@@ -164,9 +164,9 @@ class TestCheckRegistryAndTracker:
         req = make_page_req("http://1.2.3.4/login.xyz")
         results, tracker = registry.run_all(req)
 
-        assert len(results) == 5
+        assert len(results) == 10
         summary = tracker.to_summary()
-        assert len(summary["executed"]) == 5
+        assert len(summary["executed"]) == 10
         assert len(summary["not_executed"]) == 0
         assert len(summary["failed"]) == 0
 

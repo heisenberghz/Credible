@@ -1,0 +1,19 @@
+{
+  "request_id": "fixture-ambiguous-001",
+  "mode": "page",
+  "page": {
+    "url": "https://design-freelancers-community.org/gigs/logo-design",
+    "title": "Looking for junior graphic designer for community project",
+    "visible_text": "We are a small volunteer group needing a new logo by next week. The stipend is small ($150 total). Please share a link to your portfolio and your preferred contact email. We will reach out to suitable applicants.",
+    "links": [
+      {
+        "text": "Submit Portfolio",
+        "href": "https://design-freelancers-community.org/submit"
+      }
+    ]
+  },
+  "expected": {
+    "any_detected": false
+  }
+}
+

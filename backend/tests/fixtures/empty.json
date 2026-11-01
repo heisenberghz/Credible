@@ -1,0 +1,11 @@
+{
+  "request_id": "fixture-empty-001",
+  "mode": "page",
+  "page": {
+    "url": "https://example.com/empty",
+    "title": "Blank Page",
+    "visible_text": "",
+    "links": []
+  }
+}
+

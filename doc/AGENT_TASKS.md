@@ -104,26 +104,26 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 4: Content/Text Checks + Regression Fixtures
+## - [x] ~~Task 4: Content/Text Checks + Regression Fixtures~~
 
-**Build:**
-- `content.payment_pressure` — Upfront fees, deposits, unusual payment requests
-- `content.urgency` — Time pressure, scarcity, "act now" language
-- `content.credential_pressure` — Requests for login, password, sensitive info
-- `content.data_exposure` — Requests for documents, ID, financial details
-- `content.unrealistic_promises` — Guaranteed income, too-good-to-be-true offers
+~~**Build:**~~
+- ~~`content.payment_pressure` — Upfront fees, deposits, unusual payment requests~~
+- ~~`content.urgency` — Time pressure, scarcity, "act now" language~~
+- ~~`content.credential_pressure` — Requests for login, password, sensitive info~~
+- ~~`content.data_exposure` — Requests for documents, ID, financial details~~
+- ~~`content.unrealistic_promises` — Guaranteed income, too-good-to-be-true offers~~
 
-Never inspects password values or hidden form values. Context-aware (doesn't treat single keywords as proof).
+~~Never inspects password values or hidden form values. Context-aware (doesn't treat single keywords as proof).~~
 
-**Regression fixtures (JSON):** benign.json, suspicious.json, ambiguous.json, malformed.json, empty.json, prompt_injection.json
+~~**Regression fixtures (JSON):** benign.json, suspicious.json, ambiguous.json, malformed.json, empty.json, prompt_injection.json~~
 
-**Tests:** Unit test per check. Fixture validation. False-positive review on benign fixtures.
+~~**Tests:** Unit test per check. Fixture validation. False-positive review on benign fixtures.~~
 
-**Acceptance:**
-- [ ] All content checks return typed `CheckResult`
-- [ ] Fixtures cover benign, suspicious, ambiguous, malformed, empty
-- [ ] No false positives on benign fixtures
-- [ ] `pytest -v` passes
+~~**Acceptance:**~~
+- [x] ~~All content checks return typed `CheckResult`~~
+- [x] ~~Fixtures cover benign, suspicious, ambiguous, malformed, empty~~
+- [x] ~~No false positives on benign fixtures~~
+- [x] ~~`pytest -v` passes~~
 
 ---
 

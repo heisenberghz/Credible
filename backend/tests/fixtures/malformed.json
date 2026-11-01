@@ -1,0 +1,9 @@
+{
+  "request_id": "fixture-malformed-001",
+  "mode": "invalid_mode",
+  "page": {
+    "url": "not-a-valid-url",
+    "visible_text": ""
+  }
+}
+

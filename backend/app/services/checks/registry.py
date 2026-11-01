@@ -4,6 +4,13 @@ from typing import Dict, List, Optional
 from app.schemas.findings import CheckResult
 from app.schemas.requests import AnalysisRequest
 from app.services.checks.base import BaseCheck, CheckExecutionTracker
+from app.services.checks.content_checks import (
+    CredentialPressureCheck,
+    DataExposureCheck,
+    PaymentPressureCheck,
+    UnrealisticPromisesCheck,
+    UrgencyCheck,
+)
 from app.services.checks.url_checks import (
     IpHostCheck,
     LookalikeCheck,
@@ -18,12 +25,20 @@ class CheckRegistry:
 
     def __init__(self):
         self._checks: Dict[str, BaseCheck] = {}
-        # Register standard URL checks
+
+        # 1. URL threat checks
         self.register(IpHostCheck())
         self.register(SuspiciousTldCheck())
         self.register(UrlObfuscationCheck())
         self.register(LookalikeCheck())
         self.register(UrlLengthCheck())
+
+        # 2. Content & social-engineering checks
+        self.register(PaymentPressureCheck())
+        self.register(UrgencyCheck())
+        self.register(CredentialPressureCheck())
+        self.register(DataExposureCheck())
+        self.register(UnrealisticPromisesCheck())
 
     def register(self, check: BaseCheck) -> None:
         self._checks[check.check_id] = check
@@ -53,4 +68,3 @@ class CheckRegistry:
 
 # Global check registry instance
 default_registry = CheckRegistry()
-

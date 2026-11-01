@@ -1,6 +1,13 @@
 """Deterministic threat detection checks package."""
 
 from app.services.checks.base import BaseCheck, CheckExecutionTracker
+from app.services.checks.content_checks import (
+    CredentialPressureCheck,
+    DataExposureCheck,
+    PaymentPressureCheck,
+    UnrealisticPromisesCheck,
+    UrgencyCheck,
+)
 from app.services.checks.registry import CheckRegistry, default_registry
 from app.services.checks.url_checks import (
     IpHostCheck,
@@ -20,5 +27,9 @@ __all__ = [
     "UrlObfuscationCheck",
     "LookalikeCheck",
     "UrlLengthCheck",
+    "PaymentPressureCheck",
+    "UrgencyCheck",
+    "CredentialPressureCheck",
+    "DataExposureCheck",
+    "UnrealisticPromisesCheck",
 ]
-

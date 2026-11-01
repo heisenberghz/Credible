@@ -1,0 +1,19 @@
+{
+  "request_id": "fixture-benign-001",
+  "mode": "page",
+  "page": {
+    "url": "https://careers.google.com/jobs/results/12345678-software-engineering-intern",
+    "title": "Software Engineering Intern, Summer 2027 - Google Careers",
+    "visible_text": "Overview: As a Software Engineering Intern at Google, you will work on core products and infrastructure. Qualifications: Currently pursuing a Bachelor's, Master's or PhD degree in Computer Science or related technical field. Experience programming in C++, Java, or Python. Google is an equal opportunity employer. We never ask candidates for registration fees or payment to participate in interviews.",
+    "links": [
+      {
+        "text": "Apply to Google",
+        "href": "https://careers.google.com/apply"
+      }
+    ]
+  },
+  "expected": {
+    "any_detected": false
+  }
+}
+

@@ -1,0 +1,27 @@
+{
+  "request_id": "fixture-suspicious-001",
+  "mode": "page",
+  "page": {
+    "url": "https://g00gle-careers-portal.xyz/internship-offer",
+    "title": "Guaranteed Summer Internship - Immediate Joining",
+    "visible_text": "Congratulations! You have been selected for our exclusive Data Science Internship. Guaranteed salary of ₹80,000 monthly with no experience required. To confirm your selection, you must deposit a refundable registration fee of ₹2,500 immediately. Only 3 seats left! Offer expires in 2 hours. Send your Aadhaar card and PAN card to our Telegram recruiter @recruiter_hr.",
+    "links": [
+      {
+        "text": "Deposit Fee Now",
+        "href": "https://g00gle-careers-portal.xyz/pay"
+      }
+    ]
+  },
+  "expected": {
+    "any_detected": true,
+    "detected_checks": [
+      "url.lookalike",
+      "url.suspicious_tld",
+      "content.payment_pressure",
+      "content.urgency",
+      "content.data_exposure",
+      "content.unrealistic_promises"
+    ]
+  }
+}
+
