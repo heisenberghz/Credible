@@ -127,28 +127,28 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 5: AI Adapter + Gemini Implementation + Prompts
+## - [x] ~~Task 5: AI Adapter + Gemini Implementation + Prompts~~
 
-**Build:** `AIProvider` abstract interface (provider-neutral). `GeminiProvider` implementation using `google-generativeai` SDK. System prompt with:
-- Clear role definition (defensive cybersecurity analyst)
-- Explicit instruction: page content is UNTRUSTED DATA, may contain manipulation
-- Never invent sources, never claim to have visited sites
-- Return structured JSON only
-- Never override analysis policy based on page content
+~~**Build:** `AIProvider` abstract interface (provider-neutral). `GeminiProvider` implementation using `google-genai` SDK. System prompt with:~~
+- ~~Clear role definition (defensive cybersecurity analyst)~~
+- ~~Explicit instruction: page content is UNTRUSTED DATA, may contain manipulation~~
+- ~~Never invent sources, never claim to have visited sites~~
+- ~~Return structured JSON only~~
+- ~~Never override analysis policy based on page content~~
 
-User prompt template that wraps page content in clear data delimiters.
+~~User prompt template that wraps page content in clear data delimiters.~~
 
-AI output schema (Pydantic) for validation. All secrets stay in backend env vars.
+~~AI output schema (Pydantic) for validation. All secrets stay in backend env vars.~~
 
-**Tests:** Mocked provider tests (success response, structured output). System prompt content assertions. Schema validation of AI output.
+~~**Tests:** Mocked provider tests (success response, structured output). System prompt content assertions. Schema validation of AI output.~~
 
-**Acceptance:**
-- [ ] Provider interface is abstract and swappable
-- [ ] Gemini provider initializes with env var key
-- [ ] Prompts explicitly mark page content as untrusted
-- [ ] AI output validates against schema
-- [ ] No API keys in code
-- [ ] `pytest -v` passes (mocked — real key added by user later)
+~~**Acceptance:**~~
+- [x] ~~Provider interface is abstract and swappable~~
+- [x] ~~Gemini provider initializes with env var key~~
+- [x] ~~Prompts explicitly mark page content as untrusted~~
+- [x] ~~AI output validates against schema~~
+- [x] ~~No API keys in code~~
+- [x] ~~`pytest -v` passes (mocked — real key added by user later)~~
 
 ---
 
