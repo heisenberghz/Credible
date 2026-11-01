@@ -29,53 +29,53 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-# Phase 1 — Foundation
+# ~~Phase 1 — Foundation~~
 
-## - [ ] Task 1: Project Scaffold + Schemas
+## - [x] ~~Task 1: Project Scaffold + Schemas~~
 
-**Build:** Monorepo structure with `backend/` and `extension/` skeletons. All dependencies installed. `.env.example` (with placeholder for `GEMINI_API_KEY` — user adds real key later). `.gitignore`. Root `README.md` with setup commands.
+~~**Build:** Monorepo structure with `backend/` and `extension/` skeletons. All dependencies installed. `.env.example` (with placeholder for `GEMINI_API_KEY` — user adds real key later). `.gitignore`. Root `README.md` with setup commands.~~
 
-**Backend schemas (Pydantic):**
-- `AnalysisRequest` (page mode + selection mode)
-- `PageData`, `SelectionData`
-- `AnalysisReport`, `Finding`, `Evidence`, `CheckResult`
-- `TrustDnaDimension`, `ProofModeEntry`
-- `ErrorResponse` with stable error codes
-- Enums: `Severity` (critical, high, medium, low, informational), `Confidence` (high, medium, low, unknown), `CheckStatus` (detected, not_detected, unknown, not_checked, unavailable, error), `AnalysisMode` (page, selection)
+~~**Backend schemas (Pydantic):**~~
+- ~~`AnalysisRequest` (page mode + selection mode)~~
+- ~~`PageData`, `SelectionData`~~
+- ~~`AnalysisReport`, `Finding`, `Evidence`, `CheckResult`~~
+- ~~`TrustDnaDimension`, `ProofModeEntry`~~
+- ~~`ErrorResponse` with stable error codes~~
+- ~~Enums: `Severity` (critical, high, medium, low, informational), `Confidence` (high, medium, low, unknown), `CheckStatus` (detected, not_detected, unknown, not_checked, unavailable, error), `AnalysisMode` (page, selection)~~
 
-**Extension types (TypeScript):** Mirror all backend schemas as TS interfaces/types.
+~~**Extension types (TypeScript):** Mirror all backend schemas as TS interfaces/types.~~
 
-**Tests:** Schema serialization roundtrip tests (pytest). TypeScript compilation check (`tsc --noEmit`).
+~~**Tests:** Schema serialization roundtrip tests (pytest). TypeScript compilation check (`tsc --noEmit`).~~
 
-**Acceptance:**
-- [ ] `backend/` and `extension/` structures exist
-- [ ] All Pydantic schemas import and validate
-- [ ] TS types compile without errors
-- [ ] `pytest -v` passes
-- [ ] No API keys in committed files
+~~**Acceptance:**~~
+- [x] ~~`backend/` and `extension/` structures exist~~
+- [x] ~~All Pydantic schemas import and validate~~
+- [x] ~~TS types compile without errors~~
+- [x] ~~`pytest -v` passes~~
+- [x] ~~No API keys in committed files~~
 
 ---
 
-## - [ ] Task 2: FastAPI App + API Endpoint + Validation
+## - [x] ~~Task 2: FastAPI App + API Endpoint + Validation~~
 
-**Build:** FastAPI application factory with CORS middleware (allowing extension origin). Request-ID middleware. Safe error handler (no stack traces, no secrets). Health endpoint (`GET /health`). Analysis endpoint (`POST /api/v1/analyze`) with:
-- Strict request validation (mode, field lengths, URL parsing)
-- Content normalization and bounding (max 50,000 chars visible text, max 5,000 chars selection)
-- Payload size limits
-- Rejection of unexpected/invalid data
-- Returns a stub report (real analysis comes in Phase 2)
+~~**Build:** FastAPI application factory with CORS middleware (allowing extension origin). Request-ID middleware. Safe error handler (no stack traces, no secrets). Health endpoint (`GET /health`). Analysis endpoint (`POST /api/v1/analyze`) with:~~
+- ~~Strict request validation (mode, field lengths, URL parsing)~~
+- ~~Content normalization and bounding (max 50,000 chars visible text, max 5,000 chars selection)~~
+- ~~Payload size limits~~
+- ~~Rejection of unexpected/invalid data~~
+- ~~Returns a stub report (real analysis comes in Phase 2)~~
 
-**Tests:** Health endpoint, valid page request, valid selection request, missing fields, invalid mode, malformed URL, empty content, oversized content, unexpected data types, error response format, request IDs present.
+~~**Tests:** Health endpoint, valid page request, valid selection request, missing fields, invalid mode, malformed URL, empty content, oversized content, unexpected data types, error response format, request IDs present.~~
 
-**Acceptance:**
-- [ ] `GET /health` returns 200
-- [ ] `POST /api/v1/analyze` validates and returns structured response
-- [ ] Invalid inputs return predictable error codes
-- [ ] Oversized payloads are rejected
-- [ ] Logs do not contain raw page text
-- [ ] `pytest -v` passes
+~~**Acceptance:**~~
+- [x] ~~`GET /health` returns 200~~
+- [x] ~~`POST /api/v1/analyze` validates and returns structured response~~
+- [x] ~~Invalid inputs return predictable error codes~~
+- [x] ~~Oversized payloads are rejected~~
+- [x] ~~Logs do not contain raw page text~~
+- [x] ~~`pytest -v` passes~~
 
-**Phase 1 test gate:** `cd backend && pytest -v` — all pass.
+~~**Phase 1 test gate:** `cd backend && pytest -v` — all pass.~~
 
 ---
 
