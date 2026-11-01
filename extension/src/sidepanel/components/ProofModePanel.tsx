@@ -142,57 +142,132 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({ entries }) => {
                 </div>
               </button>
 
-              {/* Expandable Deep Proof Details */}
+              {/* Expandable Deep Proof Details - 3 Epistemological Layers */}
               {isExpanded && (
                 <div
                   id={detailId}
                   data-testid={`proof-detail-${entry.finding_id}`}
+                  className="proof-detail-layers"
                   style={{
                     padding: '12px',
                     borderTop: '1px solid #E2E8F0',
                     backgroundColor: '#FFFFFF',
                     fontSize: '12px',
                     lineHeight: '1.45',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
                   }}
                 >
-                  <div style={{ marginBottom: '8px' }}>
-                    <strong style={{ color: '#0F172A', display: 'block', marginBottom: '2px' }}>
-                      Exact Observation:
-                    </strong>
+                  {/* Layer 1: Raw Observed Signal (Fact) */}
+                  <div
+                    className="proof-layer proof-layer-observation"
+                    data-testid="proof-layer-observation"
+                    style={{
+                      backgroundColor: '#F8FAFC',
+                      border: '1px solid #E2E8F0',
+                      borderLeft: '3px solid #2563EB',
+                      borderRadius: '6px',
+                      padding: '8px 10px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#1E40AF', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                        1. Raw Observed Signal
+                      </span>
+                      <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
+                        {entry.location}
+                      </span>
+                    </div>
                     <blockquote
                       data-testid="proof-observed"
                       style={{
-                        padding: '6px 10px',
-                        backgroundColor: '#F8FAFC',
-                        borderLeft: '3px solid #3B82F6',
-                        borderRadius: '0 6px 6px 0',
-                        color: '#1E293B',
+                        margin: 0,
+                        color: '#0F172A',
                         fontFamily: 'monospace',
                         fontSize: '11px',
                         wordBreak: 'break-word',
+                        lineHeight: '1.4',
                       }}
                     >
                       {entry.observed}
                     </blockquote>
                   </div>
 
-                  <div style={{ marginBottom: '8px' }}>
-                    <strong style={{ color: '#0F172A' }}>Why This Matters: </strong>
-                    <span data-testid="proof-why" style={{ color: '#475569' }}>
+                  {/* Layer 2: Threat Interpretation (Inference) */}
+                  <div
+                    className="proof-layer proof-layer-interpretation"
+                    data-testid="proof-layer-interpretation"
+                    style={{
+                      backgroundColor: '#FAF5FF',
+                      border: '1px solid #F3E8FF',
+                      borderLeft: '3px solid #7C3AED',
+                      borderRadius: '6px',
+                      padding: '8px 10px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#6B21A8', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                        2. Threat Interpretation
+                      </span>
+                      <span style={{ fontSize: '10px', color: '#7E22CE', fontWeight: 600 }}>
+                        {entry.is_deterministic ? 'Deterministic Heuristic' : 'AI Semantic Inference'}
+                      </span>
+                    </div>
+                    <p data-testid="proof-why" style={{ margin: 0, color: '#3B0764', fontSize: '12px', lineHeight: '1.45' }}>
                       {entry.why_it_matters}
-                    </span>
+                    </p>
+                    {entry.check_id && (
+                      <div style={{ marginTop: '4px', fontSize: '10px', color: '#9333EA' }}>
+                        <span>Rule ID: </span>
+                        <code>{entry.check_id}</code>
+                      </div>
+                    )}
                   </div>
 
-                  {entry.check_id && (
-                    <div style={{ marginBottom: '8px', color: '#64748B', fontSize: '11px' }}>
-                      <strong>Attributed Rule ID: </strong>
-                      <code>{entry.check_id}</code>
+                  {/* Layer 3: External Corroboration (Ground Truth Status) */}
+                  <div
+                    className="proof-layer proof-layer-corroboration"
+                    data-testid="proof-layer-corroboration"
+                    style={{
+                      backgroundColor: '#F8FAFC',
+                      border: '1px solid #E2E8F0',
+                      borderLeft: '3px solid #64748B',
+                      borderRadius: '6px',
+                      padding: '8px 10px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                        3. External Corroboration
+                      </span>
+                      <span
+                        data-testid="corroboration-status-tag"
+                        style={{
+                          fontSize: '9px',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          padding: '1px 5px',
+                          borderRadius: '3px',
+                          backgroundColor: '#F1F5F9',
+                          color: '#475569',
+                          border: '1px solid #CBD5E1',
+                        }}
+                      >
+                        Privacy-Preserving (Unchecked)
+                      </span>
                     </div>
-                  )}
+                    <p style={{ margin: 0, color: '#64748B', fontSize: '11px', lineHeight: '1.4' }}>
+                      {entry.location.includes('hostname') || entry.location.includes('url')
+                        ? 'External WHOIS registrar records, domain age, and corporate business registries were not queried to preserve browsing privacy.'
+                        : 'Local client DOM observation only. Off-platform communications or external registry databases not corroborated.'}
+                    </p>
+                  </div>
 
+                  {/* Caveats & Limitations */}
                   {entry.limitations && entry.limitations.length > 0 && (
-                    <div style={{ color: '#94A3B8', fontSize: '11px' }}>
-                      <strong>Caveats & Limitations: </strong>
+                    <div style={{ color: '#94A3B8', fontSize: '11px', marginTop: '2px' }}>
+                      <strong>Limitations: </strong>
                       {entry.limitations.join(' • ')}
                     </div>
                   )}

@@ -194,6 +194,28 @@ describe('Proof Mode Panel', () => {
     );
     expect(screen.getByText(/content\.payment_pressure/)).toBeInTheDocument();
   });
+
+  it('renders 3-layer epistemological segmentation in Proof Mode (Observed, Threat, Corroboration)', () => {
+    render(<ProofModePanel entries={mockProofEntries} />);
+
+    const toggle = screen.getByTestId('proof-toggle-proof-1');
+    fireEvent.click(toggle);
+
+    // Layer 1: Raw Observed Signal
+    expect(screen.getByTestId('proof-layer-observation')).toBeInTheDocument();
+    expect(screen.getByText('1. Raw Observed Signal')).toBeInTheDocument();
+    expect(screen.getByText('body > form > p')).toBeInTheDocument();
+
+    // Layer 2: Threat Interpretation
+    expect(screen.getByTestId('proof-layer-interpretation')).toBeInTheDocument();
+    expect(screen.getByText('2. Threat Interpretation')).toBeInTheDocument();
+    expect(screen.getByText('Deterministic Heuristic')).toBeInTheDocument();
+
+    // Layer 3: External Corroboration
+    expect(screen.getByTestId('proof-layer-corroboration')).toBeInTheDocument();
+    expect(screen.getByText('3. External Corroboration')).toBeInTheDocument();
+    expect(screen.getByTestId('corroboration-status-tag')).toHaveTextContent('Privacy-Preserving (Unchecked)');
+  });
 });
 
 describe('Next Best Action List', () => {
