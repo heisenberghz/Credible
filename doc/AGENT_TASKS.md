@@ -186,31 +186,31 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 8: Trust DNA + Proof Mode + Next Actions
+## - [x] ~~Task 8: Trust DNA + Proof Mode + Next Actions~~
 
-**Build:**
+~~**Build:**~~
 
-**Trust DNA builder** — 6 dimensions built from actual check results:
-1. Identity & Domain Signals
-2. Connection & Technical Signals
-3. Transparency
-4. Page Behavior
-5. Content & Offer Consistency
-6. Credential & Payment Pressure
+~~**Trust DNA builder** — 6 dimensions built from actual check results:~~
+1. ~~Identity & Domain Signals~~
+2. ~~Connection & Technical Signals~~
+3. ~~Transparency~~
+4. ~~Page Behavior~~
+5. ~~Content & Offer Consistency~~
+6. ~~Credential & Payment Pressure~~
 
-Each dimension: status (positive/concern/mixed/unknown/not_checked), evidence, confidence, limitations. Never shows "verified" if check didn't run.
+~~Each dimension: status (positive/concern/mixed/unknown/not_checked), evidence, confidence, limitations. Never shows "verified" if check didn't run.~~
 
-**Proof Mode builder** — Trace every finding to: what was observed, where, why it matters, which check produced it, deterministic vs AI, confidence, limitations.
+~~**Proof Mode builder** — Trace every finding to: what was observed, where, why it matters, which check produced it, deterministic vs AI, confidence, limitations.~~
 
-**Next Best Action generator** — Map findings to specific, proportionate recommendations. No alarmist language. Handle ambiguous/incomplete results.
+~~**Next Best Action generator** — Map findings to specific, proportionate recommendations. No alarmist language. Handle ambiguous/incomplete results.~~
 
-**Tests:** Trust DNA dimension construction, unknown/not_checked handling, Proof Mode tracing, action generation, proportionality.
+~~**Tests:** Trust DNA dimension construction, unknown/not_checked handling, Proof Mode tracing, action generation, proportionality.~~
 
-**Acceptance:**
-- [ ] Trust DNA dimensions reflect actual checks
-- [ ] Proof Mode traces every finding to evidence
-- [ ] Actions are proportionate and non-alarmist
-- [ ] `pytest -v` passes
+~~**Acceptance:**~~
+- [x] ~~Trust DNA dimensions reflect actual checks~~
+- [x] ~~Proof Mode traces every finding to evidence~~
+- [x] ~~Actions are proportionate and non-alarmist~~
+- [x] ~~`pytest -v` passes~~
 
 ---
 
