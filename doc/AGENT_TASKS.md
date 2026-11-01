@@ -281,27 +281,27 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 12: API Client + Scan Flow + Service Worker Integration
+## - [x] ~~Task 12: API Client + Scan Flow + Service Worker Integration~~
 
-**Build:** Typed API client (`api-client.ts`) with:
-- Backend origin from config
-- Request construction matching backend schema
-- Runtime response validation
-- Timeout (15s) and cancellation
-- Error mapping to UI states
-- CORS handling
+~~**Build:** Typed API client (`api-client.ts`) with:~~
+- ~~Backend origin from config~~
+- ~~Request construction matching backend schema~~
+- ~~Runtime response validation~~
+- ~~Timeout (15s) and cancellation~~
+- ~~Error mapping to UI states~~
+- ~~CORS handling~~
 
-Service worker integration: popup sends `requestScan` → SW injects content script → gets page data → calls API → opens side panel with results.
+~~Service worker integration: popup sends `requestScan` → SW injects content script → gets page data → calls API → opens side panel with results.~~
 
-**Tests:** Request construction. Response parsing. Timeout handling. Error mapping. Mock API responses.
+~~**Tests:** Request construction. Response parsing. Timeout handling. Error mapping. Mock API responses.~~
 
-**Acceptance:**
-- [ ] API client constructs valid requests
-- [ ] Responses validate at runtime
-- [ ] Timeout produces error state, not hang
-- [ ] `pnpm test` passes
+~~**Acceptance:**~~
+- [x] ~~API client constructs valid requests~~
+- [x] ~~Responses validate at runtime~~
+- [x] ~~Timeout produces error state, not hang~~
+- [x] ~~`pnpm test` passes~~
 
-**Phase 3 test gate:** `cd extension && pnpm test` — all pass. Extension loads in Chrome.
+~~**Phase 3 test gate:** `cd extension && pnpm test` — all pass. Extension loads in Chrome.~~
 
 ---
 
