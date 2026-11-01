@@ -307,25 +307,25 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 # Phase 4 — Side Panel UI + Select-to-Verify
 
-## - [ ] Task 13: Side Panel — Core Results UI
+## - [x] ~~Task 13: Side Panel — Core Results UI~~
 
-**Build:** Side panel entry point (`sidepanel/`). React components:
-- `AssessmentSummary` — plain-language summary, no opaque score
-- `FindingList` — findings grouped by severity
-- `FindingDetail` — expandable with evidence, severity badge, confidence badge, "View Proof" toggle
-- `SeverityBadge` — color-coded (critical=red, high=orange, medium=yellow, low=blue, info=gray)
-- `ConfidenceBadge` — visually distinct from severity
-- `ErrorState` — loading, offline, timeout, backend error, invalid response
+~~**Build:** Side panel entry point (`sidepanel/`). React components:~~
+- ~~`AssessmentSummary` — plain-language summary, no opaque score~~
+- ~~`FindingList` — findings grouped by severity~~
+- ~~`FindingDetail` — expandable with evidence, severity badge, confidence badge, "View Proof" toggle~~
+- ~~`SeverityBadge` — color-coded (critical=red, high=orange, medium=yellow, low=blue, info=gray)~~
+- ~~`ConfidenceBadge` — visually distinct from severity~~
+- ~~`ErrorState` — loading, offline, timeout, backend error, invalid response~~
 
-Side panel receives report data from service worker via message passing.
+~~Side panel receives report data from service worker via message passing.~~
 
-**Tests:** Component renders with fixture data. Severity/confidence visually distinct. Error states display correctly.
+~~**Tests:** Component renders with fixture data. Severity/confidence visually distinct. Error states display correctly.~~
 
-**Acceptance:**
-- [ ] Side panel renders complete report
-- [ ] Severity and confidence are visually distinct
-- [ ] Error states handled (loading, offline, timeout, error)
-- [ ] `pnpm test` passes
+~~**Acceptance:**~~
+- [x] ~~Side panel renders complete report~~
+- [x] ~~Severity and confidence are visually distinct~~
+- [x] ~~Error states handled (loading, offline, timeout, error)~~
+- [x] ~~`pnpm test` passes~~
 
 ---
 
