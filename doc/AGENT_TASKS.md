@@ -398,37 +398,37 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 17: Privacy, Permission + Security Audit
+## - [x] ~~Task 17: Privacy, Permission + Security Audit~~
 
-**Build:**
+~~**Build:**~~
 
-**Privacy audit:**
-- Inspect actual network payloads (no passwords, no hidden fields, no secrets)
-- Verify manifest permissions are minimal
-- Verify no automatic scanning occurs
-- Verify no collection before user action
+~~**Privacy audit:**~~
+- ~~Inspect actual network payloads (no passwords, no hidden fields, no secrets)~~
+- ~~Verify manifest permissions are minimal~~
+- ~~Verify no automatic scanning occurs~~
+- ~~Verify no collection before user action~~
 
-**Security audit:**
-- Prompt injection regression tests (page content with "ignore instructions")
-- SSRF prevention (backend doesn't fetch arbitrary URLs)
-- Secret scanning (grep for API keys in code, logs, build output)
-- Logging review (no raw page content in logs)
-- Extension messaging boundary review
-- AI cannot override policy or claim unrun checks
+~~**Security audit:**~~
+- ~~Prompt injection regression tests (page content with "ignore instructions")~~
+- ~~SSRF prevention (backend doesn't fetch arbitrary URLs)~~
+- ~~Secret scanning (grep for API keys in code, logs, build output)~~
+- ~~Logging review (no raw page content in logs)~~
+- ~~Extension messaging boundary review~~
+- ~~AI cannot override policy or claim unrun checks~~
 
-**Dependency audit:** `pip audit` for backend, `pnpm audit` for extension.
+~~**Dependency audit:** `pip audit` for backend, `pnpm audit` for extension.~~
 
-**Tests:** Prompt injection test suite. Secret scanning. SSRF regression. Payload inspection assertions.
+~~**Tests:** Prompt injection test suite. Secret scanning. SSRF regression. Payload inspection assertions.~~
 
-**Acceptance:**
-- [ ] No secrets in code, logs, or build output
-- [ ] Prompt injection attempts don't affect analysis
-- [ ] No arbitrary URL fetching
-- [ ] Minimal permissions only
-- [ ] `pytest -v` + `pnpm test` pass
-- [ ] Dependency audits clean (or known issues documented)
+~~**Acceptance:**~~
+- [x] ~~No secrets in code, logs, or build output~~
+- [x] ~~Prompt injection attempts don't affect analysis~~
+- [x] ~~No arbitrary URL fetching~~
+- [x] ~~Minimal permissions only~~
+- [x] ~~`pytest -v` + `pnpm test` pass~~
+- [x] ~~Dependency audits clean (or known issues documented)~~
 
-**Phase 5 test gate:** Full regression — `cd backend && pytest -v && cd ../extension && pnpm test` — all pass.
+~~**Phase 5 test gate:** Full regression — `cd backend && pytest -v && cd ../extension && pnpm test` — all pass.~~
 
 ---
 
