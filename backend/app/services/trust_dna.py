@@ -83,11 +83,17 @@ def build_trust_dna(
 
     # 2. Connection & Technical Signals
     conn_evidences: List[Evidence] = []
+    is_localhost = (
+        parsed_url.hostname in ("localhost", "127.0.0.1", "::1", "testserver")
+        if (parsed_url and parsed_url.hostname)
+        else False
+    )
     is_https = parsed_url.scheme == "https" if parsed_url else False
+    is_secure_transport = is_https or is_localhost
     len_check = check_map.get("url.length")
     obf_check = check_map.get("url.obfuscation")
 
-    if not is_https and url_str:
+    if not is_secure_transport and url_str:
         conn_evidences.append(Evidence(source="url", excerpt=url_str[:50], reason="URL uses unencrypted HTTP protocol."))
     if len_check and len_check.status == CheckStatus.DETECTED:
         conn_evidences.extend(len_check.evidence)
@@ -97,21 +103,26 @@ def build_trust_dna(
             TrustDnaDimension(
                 id="connection_technical",
                 name="Connection and Technical Signals",
-                status=TrustDnaStatus.CONCERN if not is_https else TrustDnaStatus.MIXED,
+                status=TrustDnaStatus.CONCERN if not is_secure_transport else TrustDnaStatus.MIXED,
                 confidence=Confidence.HIGH,
                 summary="Technical connection or URL structure shows hygiene issues.",
                 evidence=conn_evidences,
                 limitations=["Connection inspection is limited to client-observable URL components."],
             )
         )
-    elif is_https:
+    elif is_secure_transport:
+        summary_text = (
+            "Secure HTTPS protocol used with standard link structure."
+            if is_https
+            else "Secure local development loopback context with standard link structure."
+        )
         dimensions.append(
             TrustDnaDimension(
                 id="connection_technical",
                 name="Connection and Technical Signals",
                 status=TrustDnaStatus.POSITIVE,
                 confidence=Confidence.HIGH,
-                summary="Secure HTTPS protocol used with standard link structure.",
+                summary=summary_text,
                 evidence=[],
                 limitations=["Transport encryption verified; does not verify backend server integrity."],
             )
