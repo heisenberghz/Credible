@@ -1,5 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap');
+
 /* Credible Side Panel Styling - Apple Minimal & Clean Design */
 :root {
+  --font-display: 'Sora', 'Segoe UI Variable Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Consolas, monospace;
+
   --bg-panel: #f8fafc;
   --bg-card: #ffffff;
   --bg-card-hover: #fcfcfc;
@@ -45,12 +50,22 @@
   padding: 0;
 }
 
+::selection {
+  background-color: #DBEAFE;
+  color: #0F172A;
+}
+
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-panel);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
-    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #F1F5F9;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(224, 231, 255, 0.5) 0%, transparent 60%),
+    radial-gradient(rgba(148, 163, 184, 0.3) 1px, transparent 1px);
+  background-size: 100% 100%, 20px 20px;
+  background-position: 0 0, 10px 10px;
+  caret-color: var(--accent-blue);
+  font-family: var(--font-display);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -102,17 +117,17 @@ a:focus-visible {
 
 /* Cards Base Styling */
 .credible-card {
-  background-color: var(--bg-card);
+  background-color: #FFFFFF;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-light);
+  border: 1px solid #CBD5E1;
   padding: 16px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 6px 18px -4px rgba(15, 23, 42, 0.04);
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .credible-card:hover {
-  box-shadow: var(--shadow-hover);
-  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), 0 12px 28px -4px rgba(15, 23, 42, 0.06);
+  border-color: #94A3B8;
 }
 
 /* Interactive Card Accordions */
@@ -140,31 +155,15 @@ a:focus-visible {
   transform: rotate(180deg);
 }
 
-/* Finding Card Polish with Color Accent Borders */
+/* Finding Card Architectural Styling */
 .finding-card {
   position: relative;
-  border-left-width: 4px !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--border-light);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.finding-card.severity-critical {
-  border-left-color: var(--severity-critical) !important;
-}
-
-.finding-card.severity-high {
-  border-left-color: var(--severity-high) !important;
-}
-
-.finding-card.severity-medium {
-  border-left-color: var(--severity-medium) !important;
-}
-
-.finding-card.severity-low {
-  border-left-color: var(--severity-low) !important;
-}
-
-.finding-card.severity-informational {
-  border-left-color: var(--severity-info) !important;
+.finding-card:hover {
+  border-color: #cbd5e1;
 }
 
 /* Copy Action Button Feedback */
@@ -243,62 +242,32 @@ a:focus-visible {
 /* Animated Score Gauge */
 .score-gauge-container {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 16px;
-  padding: 12px 14px;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
+  padding: 14px 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
   border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   margin-bottom: 14px;
 }
 
 .gauge-graphic-wrapper {
   position: relative;
-  width: 96px;
-  height: 96px;
   flex-shrink: 0;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .score-svg {
-  transform: rotate(0deg);
+  display: block;
 }
 
 .gauge-progress {
   transition: stroke-dashoffset 0.85s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s ease;
-}
-
-.gauge-center-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.gauge-number {
-  font-size: 24px;
-  font-weight: 800;
-  color: #0f172a;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
-}
-
-.gauge-scale {
-  font-size: 10px;
-  font-weight: 600;
-  color: #94a3b8;
-  margin-top: 1px;
 }
 
 .gauge-details {

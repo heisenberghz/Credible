@@ -1,18 +1,33 @@
 @import '../sidepanel/sidepanel.css';
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap');
 
-/* Credible Security Command Center - Swiss Architectural Design */
+/* ==========================================================================
+   CREDIBLE COMMAND CENTER — BESPOKE ARCHITECTURAL CYBERSECURITY WORKSTATION
+   ========================================================================== */
 :root {
-  --bg-dashboard: #F8FAFC;
-  --bg-card: #FFFFFF;
+  --font-display: 'Sora', 'Segoe UI Variable Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Consolas, monospace;
+
+  --bg-canvas: #F1F5F9;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F8FAFC;
   --text-main: #0F172A;
-  --text-sub: #475569;
+  --text-sub: #334155;
   --text-muted: #64748B;
   --border-subtle: #E2E8F0;
-  --border-focus: #0F172A;
+  --border-active: #CBD5E1;
+  --border-strong: #94A3B8;
+  --border-focus: #0052FF;
+  
   --accent-cobalt: #0052FF;
   --accent-emerald: #059669;
   --accent-crimson: #E11D48;
   --accent-amber: #D97706;
+
+  /* Architectural Depth Tokens */
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.05), 0 6px 18px -4px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 4px 16px rgba(15, 23, 42, 0.08), 0 16px 36px -4px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 8px 24px -4px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.04);
 }
 
 * {
@@ -21,12 +36,22 @@
   padding: 0;
 }
 
+::selection {
+  background-color: #DBEAFE;
+  color: #0F172A;
+}
+
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-dashboard);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
-    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-canvas);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(224, 231, 255, 0.6) 0%, transparent 60%),
+    radial-gradient(rgba(148, 163, 184, 0.35) 1.2px, transparent 1.2px);
+  background-size: 100% 100%, 24px 24px;
+  background-position: 0 0, 12px 12px;
+  caret-color: var(--accent-cobalt);
+  font-family: var(--font-display);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -35,8 +60,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -65,30 +90,473 @@ a:focus-visible {
   flex-direction: column;
 }
 
+/* ==========================================================================
+   DEEP OBSIDIAN COMMAND DECK (HEADER)
+   ========================================================================== */
 .dashboard-header {
-  background-color: #FFFFFF;
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 14px 24px;
+  background-color: #090D16;
+  border-bottom: 1px solid #1E293B;
+  padding: 12px 28px;
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 40;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
+.dashboard-header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo-frame {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1E293B, #0F172A);
+  border: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px rgba(0, 82, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.brand-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.badge-audit {
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  padding: 2px 7px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #E2E8F0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  letter-spacing: 0.05em;
+}
+
+.engine-beacon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  letter-spacing: 0.04em;
+}
+
+.engine-beacon-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: beaconPulse 2s ease-in-out infinite;
+}
+
+@keyframes beaconPulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: #94A3B8;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-header-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: #E2E8F0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  backdrop-filter: blur(8px);
+}
+
+.btn-header-action:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+}
+
+.btn-header-scan {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  background-color: #0052FF;
+  color: #FFFFFF;
+  border: 1px solid #0052FF;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(0, 82, 255, 0.4);
+  transition: all 0.15s ease;
+}
+
+.btn-header-scan:hover:not(:disabled) {
+  background-color: #1A65FF;
+  box-shadow: 0 0 20px rgba(0, 82, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-header-scan:disabled {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: transparent;
+  color: #64748B;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   CANVAS MAIN CONTENT
+   ========================================================================== */
 .dashboard-main {
   flex: 1;
-  max-width: 1400px;
+  max-width: 1440px;
   width: 100%;
   margin: 0 auto;
-  padding: 24px;
+  padding: 20px 28px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+}
+
+/* ==========================================================================
+   CALIBRATION BENCHMARK STRIP
+   ========================================================================== */
+.benchmark-deck-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 16px;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.benchmark-deck-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.benchmark-deck-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: #0F172A;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.benchmark-deck-caption {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.benchmark-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.benchmark-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #F8FAFC;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+}
+
+.benchmark-pill:hover {
+  background-color: #F1F5F9;
+  border-color: #94A3B8;
+  color: #0F172A;
+  transform: translateY(-1px);
+}
+
+.benchmark-pill.active {
+  background-color: #0F172A;
+  color: #FFFFFF;
+  border-color: #0F172A;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.2);
+}
+
+.benchmark-pip {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.benchmark-pip.pip-clean { background-color: #10B981; box-shadow: 0 0 6px #10B981; }
+.benchmark-pip.pip-threat { background-color: #F43F5E; box-shadow: 0 0 6px #F43F5E; }
+.benchmark-pip.pip-caution { background-color: #F59E0B; box-shadow: 0 0 6px #F59E0B; }
+
+.benchmark-score-chip {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.benchmark-pill.active .benchmark-score-chip {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   UNIFIED FORENSIC HORIZON CONSOLE (Hero Telemetry Deck)
+   ========================================================================== */
+.forensic-horizon-deck {
+  display: grid;
+  grid-template-columns: 290px 1fr 310px;
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .forensic-horizon-deck {
+    grid-template-columns: 1fr;
+  }
+}
+
+.horizon-panel {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.horizon-divider {
+  width: 1px;
+  background-color: #E2E8F0;
+}
+
+@media (max-width: 1024px) {
+  .horizon-divider {
+    width: 100%;
+    height: 1px;
+  }
+}
+
+.horizon-micro-label {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.horizon-verdict-panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.horizon-verdict-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.horizon-verdict-pill {
+  font-size: 11px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  display: inline-block;
+  width: fit-content;
+  line-height: 1.2;
+}
+
+.horizon-threat-count {
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.horizon-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.horizon-protocol-badge {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.horizon-privacy-chip {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.horizon-url-box {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 4px 0 6px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.horizon-url-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #0F172A;
+}
+
+.horizon-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.density-number {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1;
+}
+
+.density-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-left: 6px;
+}
+
+.horizon-progress-track {
+  height: 6px;
+  width: 100%;
+  border-radius: 9999px;
+  background-color: #F1F5F9;
+  display: flex;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.track-bar.track-pass {
+  background-color: #10B981;
+}
+
+.track-bar.track-flag {
+  background-color: #F43F5E;
+}
+
+/* ==========================================================================
+   CARDS & WORKBENCH GRID
+   ========================================================================== */
+.arch-card {
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  padding: 18px 22px;
+  box-shadow: var(--shadow-card);
 }
 
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 18px;
 }
 
 @media (max-width: 1024px) {
@@ -97,28 +565,6 @@ a:focus-visible {
   }
 }
 
-.arch-card {
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
-}
-
-.arch-tile {
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 12px;
-  transition: all 0.15s ease-in-out;
-}
-
-.arch-tile:hover {
-  border-color: #0F172A;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-}
-
 .tabular-num {
   font-variant-numeric: tabular-nums;
 }
-

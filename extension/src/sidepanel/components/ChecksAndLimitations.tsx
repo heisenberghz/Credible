@@ -135,9 +135,9 @@ export const ChecksAndLimitations: React.FC<ChecksAndLimitationsProps> = ({
               data-testid="limitations-container"
               style={{
                 backgroundColor: '#FFFBEB',
-                borderLeft: '3px solid #F59E0B',
-                padding: '8px 10px',
-                borderRadius: '0 6px 6px 0',
+                border: '1px solid #FDE68A',
+                padding: '10px 12px',
+                borderRadius: '6px',
                 marginTop: '10px',
               }}
             >

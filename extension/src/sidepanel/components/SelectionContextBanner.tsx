@@ -49,12 +49,12 @@ export const SelectionContextBanner: React.FC<SelectionContextBannerProps> = ({
           style={{
             fontSize: '13px',
             fontStyle: 'italic',
-            color: '#1E293B',
+            color: '#0F172A',
             lineHeight: '1.45',
             backgroundColor: '#FFFFFF',
-            padding: '8px 10px',
+            padding: '8px 12px',
             borderRadius: '6px',
-            borderLeft: '3px solid #2563EB',
+            border: '1px solid #BFDBFE',
             wordBreak: 'break-word',
             margin: '4px 0',
           }}

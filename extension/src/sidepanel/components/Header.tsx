@@ -1,4 +1,5 @@
 import React from 'react';
+import { CredibleLogoMark } from '../../components/CredibleLogoMark';
 
 interface HeaderProps {
   onScan: () => void;
@@ -15,45 +16,42 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '12px 16px',
-        borderBottom: '1px solid #E2E8F0',
-        backgroundColor: '#FFFFFF',
+        borderBottom: '1px solid #1E293B',
+        backgroundColor: '#090D16',
         position: 'sticky',
         top: 0,
-        zIndex: 10,
+        zIndex: 30,
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div
           style={{
-            width: '28px',
-            height: '28px',
+            width: '32px',
+            height: '32px',
             borderRadius: '8px',
-            backgroundColor: '#0F172A',
+            background: 'linear-gradient(135deg, #1E293B, #0F172A)',
+            border: '1px solid #334155',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#FFFFFF',
             flexShrink: 0,
-            boxShadow: '0 1px 2px rgba(15, 23, 42, 0.12)',
+            boxShadow: '0 0 12px rgba(0, 82, 255, 0.3)',
           }}
           aria-hidden="true"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square">
-            <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="2" />
-            <path d="M12 3v18M3 12h18" strokeDasharray="2 2" strokeWidth="1.5" stroke="#94A3B8" />
-            <circle cx="12" cy="12" r="3" fill="#FFFFFF" stroke="#0F172A" strokeWidth="2" />
-          </svg>
+          <CredibleLogoMark size={20} />
         </div>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <h2 style={{ fontSize: '14px', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.01em', textTransform: 'uppercase', lineHeight: 1.2 }}>
+            <h2 style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em', textTransform: 'uppercase', lineHeight: 1.2, margin: 0 }}>
               CREDIBLE
             </h2>
-            <span style={{ fontSize: '10px', fontWeight: 700, fontFamily: 'monospace', padding: '1px 5px', borderRadius: '4px', backgroundColor: '#F1F5F9', color: '#475569', border: '1px solid #CBD5E1', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '9px', fontWeight: 800, fontFamily: 'monospace', padding: '1px 5px', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#E2E8F0', border: '1px solid rgba(255, 255, 255, 0.18)', letterSpacing: '0.04em' }}>
               v2.4 AUDIT
             </span>
           </div>
-          <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 500, letterSpacing: '-0.01em' }}>
+          <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 500, letterSpacing: '-0.01em', display: 'block' }}>
             Defensive Security Engine
           </span>
         </div>
@@ -72,11 +70,11 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '4px',
+            gap: '5px',
             padding: '6px 10px',
-            backgroundColor: '#FFFFFF',
-            color: '#0F172A',
-            border: '1px solid #CBD5E1',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            color: '#F1F5F9',
+            border: '1px solid rgba(255, 255, 255, 0.16)',
             borderRadius: '6px',
             fontSize: '11px',
             fontFamily: 'monospace',
@@ -85,7 +83,12 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
             transition: 'all 0.15s ease',
           }}
         >
-          <span>DASHBOARD ↗</span>
+          <span>DASHBOARD</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
         </button>
 
         <button
@@ -98,26 +101,34 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
             alignItems: 'center',
             gap: '6px',
             padding: '6px 12px',
-            backgroundColor: isScanning ? '#F1F5F9' : '#0F172A',
-            color: isScanning ? '#94A3B8' : '#FFFFFF',
+            backgroundColor: isScanning ? 'rgba(255, 255, 255, 0.1)' : '#0052FF',
+            color: isScanning ? '#64748B' : '#FFFFFF',
             border: '1px solid',
-            borderColor: isScanning ? '#E2E8F0' : '#0F172A',
+            borderColor: isScanning ? 'transparent' : '#0052FF',
             borderRadius: '6px',
             fontSize: '11px',
             fontFamily: 'monospace',
-            fontWeight: 700,
+            fontWeight: 800,
             letterSpacing: '0.04em',
             textTransform: 'uppercase',
             cursor: isScanning ? 'not-allowed' : 'pointer',
-            boxShadow: isScanning ? 'none' : '0 1px 2px rgba(15, 23, 42, 0.08)',
+            boxShadow: isScanning ? 'none' : '0 0 14px rgba(0, 82, 255, 0.4)',
             transition: 'all 0.15s ease',
           }}
         >
-          <span aria-hidden="true">{isScanning ? '⏳' : '⚡'}</span>
+          {isScanning ? (
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="loading-spinner" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+              <path d="M12 2a10 10 0 0 1 10 10" />
+            </svg>
+          ) : (
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          )}
           <span>{isScanning ? 'SCANNING...' : 'SCAN TAB'}</span>
         </button>
       </div>
     </header>
   );
 };
-

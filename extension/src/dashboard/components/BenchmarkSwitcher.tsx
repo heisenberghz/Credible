@@ -9,63 +9,55 @@ interface BenchmarkItem {
   id: string;
   badge: string;
   label: string;
-  subtitle: string;
   score: number;
+  pipClass: string;
   tagColor: { bg: string; text: string; border: string };
 }
 
 const BENCHMARKS: BenchmarkItem[] = [
   {
     id: 'demo-scen-1-benign',
-    badge: '1. BENIGN',
+    badge: '01 · BENIGN',
     label: 'Corporate Career Portal',
-    subtitle: 'Standard patterns • 0 findings',
     score: 97,
+    pipClass: 'pip-clean',
     tagColor: { bg: '#ECFDF5', text: '#065F46', border: '#A7F3D0' },
   },
   {
     id: 'demo-scen-2-suspicious',
-    badge: '2. SUSPICIOUS',
+    badge: '02 · SUSPICIOUS',
     label: 'Urgent Crypto Deposit Scam',
-    subtitle: 'Fee demands • 24h timer • 2 threats',
     score: 28,
+    pipClass: 'pip-threat',
     tagColor: { bg: '#FFF1F2', text: '#9F1239', border: '#FECDD3' },
   },
   {
     id: 'demo-scen-3-ambiguous',
-    badge: '3. AMBIGUOUS',
+    badge: '03 · AMBIGUOUS',
     label: 'Nova Labs Community Research',
-    subtitle: 'Informal entity • Caution warranted',
     score: 62,
+    pipClass: 'pip-caution',
     tagColor: { bg: '#FFFBEB', text: '#92400E', border: '#FDE68A' },
   },
 ];
 
 export const BenchmarkSwitcher: React.FC<BenchmarkSwitcherProps> = ({ selectedId, onSelect }) => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '12px',
-        padding: '12px 18px',
-        backgroundColor: '#FFFFFF',
-        borderRadius: '10px',
-        border: '1px solid #E2E8F0',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontSize: '12px', fontWeight: 800, fontFamily: 'monospace', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-          BENCHMARK SUITE:
-        </span>
-        <span style={{ fontSize: '11px', color: '#64748B' }}>
-          Evaluate deterministic heuristics across benchmark scenarios:
+    <div className="benchmark-deck-container">
+      <div className="benchmark-deck-header">
+        <div className="benchmark-deck-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M10 2v7.31M14 2v7.31M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0" />
+            <path d="M5.52 16h12.96" />
+          </svg>
+          <span>CALIBRATION BENCHMARKS</span>
+        </div>
+        <span className="benchmark-deck-caption">
+          Ground-truth verification scenarios
         </span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+      <div className="benchmark-pills-row">
         {BENCHMARKS.map((b) => {
           const isSelected = selectedId === b.id;
 
@@ -75,32 +67,15 @@ export const BenchmarkSwitcher: React.FC<BenchmarkSwitcherProps> = ({ selectedId
               onClick={() => onSelect(b.id)}
               type="button"
               data-testid={`benchmark-btn-${b.id}`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 12px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                backgroundColor: isSelected ? '#0F172A' : '#F8FAFC',
-                color: isSelected ? '#FFFFFF' : '#334155',
-                border: isSelected ? '1px solid #0F172A' : '1px solid #CBD5E1',
-                boxShadow: isSelected ? '0 2px 4px rgba(15, 23, 42, 0.15)' : 'none',
-              }}
+              className={`benchmark-pill ${isSelected ? 'active' : ''}`}
             >
-              <span>{b.badge}</span>
-              <span style={{ opacity: isSelected ? 0.9 : 0.7 }}>•</span>
+              <span className={`benchmark-pip ${b.pipClass}`} />
+              <span style={{ fontWeight: 800 }}>{b.badge}</span>
+              <span style={{ opacity: isSelected ? 0.9 : 0.6 }}>•</span>
               <span>{b.label}</span>
               <span
+                className="benchmark-score-chip"
                 style={{
-                  padding: '1px 5px',
-                  borderRadius: '3px',
-                  fontSize: '10px',
-                  fontWeight: 800,
                   backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.2)' : b.tagColor.bg,
                   color: isSelected ? '#FFFFFF' : b.tagColor.text,
                   border: isSelected ? 'none' : `1px solid ${b.tagColor.border}`,
@@ -115,4 +90,3 @@ export const BenchmarkSwitcher: React.FC<BenchmarkSwitcherProps> = ({ selectedId
     </div>
   );
 };
-

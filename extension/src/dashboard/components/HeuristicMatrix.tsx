@@ -258,13 +258,13 @@ export const HeuristicMatrix: React.FC<HeuristicMatrixProps> = ({ report }) => {
                         <div
                           style={{
                             marginTop: '6px',
-                            padding: '6px 8px',
-                            backgroundColor: '#FEF2F2',
-                            borderLeft: '3px solid #E11D48',
+                            padding: '6px 10px',
+                            backgroundColor: '#FFF1F2',
+                            border: '1px solid #FECDD3',
                             borderRadius: '4px',
                             fontSize: '11px',
                             fontFamily: 'monospace',
-                            color: '#881337',
+                            color: '#9F1239',
                           }}
                         >
                           &ldquo;{rule.finding.evidence[0].excerpt}&rdquo;

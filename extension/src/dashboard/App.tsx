@@ -547,115 +547,128 @@ export const DashboardApp: React.FC = () => {
         {/* BENCHMARK SCENARIO SWITCHER */}
         <BenchmarkSwitcher selectedId={report.request_id} onSelect={handleSelectBenchmark} />
 
-        {/* EXECUTIVE KPI COMMAND BAR */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '16px',
-          }}
-        >
-          {/* KPI 1: Credibility Safety Index */}
-          <div className="arch-card" style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 20px' }}>
-            <div style={{ width: '88px', height: '88px', flexShrink: 0 }}>
-              <ScoreGauge score={score} size={88} variant="dial-only" />
+        {/* FORENSIC HORIZON CONSOLE (UNIFIED HIGH-DENSITY TELEMETRY DECK) */}
+        <div className="forensic-horizon-deck" data-testid="forensic-horizon-deck">
+          {/* Panel 1: Chronograph Dial & Verdict */}
+          <div className="horizon-panel horizon-verdict-panel">
+            <div style={{ width: '84px', height: '84px', flexShrink: 0 }}>
+              <ScoreGauge score={score} size={84} variant="dial-only" />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                OVERALL VERDICT
-              </span>
+            <div className="horizon-verdict-info">
+              <span className="horizon-micro-label">OVERALL VERDICT</span>
               <span
                 data-testid="dashboard-verdict-pill"
+                className="horizon-verdict-pill"
                 style={{
-                  fontSize: '12px',
-                  fontWeight: 800,
-                  fontFamily: 'monospace',
-                  letterSpacing: '0.02em',
-                  padding: '3px 8px',
-                  borderRadius: '4px',
                   backgroundColor: verdictBg,
                   color: verdictText,
-                  border: `1px solid ${verdictBorder}`,
-                  display: 'inline-block',
-                  width: 'fit-content',
+                  borderColor: verdictBorder,
                 }}
               >
                 {verdictLabel}
               </span>
-              <span style={{ fontSize: '11px', color: isThreat ? '#E11D48' : '#059669', fontWeight: 600 }}>
-                {report.findings.length > 0 ? `⚠️ ${report.findings.length} Threat Vectors Triggered` : '✓ 0 Threat Vectors Triggered'}
-              </span>
+              <div className="horizon-threat-count" style={{ color: isThreat ? '#E11D48' : '#059669' }}>
+                {report.findings.length > 0 ? (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                      <line x1="12" y1="9" x2="12" y2="13" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    <span>{report.findings.length} Threat Vectors Triggered</span>
+                  </>
+                ) : (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span>0 Threat Vectors Triggered</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* KPI 2: Target & Investigation Scope */}
-          <div className="arch-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '6px', padding: '16px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                INVESTIGATION TARGET
-              </span>
-              <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '1px 5px', borderRadius: '3px', backgroundColor: '#F1F5F9', color: '#475569' }}>
-                {report.analyzed_url.startsWith('https') ? '🔒 HTTPS' : '🌐 HTTP'}
+          {/* Divider */}
+          <div className="horizon-divider" />
+
+          {/* Panel 2: Target Intelligence Telemetry */}
+          <div className="horizon-panel horizon-target-panel">
+            <div className="horizon-panel-header">
+              <span className="horizon-micro-label">INVESTIGATION TARGET</span>
+              <span className="horizon-protocol-badge">
+                {report.analyzed_url.startsWith('https') ? (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                ) : (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                )}
+                <span>{report.analyzed_url.startsWith('https') ? 'HTTPS' : 'HTTP'}</span>
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <strong style={{ fontSize: '13px', color: '#0F172A', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={report.analyzed_url}>
-                {report.analyzed_url}
-              </strong>
+            <div className="horizon-url-box" title={report.analyzed_url}>
+              <code className="horizon-url-code">{report.analyzed_url}</code>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: '#64748B' }}>
-              <span>Mode: <strong style={{ color: '#0F172A', textTransform: 'uppercase' }}>{report.mode}</strong></span>
+            <div className="horizon-meta-row">
+              <span>Mode: <strong style={{ color: '#0F172A' }}>{report.mode.toUpperCase()}</strong></span>
               <span>•</span>
               <span>Scanned: <strong style={{ color: '#0F172A' }}>{report.timestamp ? new Date(report.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recent'}</strong></span>
             </div>
           </div>
 
-          {/* KPI 3: Heuristic Execution Density */}
-          <div className="arch-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '6px', padding: '16px 20px' }}>
-            <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              HEURISTIC COVERAGE
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '18px', fontWeight: 800, color: '#0F172A', fontFamily: 'monospace' }}>
-                {report.checks?.executed?.length || 5}
-              </span>
-              <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}>
-                Rules Evaluated
+          {/* Divider */}
+          <div className="horizon-divider" />
+
+          {/* Panel 3: Heuristic Coverage & Defensive Privacy */}
+          <div className="horizon-panel horizon-rules-panel">
+            <div className="horizon-panel-header">
+              <span className="horizon-micro-label">HEURISTIC DENSITY</span>
+              <span className="horizon-privacy-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span>100% CLIENT PRIVACY</span>
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#64748B' }}>
-              <span style={{ color: '#059669', fontWeight: 700 }}>✓ {(report.checks?.executed?.length || 5) - report.findings.length} Passed</span>
+            <div style={{ display: 'flex', alignItems: 'baseline', margin: '2px 0' }}>
+              <span className="density-number">{report.checks?.executed?.length || 10}</span>
+              <span className="density-label">Rules Evaluated</span>
+            </div>
+            <div className="horizon-progress-track">
+              <div className="track-bar track-pass" style={{ flex: Math.max(1, (report.checks?.executed?.length || 10) - report.findings.length) }} />
+              {report.findings.length > 0 && (
+                <div className="track-bar track-flag" style={{ flex: report.findings.length }} />
+              )}
+            </div>
+            <div className="horizon-meta-row">
+              <span style={{ color: '#059669', fontWeight: 700 }}>✓ {(report.checks?.executed?.length || 10) - report.findings.length} Passed</span>
               <span>•</span>
-              <span style={{ color: report.findings.length > 0 ? '#E11D48' : '#64748B', fontWeight: report.findings.length > 0 ? 700 : 400 }}>
+              <span style={{ color: report.findings.length > 0 ? '#E11D48' : '#64748B', fontWeight: report.findings.length > 0 ? 800 : 500 }}>
                 {report.findings.length} Flagged
               </span>
             </div>
           </div>
-
-          {/* KPI 4: Defense & Privacy Guarantees */}
-          <div className="arch-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '6px', padding: '16px 20px' }}>
-            <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              DEFENSIVE PRIVACY
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: '#059669', fontWeight: 800 }}>🛡️</span>
-              <span style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A' }}>
-                100% Client-Side Privacy
-              </span>
-            </div>
-            <span style={{ fontSize: '11px', color: '#64748B', lineHeight: 1.4 }}>
-              Zero off-platform registry queries • Passwords and tokens excluded from DOM inspection
-            </span>
-          </div>
         </div>
 
         {/* EXECUTIVE NARRATIVE SUMMARY */}
-        <section className="arch-card" data-testid="dashboard-hero" style={{ padding: '20px 24px' }}>
+        <section className="arch-card" data-testid="dashboard-hero" style={{ padding: '16px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-            <span style={{ fontSize: '18px', lineHeight: 1, marginTop: '2px' }}>📄</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0052FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginTop: '2px', flexShrink: 0 }}>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   EXECUTIVE THREAT NARRATIVE
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -668,14 +681,21 @@ export const DashboardApp: React.FC = () => {
                       fontSize: '11px',
                       padding: '3px 8px',
                       borderRadius: '4px',
-                      fontFamily: 'monospace',
-                      fontWeight: 600,
+                      fontFamily: 'var(--font-mono)',
+                      fontWeight: 700,
                       cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
                     }}
                   >
-                    <span>{copiedSummary ? '✓ Copied' : '📋 Copy Summary'}</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    <span>{copiedSummary ? 'Copied' : 'Copy Summary'}</span>
                   </button>
-                  <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
+                  <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
                     AI + HEURISTIC SYNTHESIS
                   </span>
                 </div>
@@ -685,7 +705,7 @@ export const DashboardApp: React.FC = () => {
               </p>
               <div
                 style={{
-                  marginTop: '6px',
+                  marginTop: '8px',
                   padding: '8px 12px',
                   backgroundColor: '#F8FAFC',
                   borderRadius: '6px',
@@ -697,27 +717,32 @@ export const DashboardApp: React.FC = () => {
                   gap: '8px',
                 }}
               >
-                <span style={{ color: '#2563EB', fontWeight: 700 }}>ℹ️ Epistemic Boundary:</span>
+                <span style={{ color: '#0052FF', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                  </svg>
+                  Epistemic Boundary:
+                </span>
                 <span>Absence of a warning is not proof of safety. Heuristic indicators evaluate observable patterns; independent verification via official employer channels is strongly advised.</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* FORENSIC HEURISTIC MATRIX (ALL RULES BREAKDOWN) */}
-        <HeuristicMatrix report={report} />
-
-        {/* 2-COLUMN FORENSIC WORKBENCH */}
+        {/* 2-COLUMN PRIMARY FORENSIC WORKBENCH */}
         <div className="dashboard-grid">
-          {/* LEFT COLUMN: Threat Findings, Trust DNA & Limitations */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* LEFT COLUMN: Threat Findings (Evidence-First), Trust DNA & Rule Matrix */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <FindingList findings={report.findings} />
             <TrustDnaPanel dimensions={report.trust_dna} />
+            <HeuristicMatrix report={report} />
             <ChecksAndLimitations checks={report.checks} limitations={report.limitations} />
           </div>
 
-          {/* RIGHT COLUMN: Next Best Actions, Proof Mode Trace & Audit History */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* RIGHT COLUMN: Proportionate Runbook, Proof Trace & Ledger */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <NextBestActionList actions={report.next_best_actions} />
             <ProofModePanel entries={report.proof_mode} showEmptyCleanState={true} />
             <ScanLedger

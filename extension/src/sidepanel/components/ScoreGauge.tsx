@@ -37,23 +37,32 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
   let strokeColor = '#059669'; // Solid Signal Emerald
   let labelText = 'Clean Signals';
   let badgeClass = 'score-safe';
+  let glowColor = 'rgba(5, 150, 105, 0.45)';
 
   if (normalizedScore < 50) {
     strokeColor = '#E11D48'; // Solid Signal Crimson
     labelText = 'High Threat';
     badgeClass = 'score-danger';
+    glowColor = 'rgba(225, 29, 72, 0.5)';
   } else if (normalizedScore < 85) {
     strokeColor = '#D97706'; // Solid Signal Amber
     labelText = 'Caution Warranted';
     badgeClass = 'score-caution';
+    glowColor = 'rgba(217, 119, 6, 0.45)';
   }
 
   // Circular gauge geometry
   const center = size / 2;
-  const strokeWidth = Math.max(5, Math.round(size * 0.075));
-  const radius = center - strokeWidth;
+  const strokeWidth = Math.max(5, Math.round(size * 0.08));
+  const radius = center - strokeWidth - 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (animatedScore / 100) * circumference;
+
+  const scoreFontSize = Math.round(size * 0.28);
+  const scaleFontSize = Math.max(9, Math.round(size * 0.11));
+
+  // Chronograph ticks every 30 degrees
+  const tickAngles = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
 
   const dialGraphic = (
     <div
@@ -64,7 +73,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
         width: `${size}px`,
         height: `${size}px`,
         flexShrink: 0,
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
       }}
@@ -74,8 +83,31 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        aria-hidden="true"
+        aria-label={`Security score: ${animatedScore} out of 100`}
+        style={{ display: 'block' }}
       >
+        {/* Aerospace Chronograph Ticks */}
+        {tickAngles.map((deg) => {
+          const rad = (deg * Math.PI) / 180;
+          const innerR = radius - strokeWidth * 0.85;
+          const outerR = radius - strokeWidth * 0.55;
+          const x1 = center + innerR * Math.cos(rad);
+          const y1 = center + innerR * Math.sin(rad);
+          const x2 = center + outerR * Math.cos(rad);
+          const y2 = center + outerR * Math.sin(rad);
+          return (
+            <line
+              key={deg}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke="#CBD5E1"
+              strokeWidth={deg % 90 === 0 ? 1.4 : 0.8}
+            />
+          );
+        })}
+
         {/* Background Track Ring */}
         <circle
           className="gauge-track"
@@ -83,10 +115,11 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           cy={center}
           r={radius}
           fill="none"
-          stroke="#F1F5F9"
+          stroke="#E2E8F0"
           strokeWidth={strokeWidth}
         />
-        {/* Animated Progress Ring */}
+
+        {/* Animated Progress Ring with Illuminated Glow */}
         <circle
           className="gauge-progress"
           cx={center}
@@ -99,53 +132,38 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           transform={`rotate(-90 ${center} ${center})`}
+          style={{ filter: `drop-shadow(0 0 6px ${glowColor})` }}
         />
-      </svg>
 
-      {/* Center Score Counter - Guaranteed Absolute Center */}
-      <div
-        className="gauge-center-content"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'none',
-        }}
-      >
-        <span
-          className="gauge-number"
+        {/* NATIVE SVG CENTERED SCORE TEXT (JetBrains Mono / Tabular Figures) */}
+        <text
+          x={center}
+          y={center - strokeWidth * 0.25}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fill="#0F172A"
+          fontSize={scoreFontSize}
+          fontWeight="800"
+          letterSpacing="-0.04em"
+          fontFamily="'JetBrains Mono', 'Cascadia Code', 'SF Mono', monospace"
           data-testid="score-value"
-          style={{
-            fontSize: `${Math.round(size * 0.26)}px`,
-            fontWeight: 800,
-            color: '#0F172A',
-            lineHeight: 1,
-            fontVariantNumeric: 'tabular-nums',
-            letterSpacing: '-0.03em',
-          }}
+          style={{ fontVariantNumeric: 'tabular-nums' }}
         >
           {animatedScore}
-        </span>
-        <span
-          className="gauge-scale"
-          style={{
-            fontSize: `${Math.max(9, Math.round(size * 0.1))}px`,
-            fontWeight: 600,
-            color: '#94A3B8',
-            marginTop: '1px',
-          }}
+        </text>
+        <text
+          x={center}
+          y={center + scoreFontSize * 0.65}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fill="#64748B"
+          fontSize={scaleFontSize}
+          fontWeight="800"
+          fontFamily="'JetBrains Mono', 'Cascadia Code', monospace"
         >
           /100
-        </span>
-      </div>
+        </text>
+      </svg>
     </div>
   );
 
@@ -159,25 +177,28 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
       data-testid="score-gauge"
       style={{
         display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
         alignItems: 'center',
         gap: '16px',
-        padding: '12px 14px',
-        backgroundColor: '#F8FAFC',
-        border: '1px solid #E2E8F0',
-        borderRadius: '10px',
+        padding: '14px 16px',
+        backgroundColor: '#FFFFFF',
+        border: '1px solid #CBD5E1',
+        borderRadius: '12px',
+        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05), 0 6px 18px -4px rgba(15, 23, 42, 0.04)',
         marginBottom: '14px',
       }}
     >
       {dialGraphic}
 
-      <div className="gauge-details" style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+      <div className="gauge-details" style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
         <div
           className="gauge-header-row"
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}
         >
           <span
             className="gauge-title"
-            style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+            style={{ fontSize: '12px', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'monospace' }}
           >
             Safety Index
           </span>
@@ -194,7 +215,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
             {labelText}
           </span>
         </div>
-        <p className="gauge-caption" style={{ fontSize: '11px', color: '#64748B', lineHeight: 1.4, margin: 0 }}>
+        <p className="gauge-caption" style={{ fontSize: '11px', color: '#64748B', lineHeight: 1.45, margin: 0 }}>
           Transparent multi-factor heuristic assessment of observable indicators.
         </p>
       </div>

@@ -108,16 +108,21 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
           data-testid="finding-action"
           style={{
             fontSize: '12px',
-            color: '#1E293B',
+            color: '#0F172A',
             backgroundColor: '#F8FAFC',
-            borderLeft: '3px solid #2563EB',
-            padding: '6px 10px',
-            borderRadius: '0 6px 6px 0',
+            border: '1px solid #E2E8F0',
+            padding: '8px 12px',
+            borderRadius: '6px',
             marginBottom: '10px',
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '8px',
           }}
         >
-          <strong style={{ color: '#2563EB' }}>Action: </strong>
-          {finding.recommended_action}
+          <span style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#0052FF', fontFamily: 'monospace' }}>
+            Action:
+          </span>
+          <span style={{ flex: 1, lineHeight: 1.45 }}>{finding.recommended_action}</span>
         </div>
       )}
 
@@ -143,12 +148,24 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
           }}
         >
           <span>{isExpanded ? 'Hide Evidence' : 'View Proof & Evidence'}</span>
-          <span
+          <svg
             className={`chevron-icon ${isExpanded ? 'expanded' : ''}`}
-            style={{ fontSize: '10px', display: 'inline-block' }}
+            width="10"
+            height="10"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            style={{
+              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease',
+            }}
           >
-            {isExpanded ? '▲' : '▼'}
-          </span>
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </button>
       </div>
 
@@ -166,8 +183,8 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
         >
           {finding.check_id && (
             <div style={{ marginBottom: '8px', color: '#64748B' }}>
-              <span style={{ fontWeight: 500 }}>Check ID: </span>
-              <code style={{ fontFamily: 'monospace', color: '#0F172A' }}>{finding.check_id}</code>
+              <span style={{ fontWeight: 600 }}>Check ID: </span>
+              <code style={{ fontFamily: 'monospace', color: '#0F172A', backgroundColor: '#F1F5F9', padding: '1px 5px', borderRadius: '4px', border: '1px solid #E2E8F0' }}>{finding.check_id}</code>
             </div>
           )}
 
@@ -182,22 +199,25 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
                     backgroundColor: '#F8FAFC',
                     borderRadius: '8px',
                     padding: '8px 10px',
-                    border: '1px solid #E2E8F0',
+                    border: '1px solid #CBD5E1',
                   }}
                 >
-                  <div style={{ fontWeight: 500, color: '#1E293B', marginBottom: '2px' }}>
+                  <div style={{ fontWeight: 600, color: '#1E293B', marginBottom: '4px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.03em', fontFamily: 'monospace' }}>
                     {item.source}
                   </div>
                   {item.excerpt && (
                     <blockquote
                       style={{
-                        margin: '4px 0',
-                        padding: '4px 8px',
+                        margin: '4px 0 6px 0',
+                        padding: '6px 10px',
                         backgroundColor: '#FFFFFF',
-                        borderLeft: '2px solid #CBD5E1',
-                        color: '#334155',
-                        fontStyle: 'italic',
+                        border: '1px solid #E2E8F0',
+                        borderRadius: '6px',
+                        color: '#0F172A',
+                        fontStyle: 'normal',
+                        fontFamily: "'JetBrains Mono', 'Cascadia Code', monospace",
                         fontSize: '11px',
+                        lineHeight: 1.5,
                         wordBreak: 'break-word',
                       }}
                     >
@@ -205,8 +225,8 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
                     </blockquote>
                   )}
                   {item.reason && (
-                    <div style={{ color: '#64748B', fontSize: '11px' }}>
-                      <strong>Why: </strong>{item.reason}
+                    <div style={{ color: '#475569', fontSize: '11px', lineHeight: 1.45 }}>
+                      <strong style={{ color: '#0F172A' }}>Why it matters: </strong>{item.reason}
                     </div>
                   )}
                 </div>

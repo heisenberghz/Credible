@@ -6,50 +6,80 @@ interface AssessmentSummaryProps {
   report: AnalysisReport;
 }
 
-const STATUS_CONFIG: Record<
-  string,
-  { label: string; bg: string; text: string; border: string; icon: string; gradient: string }
-> = {
+interface StatusTheme {
+  label: string;
+  bg: string;
+  text: string;
+  border: string;
+}
+
+const STATUS_CONFIG: Record<string, StatusTheme> = {
   [AssessmentStatus.SUSPICIOUS]: {
     label: 'Suspicious Indicators Detected',
     bg: '#FFF1F2',
     text: '#9F1239',
     border: '#FECDD3',
-    icon: '⚠️',
-    gradient: '#FFF1F2',
   },
   [AssessmentStatus.NEEDS_VERIFICATION]: {
     label: 'Verification Recommended',
     bg: '#FFFBEB',
     text: '#92400E',
     border: '#FDE68A',
-    icon: '🔍',
-    gradient: '#FFFBEB',
   },
   [AssessmentStatus.CAUTION]: {
     label: 'Caution Warranted',
     bg: '#FFFBEB',
     text: '#92400E',
     border: '#FDE68A',
-    icon: '⚡',
-    gradient: '#FFFBEB',
   },
   [AssessmentStatus.BENIGN]: {
     label: 'Standard Patterns Observed',
     bg: '#ECFDF5',
     text: '#065F46',
     border: '#A7F3D0',
-    icon: '✓',
-    gradient: '#ECFDF5',
   },
   [AssessmentStatus.INCONCLUSIVE]: {
     label: 'Inconclusive Signals',
     bg: '#F8FAFC',
     text: '#334155',
     border: '#CBD5E1',
-    icon: 'ℹ️',
-    gradient: '#F8FAFC',
   },
+};
+
+const renderVerdictIcon = (status: string) => {
+  switch (status) {
+    case AssessmentStatus.SUSPICIOUS:
+      return (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+      );
+    case AssessmentStatus.BENIGN:
+      return (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      );
+    case AssessmentStatus.CAUTION:
+    case AssessmentStatus.NEEDS_VERIFICATION:
+      return (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      );
+    default:
+      return (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+      );
+  }
 };
 
 export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) => {
@@ -101,16 +131,15 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
             gap: '8px',
             padding: '8px 12px',
             borderRadius: '8px',
-            background: config.gradient,
             backgroundColor: config.bg,
             color: config.text,
             border: `1px solid ${config.border}`,
-            fontWeight: 600,
+            fontWeight: 700,
             fontSize: '13px',
             flexGrow: 1,
           }}
         >
-          <span aria-hidden="true">{config.icon}</span>
+          {renderVerdictIcon(statusKey)}
           <span data-testid="assessment-status-label">{config.label}</span>
         </div>
 
@@ -121,7 +150,16 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
           title="Copy assessment summary to clipboard"
           aria-label="Copy assessment summary"
         >
-          <span>{copied ? '✓' : '📋'}</span>
+          {copied ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          )}
           <span>{copied ? 'Copied' : 'Copy'}</span>
         </button>
       </div>

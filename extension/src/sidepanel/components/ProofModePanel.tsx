@@ -244,15 +244,17 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                     style={{
                       backgroundColor: '#F8FAFC',
                       border: '1px solid #E2E8F0',
-                      borderLeft: '3px solid #0052FF',
                       borderRadius: '6px',
-                      padding: '8px 10px',
+                      padding: '10px 12px',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#0052FF', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'monospace' }}>
-                        1. Raw Observed Signal
-                      </span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ color: '#0052FF', fontSize: '9px' }}>●</span>
+                        <span style={{ fontSize: '11px', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'monospace' }}>
+                          1. Raw Observed Signal
+                        </span>
+                      </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
                           {entry.location}
@@ -299,6 +301,10 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                         fontSize: '11px',
                         wordBreak: 'break-word',
                         lineHeight: '1.4',
+                        backgroundColor: '#FFFFFF',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #E2E8F0',
                       }}
                     >
                       {entry.observed}
@@ -312,15 +318,17 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                     style={{
                       backgroundColor: '#F8FAFC',
                       border: '1px solid #E2E8F0',
-                      borderLeft: '3px solid #7C3AED',
                       borderRadius: '6px',
-                      padding: '8px 10px',
+                      padding: '10px 12px',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'monospace' }}>
-                        2. Threat Interpretation
-                      </span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ color: '#E11D48', fontSize: '9px' }}>●</span>
+                        <span style={{ fontSize: '11px', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'monospace' }}>
+                          2. Threat Interpretation
+                        </span>
+                      </div>
                       <span style={{ fontSize: '10px', color: '#64748B', fontWeight: 600, fontFamily: 'monospace' }}>
                         {entry.is_deterministic ? 'Deterministic Heuristic' : 'AI Semantic Inference'}
                       </span>
@@ -343,15 +351,17 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                     style={{
                       backgroundColor: '#F8FAFC',
                       border: '1px solid #E2E8F0',
-                      borderLeft: '3px solid #64748B',
                       borderRadius: '6px',
-                      padding: '8px 10px',
+                      padding: '10px 12px',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                        3. External Corroboration
-                      </span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ color: '#D97706', fontSize: '9px' }}>●</span>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'monospace' }}>
+                          3. External Corroboration
+                        </span>
+                      </div>
                       <span
                         data-testid="corroboration-status-tag"
                         style={{
