@@ -474,27 +474,27 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 20: Final Regression + Acceptance
+## - [x] ~~Task 20: Final Regression + Acceptance~~
 
-**Build:** Run the complete test suite. Verify every acceptance criterion. Full demo walkthrough of all 5 scenarios.
+~~**Build:** Run the complete test suite. Verify every acceptance criterion. Full demo walkthrough of all 5 scenarios.~~
 
-**Acceptance criteria checklist:**
-- [ ] User can initiate scan from popup
-- [ ] Side panel shows full results with evidence
-- [ ] Extension sends only bounded fields
-- [ ] Backend validates and handles malformed requests
-- [ ] Deterministic checks report status and evidence
-- [ ] AI output is schema-validated, cannot override guardrails
-- [ ] Severity and confidence are distinct in API and UI
-- [ ] Insufficient evidence → `unknown`, not fabricated conclusion
-- [ ] Trust DNA shows evidence and limitations
-- [ ] Proof Mode traces findings to observations
-- [ ] Next Best Action is proportionate
-- [ ] UI handles loading, timeout, offline, errors
-- [ ] No secrets in extension or logs
-- [ ] Demo shows benign, suspicious, and ambiguous examples honestly
+~~**Acceptance criteria checklist:**~~
+- [x] ~~User can initiate scan from popup~~
+- [x] ~~Side panel shows full results with evidence~~
+- [x] ~~Extension sends only bounded fields~~
+- [x] ~~Backend validates and handles malformed requests~~
+- [x] ~~Deterministic checks report status and evidence~~
+- [x] ~~AI output is schema-validated, cannot override guardrails~~
+- [x] ~~Severity and confidence are distinct in API and UI~~
+- [x] ~~Insufficient evidence → `unknown`, not fabricated conclusion~~
+- [x] ~~Trust DNA shows evidence and limitations~~
+- [x] ~~Proof Mode traces findings to observations~~
+- [x] ~~Next Best Action is proportionate~~
+- [x] ~~UI handles loading, timeout, offline, errors~~
+- [x] ~~No secrets in extension or logs~~
+- [x] ~~Demo shows benign, suspicious, and ambiguous examples honestly~~
 
-**Phase 6 test gate:** ALL tests pass. ALL acceptance criteria verified.
+~~**Phase 6 test gate:** ALL tests pass. ALL acceptance criteria verified.~~
 
 ---
 
