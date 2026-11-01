@@ -59,34 +59,64 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
         </div>
       </div>
 
-      <button
-        onClick={onScan}
-        disabled={isScanning}
-        data-testid="header-scan-btn"
-        title="Analyze current active tab"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '6px 12px',
-          backgroundColor: isScanning ? '#F1F5F9' : '#0F172A',
-          color: isScanning ? '#94A3B8' : '#FFFFFF',
-          border: '1px solid',
-          borderColor: isScanning ? '#E2E8F0' : '#0F172A',
-          borderRadius: '6px',
-          fontSize: '11px',
-          fontFamily: 'monospace',
-          fontWeight: 700,
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-          cursor: isScanning ? 'not-allowed' : 'pointer',
-          boxShadow: isScanning ? 'none' : '0 1px 2px rgba(15, 23, 42, 0.08)',
-          transition: 'all 0.15s ease',
-        }}
-      >
-        <span aria-hidden="true">{isScanning ? '⏳' : '⚡'}</span>
-        <span>{isScanning ? 'SCANNING...' : 'SCAN TAB'}</span>
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof chrome !== 'undefined' && chrome.tabs?.create) {
+              chrome.tabs.create({ url: chrome.runtime.getURL('src/dashboard/index.html') });
+            }
+          }}
+          data-testid="open-dashboard-btn"
+          title="Open Full Command Center Dashboard in a new tab"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px',
+            padding: '6px 10px',
+            backgroundColor: '#FFFFFF',
+            color: '#0F172A',
+            border: '1px solid #CBD5E1',
+            borderRadius: '6px',
+            fontSize: '11px',
+            fontFamily: 'monospace',
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          <span>DASHBOARD ↗</span>
+        </button>
+
+        <button
+          onClick={onScan}
+          disabled={isScanning}
+          data-testid="header-scan-btn"
+          title="Analyze current active tab"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            backgroundColor: isScanning ? '#F1F5F9' : '#0F172A',
+            color: isScanning ? '#94A3B8' : '#FFFFFF',
+            border: '1px solid',
+            borderColor: isScanning ? '#E2E8F0' : '#0F172A',
+            borderRadius: '6px',
+            fontSize: '11px',
+            fontFamily: 'monospace',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            cursor: isScanning ? 'not-allowed' : 'pointer',
+            boxShadow: isScanning ? 'none' : '0 1px 2px rgba(15, 23, 42, 0.08)',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          <span aria-hidden="true">{isScanning ? '⏳' : '⚡'}</span>
+          <span>{isScanning ? 'SCANNING...' : 'SCAN TAB'}</span>
+        </button>
+      </div>
     </header>
   );
 };

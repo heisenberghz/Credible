@@ -241,6 +241,19 @@ export const App: React.FC = () => {
           <span>Open Side Panel</span>
         </button>
 
+        <button
+          className="btn-secondary"
+          onClick={() => {
+            if (typeof chrome !== 'undefined' && chrome.tabs?.create) {
+              chrome.tabs.create({ url: chrome.runtime.getURL('src/dashboard/index.html') });
+            }
+          }}
+          data-testid="open-dashboard-link"
+          style={{ marginTop: '6px' }}
+        >
+          <span>Open Full Dashboard ↗</span>
+        </button>
+
         <div className="popup-footer">
           <span className="footer-hint">Privacy-preserving • Zero passwords collected</span>
         </div>

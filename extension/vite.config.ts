@@ -12,6 +12,7 @@ export default defineConfig({
       input: {
         popup: resolve(__dirname, 'src/popup/index.html'),
         sidepanel: resolve(__dirname, 'src/sidepanel/index.html'),
+        dashboard: resolve(__dirname, 'src/dashboard/index.html'),
         background: resolve(__dirname, 'src/background/service-worker.ts'),
         content: resolve(__dirname, 'src/content/extractor.ts'),
       },
