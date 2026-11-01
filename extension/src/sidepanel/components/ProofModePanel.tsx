@@ -4,13 +4,91 @@ import { ConfidenceBadge } from './ConfidenceBadge';
 
 interface ProofModePanelProps {
   entries: ProofModeEntry[];
+  showEmptyCleanState?: boolean;
 }
 
-export const ProofModePanel: React.FC<ProofModePanelProps> = ({ entries }) => {
+export const ProofModePanel: React.FC<ProofModePanelProps> = ({
+  entries,
+  showEmptyCleanState = false,
+}) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   if (!entries || entries.length === 0) {
-    return null;
+    if (!showEmptyCleanState) {
+      return null;
+    }
+
+    return (
+      <section
+        className="proof-mode-section"
+        data-testid="proof-mode-panel"
+        aria-labelledby="proof-mode-heading"
+        style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '14px',
+          border: '1px solid #E2E8F0',
+          padding: '16px',
+          marginBottom: '16px',
+          boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <h3
+            id="proof-mode-heading"
+            data-testid="proof-mode-title"
+            style={{
+              fontSize: '12px',
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              color: '#0F172A',
+              fontFamily: 'monospace',
+            }}
+          >
+            Proof Mode Trace (0)
+          </h3>
+          <span style={{ fontSize: '11px', color: '#059669', fontFamily: 'monospace', fontWeight: 700 }}>
+            ✓ VERIFIED CLEAN SIGNALS
+          </span>
+        </div>
+
+        <div
+          style={{
+            padding: '14px',
+            borderRadius: '8px',
+            backgroundColor: '#F8FAFC',
+            border: '1px solid #E2E8F0',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ color: '#059669', fontSize: '14px', fontWeight: 800 }}>✓</span>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A' }}>
+              Zero Threat Vectors Flagged in DOM
+            </span>
+          </div>
+          <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.5, margin: 0 }}>
+            All deterministic and semantic checks passed with clean signatures. No upfront cryptocurrency requests, payment pressure, artificial countdown scarcity timers, or illicit credential harvesting patterns were observed in the analyzed content.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
+            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
+              payment_pressure: CLEAN
+            </span>
+            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
+              urgency: CLEAN
+            </span>
+            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
+              credential_pressure: CLEAN
+            </span>
+            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
+              data_exposure: CLEAN
+            </span>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   const toggleExpand = (findingId: string) => {

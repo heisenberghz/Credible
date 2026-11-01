@@ -226,6 +226,14 @@ export async function handleRequestScan(explicitTabId?: number) {
       report,
     });
 
+    try {
+      chrome.storage?.local?.set?.({
+        credible_latest_report: report,
+      });
+    } catch {
+      // Non-fatal if storage is unavailable
+    }
+
     return {
       success: true,
       tabId: targetTabId,
@@ -362,6 +370,14 @@ export async function handleSelectionScan(tabId: number, fallbackText?: string) 
       report,
       selectionData,
     });
+
+    try {
+      chrome.storage?.local?.set?.({
+        credible_latest_report: report,
+      });
+    } catch {
+      // Non-fatal if storage is unavailable
+    }
   } catch (err) {
     const friendlyError = mapErrorToUserMessage(err);
     currentTabState = {

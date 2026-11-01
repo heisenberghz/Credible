@@ -1,3 +1,5 @@
+@import '../sidepanel/sidepanel.css';
+
 /* Credible Security Command Center - Swiss Architectural Design */
 :root {
   --bg-dashboard: #F8FAFC;

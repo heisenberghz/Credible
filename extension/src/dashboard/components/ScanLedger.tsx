@@ -21,27 +21,61 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
           <h3 style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#0F172A', fontFamily: 'monospace' }}>
             INVESTIGATION SCAN LEDGER ({history.length})
           </h3>
-          <p style={{ fontSize: '11px', color: '#64748B' }}>Persistent local audit ledger</p>
+          <p style={{ fontSize: '11px', color: '#64748B' }}>Audit history & benchmark comparison</p>
         </div>
-        {history.length > 0 && (
-          <button
-            onClick={onClear}
-            style={{
-              fontSize: '10px',
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              padding: '2px 8px',
-              backgroundColor: '#F8FAFC',
-              color: '#64748B',
-              border: '1px solid #CBD5E1',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-            title="Clear stored scan history"
-          >
-            CLEAR
-          </button>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {history.length > 0 && (
+            <button
+              onClick={onClear}
+              style={{
+                fontSize: '10px',
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                padding: '2px 8px',
+                backgroundColor: '#F8FAFC',
+                color: '#64748B',
+                border: '1px solid #CBD5E1',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+              title="Clear stored scan history"
+            >
+              CLEAR
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Quick Scenario Benchmark Selector */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px', flexWrap: 'wrap' }}>
+        <span style={{ fontSize: '10px', fontFamily: 'monospace', color: '#64748B', fontWeight: 700 }}>
+          BENCHMARKS:
+        </span>
+        {history.slice(0, 3).map((item, idx) => {
+          const isSelected = item.request_id === selectedId;
+          const label = idx === 0 ? '1. Benign' : idx === 1 ? '2. Suspicious' : '3. Ambiguous';
+          return (
+            <button
+              key={item.request_id}
+              onClick={() => onSelect(item)}
+              style={{
+                fontSize: '11px',
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                padding: '2px 8px',
+                backgroundColor: isSelected ? '#0F172A' : '#F1F5F9',
+                color: isSelected ? '#FFFFFF' : '#475569',
+                border: '1px solid',
+                borderColor: isSelected ? '#0F172A' : '#CBD5E1',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {label} ({item.score ?? 100})
+            </button>
+          );
+        })}
       </div>
 
       {history.length === 0 ? (

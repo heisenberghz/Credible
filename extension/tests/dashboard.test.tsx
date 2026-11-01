@@ -45,7 +45,8 @@ describe('Task 20: Full-Tab Command Center Dashboard Suite', () => {
     // Hero verdict and findings should update to suspicious
     expect(screen.getByText(/CRITICAL THREAT DETECTED/i)).toBeInTheDocument();
     expect(screen.getByTestId('proof-mode-panel')).toBeInTheDocument();
-    expect(screen.getByText(/Upfront Payment or Deposit Requested/i)).toBeInTheDocument();
+    expect(screen.getByTestId('heuristic-matrix-panel')).toBeInTheDocument();
+    expect(screen.getAllByText(/Upfront Payment or Deposit Requested/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it('generates a valid, structured Markdown security dossier with all sections', () => {
