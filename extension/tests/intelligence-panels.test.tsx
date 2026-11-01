@@ -13,57 +13,63 @@ import {
 
 const mockDimensions: TrustDnaDimension[] = [
   {
-    id: 'identity_domain',
-    name: 'Identity & Domain Signals',
-    status: TrustDnaStatus.POSITIVE,
+    id: 'payment_risk',
+    name: 'Payment Risk',
+    status: TrustDnaStatus.WARNING_FOUND,
     confidence: Confidence.HIGH,
-    summary: 'Standard domain structure, registered reputable registrar.',
-    evidence: [{ source: 'URL Analysis', excerpt: 'example.com', reason: 'No lookalike match' }],
+    dimension_score: 20,
+    summary: 'Explicit requests for upfront money or deposits detected.',
+    evidence: [{ source: 'Content', excerpt: 'Pay $500 fee', reason: 'Fee request' }],
     limitations: [],
   },
   {
-    id: 'connection_technical',
-    name: 'Connection & Technical Signals',
-    status: TrustDnaStatus.NOT_CHECKED,
-    confidence: Confidence.UNKNOWN,
-    summary: 'Off-page TLS handshake not directly checked in client sandbox.',
-    evidence: [],
-    limitations: ['Off-page network checks not active in client mode'],
-  },
-  {
-    id: 'transparency',
-    name: 'Transparency Signals',
+    id: 'identity_risk',
+    name: 'Identity Risk',
     status: TrustDnaStatus.UNKNOWN,
-    confidence: Confidence.UNKNOWN,
-    summary: 'Organizational disclosure signals inconclusive on this page.',
+    confidence: Confidence.LOW,
+    dimension_score: 75,
+    summary: 'Corporate identity records were not independently verified via registrar records.',
     evidence: [],
-    limitations: [],
+    limitations: ['WHOIS query not performed in MVP'],
   },
   {
-    id: 'page_behavior',
-    name: 'Page Behavior Signals',
-    status: TrustDnaStatus.POSITIVE,
-    confidence: Confidence.MEDIUM,
-    summary: 'No aggressive popups or redirect obfuscation.',
-    evidence: [],
-    limitations: [],
-  },
-  {
-    id: 'content_consistency',
-    name: 'Content & Offer Consistency',
-    status: TrustDnaStatus.MIXED,
-    confidence: Confidence.MEDIUM,
-    summary: 'Promotional language exhibits minor urgency claims.',
+    id: 'social_engineering_risk',
+    name: 'Social Engineering Risk',
+    status: TrustDnaStatus.WARNING_FOUND,
+    confidence: Confidence.HIGH,
+    dimension_score: 35,
+    summary: 'High-pressure urgency tactics detected.',
     evidence: [{ source: 'Content Scan', excerpt: 'Expires today', reason: 'Time pressure' }],
     limitations: [],
   },
   {
-    id: 'credential_payment_pressure',
-    name: 'Credential & Payment Pressure',
-    status: TrustDnaStatus.CONCERN,
+    id: 'data_exposure_risk',
+    name: 'Data Exposure Risk',
+    status: TrustDnaStatus.NO_INDICATOR_DETECTED,
     confidence: Confidence.HIGH,
-    summary: 'Detected demands for sensitive authentication password entry.',
-    evidence: [{ source: 'DOM Inspection', excerpt: 'Enter account password', reason: 'Login demand' }],
+    dimension_score: 100,
+    summary: 'No illicit credential harvesting observed.',
+    evidence: [],
+    limitations: [],
+  },
+  {
+    id: 'link_domain_risk',
+    name: 'Link and Domain Risk',
+    status: TrustDnaStatus.NO_INDICATOR_DETECTED,
+    confidence: Confidence.HIGH,
+    dimension_score: 100,
+    summary: 'Secure HTTPS protocol and standard domain structure with zero URL obfuscation.',
+    evidence: [],
+    limitations: [],
+  },
+  {
+    id: 'evidence_confidence',
+    name: 'Evidence Confidence',
+    status: TrustDnaStatus.NO_INDICATOR_DETECTED,
+    confidence: Confidence.MEDIUM,
+    dimension_score: 90,
+    summary: 'Assessment grounded reliably on client-observable deterministic heuristic rules.',
+    evidence: [],
     limitations: [],
   },
 ];
@@ -101,54 +107,57 @@ describe('Trust DNA Panel', () => {
       'Trust DNA Profile (6 Dimensions)'
     );
 
-    // Verify all 6 dimensions are displayed
-    expect(screen.getByText('Identity & Domain Signals')).toBeInTheDocument();
-    expect(screen.getByText('Connection & Technical Signals')).toBeInTheDocument();
-    expect(screen.getByText('Transparency Signals')).toBeInTheDocument();
-    expect(screen.getByText('Page Behavior Signals')).toBeInTheDocument();
-    expect(screen.getByText('Content & Offer Consistency')).toBeInTheDocument();
-    expect(screen.getByText('Credential & Payment Pressure')).toBeInTheDocument();
+    // Verify all 6 canonical 5.1 dimensions are displayed
+    expect(screen.getByText('Payment Risk')).toBeInTheDocument();
+    expect(screen.getByText('Identity Risk')).toBeInTheDocument();
+    expect(screen.getByText('Social Engineering Risk')).toBeInTheDocument();
+    expect(screen.getByText('Data Exposure Risk')).toBeInTheDocument();
+    expect(screen.getByText('Link and Domain Risk')).toBeInTheDocument();
+    expect(screen.getByText('Evidence Confidence')).toBeInTheDocument();
+
+    // Verify permanent defensive philosophy disclaimer is rendered
+    expect(screen.getByTestId('trust-dna-safety-notice')).toHaveTextContent(
+      'Absence of a warning is not proof of safety'
+    );
 
     // Verify status labels
-    expect(screen.getAllByText('Positive').length).toBe(2);
-    expect(screen.getByText('Not Checked')).toBeInTheDocument();
+    expect(screen.getAllByText('Warning Found').length).toBe(2);
+    expect(screen.getAllByText('No Warning Detected').length).toBe(3);
     expect(screen.getByText('Unknown')).toBeInTheDocument();
-    expect(screen.getByText('Mixed')).toBeInTheDocument();
-    expect(screen.getByText('Concern')).toBeInTheDocument();
   });
 
   it('supports keyboard navigation (Enter, Space, Escape) to expand/collapse details', () => {
     render(<TrustDnaPanel dimensions={mockDimensions} />);
 
-    const toggleBtn = screen.getByTestId('dim-toggle-identity_domain');
+    const toggleBtn = screen.getByTestId('dim-toggle-payment_risk');
     expect(toggleBtn).toHaveAttribute('aria-expanded', 'false');
 
     // Press Enter to expand
     fireEvent.keyDown(toggleBtn, { key: 'Enter' });
     expect(toggleBtn).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByTestId('dim-detail-identity_domain')).toBeInTheDocument();
-    expect(screen.getByText(/example\.com/)).toBeInTheDocument();
+    expect(screen.getByTestId('dim-detail-payment_risk')).toBeInTheDocument();
+    expect(screen.getByText(/Pay \$500 fee/)).toBeInTheDocument();
 
     // Press Escape to collapse
     fireEvent.keyDown(toggleBtn, { key: 'Escape' });
     expect(toggleBtn).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.queryByTestId('dim-detail-identity_domain')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('dim-detail-payment_risk')).not.toBeInTheDocument();
 
     // Press Space to expand
     fireEvent.keyDown(toggleBtn, { key: ' ' });
     expect(toggleBtn).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('clearly displays Unknown and Not Checked states without false verification claims', () => {
+  it('clearly displays Unknown states without false verification claims', () => {
     render(<TrustDnaPanel dimensions={mockDimensions} />);
 
-    const notCheckedDim = screen.getByTestId('trust-dna-dim-connection_technical');
-    expect(notCheckedDim).toHaveTextContent('Not Checked');
-    expect(notCheckedDim).not.toHaveTextContent('Verified');
-
-    const unknownDim = screen.getByTestId('trust-dna-dim-transparency');
+    const unknownDim = screen.getByTestId('trust-dna-dim-identity_risk');
     expect(unknownDim).toHaveTextContent('Unknown');
     expect(unknownDim).not.toHaveTextContent('Verified');
+
+    // Click to expand accordion and reveal limitations
+    fireEvent.click(screen.getByTestId('dim-toggle-identity_risk'));
+    expect(unknownDim).toHaveTextContent('WHOIS query not performed in MVP');
   });
 });
 

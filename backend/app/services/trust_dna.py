@@ -1,4 +1,13 @@
-"""Trust DNA multidimensional profile builder."""
+"""
+Trust DNA multidimensional profile builder aligned with MVP Specification 5.1.
+Dimensions:
+1. payment_risk
+2. identity_risk
+3. social_engineering_risk
+4. data_exposure_risk
+5. link_domain_risk
+6. evidence_confidence
+"""
 
 from typing import List, Optional
 from urllib.parse import urlparse
@@ -15,74 +24,208 @@ def build_trust_dna(
     ai_output: Optional[AIAnalysisOutput] = None,
 ) -> List[TrustDnaDimension]:
     """
-    Builds the 6 canonical Trust DNA dimensions based strictly on observed checks.
-    Dimensions:
-    1. identity_domain
-    2. connection_technical
-    3. transparency
-    4. page_behavior
-    5. content_consistency
-    6. credential_payment
+    Builds the 6 canonical 5.1 Trust DNA dimensions based on observed checks and AI consensus.
     """
     check_map = {c.check_id: c for c in deterministic_checks}
     url_str = ""
+    has_text = False
+
     if request.mode == AnalysisMode.PAGE and request.page:
         url_str = request.page.url
+        has_text = bool(request.page.visible_text and request.page.visible_text.strip())
     elif request.mode == AnalysisMode.SELECTION and request.selection:
         url_str = request.selection.url
+        has_text = bool(request.selection.text and request.selection.text.strip())
 
     parsed_url = urlparse(url_str) if url_str else None
-
     dimensions: List[TrustDnaDimension] = []
 
-    # 1. Identity & Domain Signals
-    identity_evidences: List[Evidence] = []
-    identity_concerns = []
-    for cid in ("url.ip_host", "url.lookalike", "url.suspicious_tld", "url.obfuscation"):
-        res = check_map.get(cid)
-        if res and res.status == CheckStatus.DETECTED:
-            identity_concerns.append(res)
-            identity_evidences.extend(res.evidence)
-
-    if identity_concerns:
+    # -------------------------------------------------------------
+    # 1. Payment Risk (payment_risk)
+    # -------------------------------------------------------------
+    pay_check = check_map.get("content.payment_pressure")
+    if pay_check and pay_check.status == CheckStatus.DETECTED:
         dimensions.append(
             TrustDnaDimension(
-                id="identity_domain",
-                name="Identity and Domain Signals",
-                status=TrustDnaStatus.CONCERN,
-                confidence=Confidence.HIGH if any(c.confidence == Confidence.HIGH for c in identity_concerns) else Confidence.MEDIUM,
-                summary="Domain or hostname patterns exhibit risk characteristics (e.g. lookalike, IP host, or high-risk TLD).",
-                evidence=identity_evidences,
-                limitations=["Automated heuristic detection; legitimate organizations occasionally register campaign domains."],
+                id="payment_risk",
+                name="Payment Risk",
+                status=TrustDnaStatus.WARNING_FOUND,
+                confidence=Confidence.HIGH,
+                dimension_score=20,
+                summary="Explicit requests for upfront money, deposits, equipment fees, or cryptocurrency transfers detected.",
+                evidence=list(pay_check.evidence),
+                limitations=["Legitimate job recruitment never requires applicants to transfer money or buy supplies in advance."],
             )
         )
-    elif url_str:
+    elif has_text:
         dimensions.append(
             TrustDnaDimension(
-                id="identity_domain",
-                name="Identity and Domain Signals",
-                status=TrustDnaStatus.POSITIVE,
-                confidence=Confidence.MEDIUM,
-                summary="Hostname conforms to standard domain conventions without obvious lookalikes or IP hosts.",
+                id="payment_risk",
+                name="Payment Risk",
+                status=TrustDnaStatus.NO_INDICATOR_DETECTED,
+                confidence=Confidence.HIGH,
+                dimension_score=100,
+                summary="No upfront fee requests, deposit demands, or cryptocurrency transfer language observed in content.",
                 evidence=[],
-                limitations=["Passes syntax heuristics. Independent domain registration lookup was not performed to preserve user privacy."],
+                limitations=["Content was scanned for payment keywords; off-platform payment communications cannot be monitored."],
             )
         )
     else:
         dimensions.append(
             TrustDnaDimension(
-                id="identity_domain",
-                name="Identity and Domain Signals",
+                id="payment_risk",
+                name="Payment Risk",
                 status=TrustDnaStatus.UNKNOWN,
                 confidence=Confidence.UNKNOWN,
-                summary="No target URL available to evaluate domain signals.",
+                dimension_score=50,
+                summary="No text content available to evaluate payment demands.",
                 evidence=[],
-                limitations=["Target URL was not provided."],
+                limitations=["Content text was not provided."],
             )
         )
 
-    # 2. Connection & Technical Signals
-    conn_evidences: List[Evidence] = []
+    # -------------------------------------------------------------
+    # 2. Identity Risk (identity_risk)
+    # -------------------------------------------------------------
+    lookalike_check = check_map.get("url.lookalike")
+    if lookalike_check and lookalike_check.status == CheckStatus.DETECTED:
+        dimensions.append(
+            TrustDnaDimension(
+                id="identity_risk",
+                name="Identity Risk",
+                status=TrustDnaStatus.WARNING_FOUND,
+                confidence=Confidence.HIGH,
+                dimension_score=25,
+                summary="Domain employs brand typosquatting, character substitution, or lookalike impersonation patterns.",
+                evidence=list(lookalike_check.evidence),
+                limitations=["Heuristic character comparison against known corporate brands."],
+            )
+        )
+    else:
+        # Without independent registrar/WHOIS lookup, identity cannot be proven (absence of warning != proof of safety)
+        dimensions.append(
+            TrustDnaDimension(
+                id="identity_risk",
+                name="Identity Risk",
+                status=TrustDnaStatus.UNKNOWN,
+                confidence=Confidence.LOW,
+                dimension_score=75,
+                summary="Domain conforms to standard naming conventions, but corporate identity was not independently verified via registrar records.",
+                evidence=[],
+                limitations=[
+                    "Independent corporate registrar lookup and WHOIS ownership queries were not performed to preserve user privacy in MVP.",
+                    "Always confirm listings on the organization's verified careers portal.",
+                ],
+            )
+        )
+
+    # -------------------------------------------------------------
+    # 3. Social Engineering Risk (social_engineering_risk)
+    # -------------------------------------------------------------
+    urgency_check = check_map.get("content.urgency")
+    promise_check = check_map.get("content.unrealistic_promises")
+    soc_evidences: List[Evidence] = []
+
+    if urgency_check and urgency_check.status == CheckStatus.DETECTED:
+        soc_evidences.extend(urgency_check.evidence)
+    if promise_check and promise_check.status == CheckStatus.DETECTED:
+        soc_evidences.extend(promise_check.evidence)
+
+    if soc_evidences:
+        dimensions.append(
+            TrustDnaDimension(
+                id="social_engineering_risk",
+                name="Social Engineering Risk",
+                status=TrustDnaStatus.WARNING_FOUND,
+                confidence=Confidence.HIGH,
+                dimension_score=35,
+                summary="High-pressure urgency tactics, artificial countdowns, or unrealistic compensation guarantees detected.",
+                evidence=soc_evidences,
+                limitations=["Language heuristics identify pressure tactics; tone analysis is contextual."],
+            )
+        )
+    elif has_text:
+        dimensions.append(
+            TrustDnaDimension(
+                id="social_engineering_risk",
+                name="Social Engineering Risk",
+                status=TrustDnaStatus.NO_INDICATOR_DETECTED,
+                confidence=Confidence.MEDIUM,
+                dimension_score=100,
+                summary="No artificial urgency, scarcity countdowns, or unrealistic promises observed in content.",
+                evidence=[],
+                limitations=["Heuristic scan covers common deceptive patterns; sophisticated conversational manipulation may vary."],
+            )
+        )
+    else:
+        dimensions.append(
+            TrustDnaDimension(
+                id="social_engineering_risk",
+                name="Social Engineering Risk",
+                status=TrustDnaStatus.UNKNOWN,
+                confidence=Confidence.UNKNOWN,
+                dimension_score=50,
+                summary="No text content provided to evaluate social engineering patterns.",
+                evidence=[],
+                limitations=[],
+            )
+        )
+
+    # -------------------------------------------------------------
+    # 4. Data Exposure Risk (data_exposure_risk)
+    # -------------------------------------------------------------
+    cred_check = check_map.get("content.credential_pressure")
+    data_check = check_map.get("content.data_exposure")
+    exposure_evidences: List[Evidence] = []
+
+    if cred_check and cred_check.status == CheckStatus.DETECTED:
+        exposure_evidences.extend(cred_check.evidence)
+    if data_check and data_check.status == CheckStatus.DETECTED:
+        exposure_evidences.extend(data_check.evidence)
+
+    if exposure_evidences:
+        dimensions.append(
+            TrustDnaDimension(
+                id="data_exposure_risk",
+                name="Data Exposure Risk",
+                status=TrustDnaStatus.WARNING_FOUND,
+                confidence=Confidence.HIGH,
+                dimension_score=20,
+                summary="Demands for sensitive passwords, 2FA codes, SSNs, passports, or banking numbers detected.",
+                evidence=exposure_evidences,
+                limitations=["Never provide passwords, seed phrases, or sensitive tax IDs during initial opportunity exploration."],
+            )
+        )
+    elif has_text:
+        dimensions.append(
+            TrustDnaDimension(
+                id="data_exposure_risk",
+                name="Data Exposure Risk",
+                status=TrustDnaStatus.NO_INDICATOR_DETECTED,
+                confidence=Confidence.HIGH,
+                dimension_score=100,
+                summary="No illicit credential harvesting or premature personal identity document collection observed.",
+                evidence=[],
+                limitations=["Only visible text is evaluated; do not input credentials into unverified forms."],
+            )
+        )
+    else:
+        dimensions.append(
+            TrustDnaDimension(
+                id="data_exposure_risk",
+                name="Data Exposure Risk",
+                status=TrustDnaStatus.UNKNOWN,
+                confidence=Confidence.UNKNOWN,
+                dimension_score=50,
+                summary="No text content available to evaluate data exposure risk.",
+                evidence=[],
+                limitations=[],
+            )
+        )
+
+    # -------------------------------------------------------------
+    # 5. Link & Domain Risk (link_domain_risk)
+    # -------------------------------------------------------------
     is_localhost = (
         parsed_url.hostname in ("localhost", "127.0.0.1", "::1", "testserver")
         if (parsed_url and parsed_url.hostname)
@@ -90,169 +233,120 @@ def build_trust_dna(
     )
     is_https = parsed_url.scheme == "https" if parsed_url else False
     is_secure_transport = is_https or is_localhost
-    len_check = check_map.get("url.length")
+
+    ip_check = check_map.get("url.ip_host")
+    tld_check = check_map.get("url.suspicious_tld")
     obf_check = check_map.get("url.obfuscation")
+    len_check = check_map.get("url.length")
 
+    link_evidences: List[Evidence] = []
     if not is_secure_transport and url_str:
-        conn_evidences.append(Evidence(source="url", excerpt=url_str[:50], reason="URL uses unencrypted HTTP protocol."))
+        link_evidences.append(Evidence(source="url", excerpt=url_str[:50], reason="URL uses unencrypted HTTP transport."))
+    if ip_check and ip_check.status == CheckStatus.DETECTED:
+        link_evidences.extend(ip_check.evidence)
+    if tld_check and tld_check.status == CheckStatus.DETECTED:
+        link_evidences.extend(tld_check.evidence)
+    if obf_check and obf_check.status == CheckStatus.DETECTED:
+        link_evidences.extend(obf_check.evidence)
     if len_check and len_check.status == CheckStatus.DETECTED:
-        conn_evidences.extend(len_check.evidence)
+        link_evidences.extend(len_check.evidence)
 
-    if conn_evidences or (obf_check and obf_check.status == CheckStatus.DETECTED):
+    if link_evidences:
         dimensions.append(
             TrustDnaDimension(
-                id="connection_technical",
-                name="Connection and Technical Signals",
-                status=TrustDnaStatus.CONCERN if not is_secure_transport else TrustDnaStatus.MIXED,
+                id="link_domain_risk",
+                name="Link and Domain Risk",
+                status=TrustDnaStatus.WARNING_FOUND,
                 confidence=Confidence.HIGH,
-                summary="Technical connection or URL structure shows hygiene issues.",
-                evidence=conn_evidences,
-                limitations=["Connection inspection is limited to client-observable URL components."],
+                dimension_score=30,
+                summary="Suspicious top-level domain, raw IP hosting, URL obfuscation, or unencrypted protocol detected.",
+                evidence=link_evidences,
+                limitations=["Technical structural inspection of observable URL authority and parameters."],
             )
         )
-    elif is_secure_transport:
+    elif url_str:
         summary_text = (
-            "Secure HTTPS protocol used with standard link structure."
+            "Secure HTTPS protocol and standard domain structure with zero URL obfuscation detected."
             if is_https
             else "Secure local development loopback context with standard link structure."
         )
         dimensions.append(
             TrustDnaDimension(
-                id="connection_technical",
-                name="Connection and Technical Signals",
-                status=TrustDnaStatus.POSITIVE,
+                id="link_domain_risk",
+                name="Link and Domain Risk",
+                status=TrustDnaStatus.NO_INDICATOR_DETECTED,
                 confidence=Confidence.HIGH,
+                dimension_score=100,
                 summary=summary_text,
                 evidence=[],
-                limitations=["Transport encryption verified; does not verify backend server integrity."],
+                limitations=["Transport encryption verified; backend server infrastructure reputation not queried."],
             )
         )
     else:
         dimensions.append(
             TrustDnaDimension(
-                id="connection_technical",
-                name="Connection and Technical Signals",
+                id="link_domain_risk",
+                name="Link and Domain Risk",
                 status=TrustDnaStatus.UNKNOWN,
                 confidence=Confidence.UNKNOWN,
-                summary="Technical connection information unavailable.",
+                dimension_score=50,
+                summary="No URL provided to evaluate link technical signals.",
                 evidence=[],
                 limitations=[],
             )
         )
 
-    # 3. Transparency
-    dimensions.append(
-        TrustDnaDimension(
-            id="transparency",
-            name="Transparency",
-            status=TrustDnaStatus.UNKNOWN,
-            confidence=Confidence.LOW,
-            summary="Organizational registration and corporate legal entity records were not independently checked.",
-            evidence=[],
-            limitations=[
-                "External corporate registrar and WHOIS lookups are not performed for user privacy in MVP.",
-                "Users should verify organization independently on official channels.",
-            ],
-        )
+    # -------------------------------------------------------------
+    # 6. Evidence Confidence (evidence_confidence) - Consensus Engine
+    # -------------------------------------------------------------
+    deterministic_warnings = any(
+        c.status == CheckStatus.DETECTED for c in deterministic_checks
     )
+    ai_warnings = bool(ai_output and ai_output.findings)
 
-    # 4. Page Behavior
-    if obf_check and obf_check.status == CheckStatus.DETECTED:
-        dimensions.append(
-            TrustDnaDimension(
-                id="page_behavior",
-                name="Page Behavior",
-                status=TrustDnaStatus.CONCERN,
-                confidence=Confidence.HIGH,
-                summary="Navigation structure contains obfuscation or misleading authority tokens.",
-                evidence=list(obf_check.evidence),
-                limitations=["Evaluation based on URL structure and readable content."],
+    # Consensus determination
+    if ai_output and ai_output.analysis_mode == "ai_full":
+        # Both models executed
+        if deterministic_warnings and not ai_warnings:
+            # Deterministic caught something that AI missed or suppressed
+            dimensions.append(
+                TrustDnaDimension(
+                    id="evidence_confidence",
+                    name="Evidence Confidence",
+                    status=TrustDnaStatus.WARNING_FOUND,
+                    confidence=Confidence.HIGH,
+                    dimension_score=60,
+                    summary="Signal divergence detected: Deterministic heuristics flagged threat indicators that AI model missed or suppressed.",
+                    evidence=[],
+                    limitations=["Deterministic threat findings take strict safety precedence over AI outputs."],
+                )
             )
-        )
+        else:
+            dimensions.append(
+                TrustDnaDimension(
+                    id="evidence_confidence",
+                    name="Evidence Confidence",
+                    status=TrustDnaStatus.NO_INDICATOR_DETECTED,
+                    confidence=Confidence.HIGH,
+                    dimension_score=100,
+                    summary="High observational consensus: Deterministic threat checks and AI reasoning agree on grounded evidence.",
+                    evidence=[],
+                    limitations=["Evidence is grounded strictly against observable page text without hallucinated claims."],
+                )
+            )
     else:
+        # Deterministic-only / fallback mode
         dimensions.append(
             TrustDnaDimension(
-                id="page_behavior",
-                name="Page Behavior",
-                status=TrustDnaStatus.POSITIVE,
-                confidence=Confidence.MEDIUM,
-                summary="No structural obfuscation detected in submitted page address or links.",
-                evidence=[],
-                limitations=["Active runtime browser script execution is not inspected."],
-            )
-        )
-
-    # 5. Content & Offer Consistency
-    promise_check = check_map.get("content.unrealistic_promises")
-    urgency_check = check_map.get("content.urgency")
-    content_concerns: List[Evidence] = []
-
-    if promise_check and promise_check.status == CheckStatus.DETECTED:
-        content_concerns.extend(promise_check.evidence)
-    if urgency_check and urgency_check.status == CheckStatus.DETECTED:
-        content_concerns.extend(urgency_check.evidence)
-
-    if content_concerns:
-        dimensions.append(
-            TrustDnaDimension(
-                id="content_consistency",
-                name="Content and Offer Consistency",
-                status=TrustDnaStatus.CONCERN,
-                confidence=Confidence.HIGH,
-                summary="Content displays unrealistic promises, guaranteed outcomes, or artificial urgency.",
-                evidence=content_concerns,
-                limitations=["Language patterns are contextual indicators, not proof of intent."],
-            )
-        )
-    else:
-        has_text = bool((request.page and request.page.visible_text) or (request.selection and request.selection.text))
-        dimensions.append(
-            TrustDnaDimension(
-                id="content_consistency",
-                name="Content and Offer Consistency",
-                status=TrustDnaStatus.POSITIVE if has_text else TrustDnaStatus.UNKNOWN,
+                id="evidence_confidence",
+                name="Evidence Confidence",
+                status=TrustDnaStatus.NO_INDICATOR_DETECTED if has_text else TrustDnaStatus.UNKNOWN,
                 confidence=Confidence.MEDIUM if has_text else Confidence.UNKNOWN,
-                summary="Content text does not display overt pressure or unrealistic promises." if has_text else "No text content submitted.",
+                dimension_score=90 if has_text else 50,
+                summary="Assessment grounded reliably on client-observable deterministic heuristic rules." if has_text else "Insufficient content available to ground findings.",
                 evidence=[],
-                limitations=[],
-            )
-        )
-
-    # 6. Credential & Payment Pressure
-    pay_check = check_map.get("content.payment_pressure")
-    cred_check = check_map.get("content.credential_pressure")
-    data_check = check_map.get("content.data_exposure")
-    pressure_concerns: List[Evidence] = []
-
-    for c in (pay_check, cred_check, data_check):
-        if c and c.status == CheckStatus.DETECTED:
-            pressure_concerns.extend(c.evidence)
-
-    if pressure_concerns:
-        dimensions.append(
-            TrustDnaDimension(
-                id="credential_payment",
-                name="Credential and Payment Pressure",
-                status=TrustDnaStatus.CONCERN,
-                confidence=Confidence.HIGH,
-                summary="Explicit requests for upfront money, deposits, credentials, or sensitive identity documents detected.",
-                evidence=pressure_concerns,
-                limitations=["Legitimate job recruitment does not require applicants to transfer funds."],
-            )
-        )
-    else:
-        has_text = bool((request.page and request.page.visible_text) or (request.selection and request.selection.text))
-        dimensions.append(
-            TrustDnaDimension(
-                id="credential_payment",
-                name="Credential and Payment Pressure",
-                status=TrustDnaStatus.POSITIVE if has_text else TrustDnaStatus.UNKNOWN,
-                confidence=Confidence.HIGH if has_text else Confidence.UNKNOWN,
-                summary="No upfront fee requests or credential harvesting demands observed in submitted content." if has_text else "No content available.",
-                evidence=[],
-                limitations=[],
+                limitations=["AI semantic reasoning is offline; evaluation performed using local deterministic heuristics."],
             )
         )
 
     return dimensions
-

@@ -15,6 +15,7 @@ from app.schemas.reports import (
 from app.schemas.requests import AnalysisMode, AnalysisRequest
 from app.services.ai.schemas import AIAnalysisOutput
 from app.services.checks.base import CheckExecutionTracker
+from app.services.scoring import calculate_credibility_score
 
 
 STANDARD_LIMITATIONS = [
@@ -44,8 +45,8 @@ class ReportComposer:
         elif Severity.LOW in severities:
             return AssessmentStatus.NEEDS_VERIFICATION
 
-        # If any Trust DNA dimension is CONCERN
-        if any(d.status == TrustDnaStatus.CONCERN for d in trust_dna):
+        # If any Trust DNA dimension has a warning found
+        if any(d.status in (TrustDnaStatus.WARNING_FOUND, TrustDnaStatus.CONCERN) for d in trust_dna):
             return AssessmentStatus.CAUTION
 
         return AssessmentStatus.BENIGN
@@ -106,11 +107,13 @@ class ReportComposer:
                 merged_limitations.append(cleaned)
 
         tracker_summary = check_tracker.to_summary()
+        credibility_score = calculate_credibility_score(findings, trust_dna, has_content)
 
         return AnalysisReport(
             request_id=request.request_id,
             status="completed",
             assessment_status=status,
+            score=credibility_score,
             summary=summary,
             analyzed_url=target_url,
             mode=request.mode,

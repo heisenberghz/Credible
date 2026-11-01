@@ -10,11 +10,14 @@ from app.schemas.requests import AnalysisMode
 
 
 class TrustDnaStatus(str, Enum):
-    POSITIVE = "positive"
-    CONCERN = "concern"
-    MIXED = "mixed"
+    WARNING_FOUND = "warning_found"
+    NO_INDICATOR_DETECTED = "no_indicator_detected"
     UNKNOWN = "unknown"
-    NOT_CHECKED = "not_checked"
+    # Legacy alias compatibility
+    CONCERN = "warning_found"
+    POSITIVE = "no_indicator_detected"
+    MIXED = "warning_found"
+    NOT_CHECKED = "unknown"
 
 
 class AssessmentStatus(str, Enum):
@@ -27,11 +30,20 @@ class AssessmentStatus(str, Enum):
 
 
 class TrustDnaDimension(BaseModel):
-    id: str = Field(..., description="Dimension key: identity_domain, connection_technical, transparency, page_behavior, content_consistency, credential_payment")
+    id: str = Field(
+        ...,
+        description="Canonical 5.1 MVP dimension keys: payment_risk, identity_risk, social_engineering_risk, data_exposure_risk, link_domain_risk, evidence_confidence",
+    )
     name: str
     status: TrustDnaStatus
     confidence: Confidence
     summary: str
+    dimension_score: int = Field(
+        default=100,
+        ge=1,
+        le=100,
+        description="Heuristic credibility score for this specific dimension (1-100)",
+    )
     evidence: list[Evidence] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
 
@@ -59,6 +71,12 @@ class AnalysisReport(BaseModel):
     request_id: str
     status: str = "completed"
     assessment_status: AssessmentStatus
+    score: int = Field(
+        default=100,
+        ge=1,
+        le=100,
+        description="Transparent multi-factor credibility score between 1 and 100",
+    )
     summary: str
     analyzed_url: str
     mode: AnalysisMode

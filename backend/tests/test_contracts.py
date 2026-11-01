@@ -53,11 +53,9 @@ class TestSchemaContracts:
 
         # TrustDnaStatus
         assert set(e.value for e in TrustDnaStatus) == {
-            "positive",
-            "concern",
-            "mixed",
+            "warning_found",
+            "no_indicator_detected",
             "unknown",
-            "not_checked",
         }
 
         # AssessmentStatus

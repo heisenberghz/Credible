@@ -30,12 +30,12 @@ class TestTrustDnaBuilder:
         assert len(dimensions) == 6
         dim_ids = [d.id for d in dimensions]
         assert dim_ids == [
-            "identity_domain",
-            "connection_technical",
-            "transparency",
-            "page_behavior",
-            "content_consistency",
-            "credential_payment",
+            "payment_risk",
+            "identity_risk",
+            "social_engineering_risk",
+            "data_exposure_risk",
+            "link_domain_risk",
+            "evidence_confidence",
         ]
 
     def test_suspicious_signals_reflect_concerns(self):
@@ -64,11 +64,9 @@ class TestTrustDnaBuilder:
         dimensions = build_trust_dna(req, checks)
         dim_map = {d.id: d for d in dimensions}
 
-        assert dim_map["identity_domain"].status == TrustDnaStatus.CONCERN
-        assert dim_map["credential_payment"].status == TrustDnaStatus.CONCERN
-        assert dim_map["transparency"].status == TrustDnaStatus.UNKNOWN
-        # Transparency must never claim verified without check
-        assert "WHOIS" in dim_map["transparency"].limitations[0]
+        assert dim_map["link_domain_risk"].status == TrustDnaStatus.WARNING_FOUND
+        assert dim_map["payment_risk"].status == TrustDnaStatus.WARNING_FOUND
+        assert "WHOIS" in dim_map["identity_risk"].limitations[0]
 
 
 class TestProofModeBuilder:

@@ -10,37 +10,52 @@ const STATUS_CONFIG: Record<
   string,
   { label: string; icon: string; bg: string; text: string; border: string }
 > = {
-  [TrustDnaStatus.POSITIVE]: {
-    label: 'Positive',
-    icon: '🟢',
-    bg: '#ECFDF5',
-    text: '#065F46',
-    border: '#A7F3D0',
-  },
-  [TrustDnaStatus.CONCERN]: {
-    label: 'Concern',
-    icon: '🔴',
+  [TrustDnaStatus.WARNING_FOUND]: {
+    label: 'Warning Found',
+    icon: '⚠️',
     bg: '#FEF2F2',
     text: '#991B1B',
     border: '#FECACA',
   },
-  [TrustDnaStatus.MIXED]: {
-    label: 'Mixed',
-    icon: '🟡',
-    bg: '#FFFBEB',
-    text: '#92400E',
-    border: '#FDE68A',
+  [TrustDnaStatus.NO_INDICATOR_DETECTED]: {
+    label: 'No Warning Detected',
+    icon: '🛡️',
+    bg: '#ECFDF5',
+    text: '#065F46',
+    border: '#A7F3D0',
   },
   [TrustDnaStatus.UNKNOWN]: {
     label: 'Unknown',
-    icon: '⚪',
+    icon: '○',
     bg: '#F8FAFC',
     text: '#475569',
     border: '#CBD5E1',
   },
-  [TrustDnaStatus.NOT_CHECKED]: {
-    label: 'Not Checked',
-    icon: '⚪',
+  // Backward compatibility aliases
+  positive: {
+    label: 'No Warning Detected',
+    icon: '🛡️',
+    bg: '#ECFDF5',
+    text: '#065F46',
+    border: '#A7F3D0',
+  },
+  concern: {
+    label: 'Warning Found',
+    icon: '⚠️',
+    bg: '#FEF2F2',
+    text: '#991B1B',
+    border: '#FECACA',
+  },
+  mixed: {
+    label: 'Warning Found',
+    icon: '⚠️',
+    bg: '#FEF2F2',
+    text: '#991B1B',
+    border: '#FECACA',
+  },
+  not_checked: {
+    label: 'Unknown',
+    icon: '○',
     bg: '#F8FAFC',
     text: '#64748B',
     border: '#E2E8F0',
@@ -93,6 +108,37 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
           Trust DNA Profile (6 Dimensions)
         </h3>
         <span style={{ fontSize: '11px', color: '#64748B' }}>Evidence-Grounded</span>
+      </div>
+
+      {/* Permanent Core Defensive Philosophy Notice Banner */}
+      <div
+        className="trust-dna-safety-notice"
+        data-testid="trust-dna-safety-notice"
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '8px',
+          padding: '10px 12px',
+          borderRadius: '8px',
+          backgroundColor: '#F8FAFC',
+          border: '1px solid #E2E8F0',
+          marginBottom: '14px',
+          fontSize: '11px',
+          lineHeight: '1.45',
+          color: '#475569',
+        }}
+      >
+        <span style={{ fontSize: '14px', lineHeight: 1 }} aria-hidden="true">
+          ℹ️
+        </span>
+        <div>
+          <strong style={{ color: '#0F172A', display: 'block', marginBottom: '2px' }}>
+            Absence of a warning is not proof of safety.
+          </strong>
+          <span>
+            Dimensions indicate observable heuristics. Independent verification via official employer channels is strongly advised.
+          </span>
+        </div>
       </div>
 
       <div

@@ -3,74 +3,85 @@
     "request_id": "fixture-benign-001",
     "status": "completed",
     "assessment_status": "benign",
+    "score": 97,
     "summary": "No immediate deceptive indicators or fee requests detected in analyzed content. Always confirm listings on official channels.",
     "analyzed_url": "https://careers.google.com/jobs/results/12345678-software-engineering-intern",
     "mode": "page",
-    "timestamp": "2026-11-01T15:55:47.139952Z",
+    "timestamp": "2026-11-01T17:37:46.056320Z",
     "findings": [],
     "trust_dna": [
       {
-        "id": "identity_domain",
-        "name": "Identity and Domain Signals",
-        "status": "positive",
-        "confidence": "medium",
-        "summary": "Hostname conforms to standard domain conventions without obvious lookalikes or IP hosts.",
-        "evidence": [],
-        "limitations": [
-          "Passes syntax heuristics. Independent domain registration lookup was not performed to preserve user privacy."
-        ]
-      },
-      {
-        "id": "connection_technical",
-        "name": "Connection and Technical Signals",
-        "status": "positive",
+        "id": "payment_risk",
+        "name": "Payment Risk",
+        "status": "no_indicator_detected",
         "confidence": "high",
-        "summary": "Secure HTTPS protocol used with standard link structure.",
+        "summary": "No upfront fee requests, deposit demands, or cryptocurrency transfer language observed in content.",
+        "dimension_score": 100,
         "evidence": [],
         "limitations": [
-          "Transport encryption verified; does not verify backend server integrity."
+          "Content was scanned for payment keywords; off-platform payment communications cannot be monitored."
         ]
       },
       {
-        "id": "transparency",
-        "name": "Transparency",
+        "id": "identity_risk",
+        "name": "Identity Risk",
         "status": "unknown",
         "confidence": "low",
-        "summary": "Organizational registration and corporate legal entity records were not independently checked.",
+        "summary": "Domain conforms to standard naming conventions, but corporate identity was not independently verified via registrar records.",
+        "dimension_score": 75,
         "evidence": [],
         "limitations": [
-          "External corporate registrar and WHOIS lookups are not performed for user privacy in MVP.",
-          "Users should verify organization independently on official channels."
+          "Independent corporate registrar lookup and WHOIS ownership queries were not performed to preserve user privacy in MVP.",
+          "Always confirm listings on the organization's verified careers portal."
         ]
       },
       {
-        "id": "page_behavior",
-        "name": "Page Behavior",
-        "status": "positive",
+        "id": "social_engineering_risk",
+        "name": "Social Engineering Risk",
+        "status": "no_indicator_detected",
         "confidence": "medium",
-        "summary": "No structural obfuscation detected in submitted page address or links.",
+        "summary": "No artificial urgency, scarcity countdowns, or unrealistic promises observed in content.",
+        "dimension_score": 100,
         "evidence": [],
         "limitations": [
-          "Active runtime browser script execution is not inspected."
+          "Heuristic scan covers common deceptive patterns; sophisticated conversational manipulation may vary."
         ]
       },
       {
-        "id": "content_consistency",
-        "name": "Content and Offer Consistency",
-        "status": "positive",
-        "confidence": "medium",
-        "summary": "Content text does not display overt pressure or unrealistic promises.",
-        "evidence": [],
-        "limitations": []
-      },
-      {
-        "id": "credential_payment",
-        "name": "Credential and Payment Pressure",
-        "status": "positive",
+        "id": "data_exposure_risk",
+        "name": "Data Exposure Risk",
+        "status": "no_indicator_detected",
         "confidence": "high",
-        "summary": "No upfront fee requests or credential harvesting demands observed in submitted content.",
+        "summary": "No illicit credential harvesting or premature personal identity document collection observed.",
+        "dimension_score": 100,
         "evidence": [],
-        "limitations": []
+        "limitations": [
+          "Only visible text is evaluated; do not input credentials into unverified forms."
+        ]
+      },
+      {
+        "id": "link_domain_risk",
+        "name": "Link and Domain Risk",
+        "status": "no_indicator_detected",
+        "confidence": "high",
+        "summary": "Secure HTTPS protocol and standard domain structure with zero URL obfuscation detected.",
+        "dimension_score": 100,
+        "evidence": [],
+        "limitations": [
+          "Transport encryption verified; backend server infrastructure reputation not queried."
+        ]
+      },
+      {
+        "id": "evidence_confidence",
+        "name": "Evidence Confidence",
+        "status": "no_indicator_detected",
+        "confidence": "medium",
+        "summary": "Assessment grounded reliably on client-observable deterministic heuristic rules.",
+        "dimension_score": 90,
+        "evidence": [],
+        "limitations": [
+          "AI semantic reasoning is offline; evaluation performed using local deterministic heuristics."
+        ]
       }
     ],
     "proof_mode": [],
@@ -107,10 +118,11 @@
     "request_id": "fixture-suspicious-001",
     "status": "completed",
     "assessment_status": "suspicious",
+    "score": 1,
     "summary": "Significant warning indicators detected: Suspicious Top-Level Domain and Brand Lookalike / Typosquat Domain. Independent verification is strongly advised before proceeding.",
     "analyzed_url": "https://g00gle-careers-portal.xyz/internship-offer",
     "mode": "page",
-    "timestamp": "2026-11-01T15:55:47.156568Z",
+    "timestamp": "2026-11-01T17:37:46.077736Z",
     "findings": [
       {
         "id": "url-suspicious_tld",
@@ -247,73 +259,49 @@
     ],
     "trust_dna": [
       {
-        "id": "identity_domain",
-        "name": "Identity and Domain Signals",
-        "status": "concern",
-        "confidence": "medium",
-        "summary": "Domain or hostname patterns exhibit risk characteristics (e.g. lookalike, IP host, or high-risk TLD).",
+        "id": "payment_risk",
+        "name": "Payment Risk",
+        "status": "warning_found",
+        "confidence": "high",
+        "summary": "Explicit requests for upfront money, deposits, equipment fees, or cryptocurrency transfers detected.",
+        "dimension_score": 20,
+        "evidence": [
+          {
+            "source": "visible_text",
+            "excerpt": "To confirm your selection, you must deposit a refundable registration fee of \u20b92,500 immediately",
+            "reason": "Explicit request for upfront payment, registration fee, or security deposit detected."
+          }
+        ],
+        "limitations": [
+          "Legitimate job recruitment never requires applicants to transfer money or buy supplies in advance."
+        ]
+      },
+      {
+        "id": "identity_risk",
+        "name": "Identity Risk",
+        "status": "warning_found",
+        "confidence": "high",
+        "summary": "Domain employs brand typosquatting, character substitution, or lookalike impersonation patterns.",
+        "dimension_score": 25,
         "evidence": [
           {
             "source": "url",
             "excerpt": "g00gle-careers-portal.xyz",
             "reason": "Hostname segment 'g00gle-careers-portal' closely resembles official brand 'google' but is not an official domain."
-          },
-          {
-            "source": "url",
-            "excerpt": ".xyz",
-            "reason": "The domain uses the '.xyz' top-level domain, which has higher statistical prevalence in disposable phishing."
           }
         ],
         "limitations": [
-          "Automated heuristic detection; legitimate organizations occasionally register campaign domains."
+          "Heuristic character comparison against known corporate brands."
         ]
       },
       {
-        "id": "connection_technical",
-        "name": "Connection and Technical Signals",
-        "status": "positive",
+        "id": "social_engineering_risk",
+        "name": "Social Engineering Risk",
+        "status": "warning_found",
         "confidence": "high",
-        "summary": "Secure HTTPS protocol used with standard link structure.",
-        "evidence": [],
-        "limitations": [
-          "Transport encryption verified; does not verify backend server integrity."
-        ]
-      },
-      {
-        "id": "transparency",
-        "name": "Transparency",
-        "status": "unknown",
-        "confidence": "low",
-        "summary": "Organizational registration and corporate legal entity records were not independently checked.",
-        "evidence": [],
-        "limitations": [
-          "External corporate registrar and WHOIS lookups are not performed for user privacy in MVP.",
-          "Users should verify organization independently on official channels."
-        ]
-      },
-      {
-        "id": "page_behavior",
-        "name": "Page Behavior",
-        "status": "positive",
-        "confidence": "medium",
-        "summary": "No structural obfuscation detected in submitted page address or links.",
-        "evidence": [],
-        "limitations": [
-          "Active runtime browser script execution is not inspected."
-        ]
-      },
-      {
-        "id": "content_consistency",
-        "name": "Content and Offer Consistency",
-        "status": "concern",
-        "confidence": "high",
-        "summary": "Content displays unrealistic promises, guaranteed outcomes, or artificial urgency.",
+        "summary": "High-pressure urgency tactics, artificial countdowns, or unrealistic compensation guarantees detected.",
+        "dimension_score": 35,
         "evidence": [
-          {
-            "source": "visible_text",
-            "excerpt": "Guaranteed salary of \u20b980,000 monthly with no experience required",
-            "reason": "Unrealistic opportunity promises such as guaranteed placement or extreme income without qualifications."
-          },
           {
             "source": "visible_text",
             "excerpt": "To confirm your selection, you must deposit a refundable registration fee of \u20b92,500 immediately",
@@ -323,24 +311,25 @@
             "source": "visible_text",
             "excerpt": "Offer expires in 2 hours",
             "reason": "Language creating artificial urgency or pressure to act quickly without independent review."
+          },
+          {
+            "source": "visible_text",
+            "excerpt": "Guaranteed salary of \u20b980,000 monthly with no experience required",
+            "reason": "Unrealistic opportunity promises such as guaranteed placement or extreme income without qualifications."
           }
         ],
         "limitations": [
-          "Language patterns are contextual indicators, not proof of intent."
+          "Language heuristics identify pressure tactics; tone analysis is contextual."
         ]
       },
       {
-        "id": "credential_payment",
-        "name": "Credential and Payment Pressure",
-        "status": "concern",
+        "id": "data_exposure_risk",
+        "name": "Data Exposure Risk",
+        "status": "warning_found",
         "confidence": "high",
-        "summary": "Explicit requests for upfront money, deposits, credentials, or sensitive identity documents detected.",
+        "summary": "Demands for sensitive passwords, 2FA codes, SSNs, passports, or banking numbers detected.",
+        "dimension_score": 20,
         "evidence": [
-          {
-            "source": "visible_text",
-            "excerpt": "To confirm your selection, you must deposit a refundable registration fee of \u20b92,500 immediately",
-            "reason": "Explicit request for upfront payment, registration fee, or security deposit detected."
-          },
           {
             "source": "visible_text",
             "excerpt": "Send your Aadhaar card and PAN card to our Telegram recruiter @recruiter_hr",
@@ -348,7 +337,37 @@
           }
         ],
         "limitations": [
-          "Legitimate job recruitment does not require applicants to transfer funds."
+          "Never provide passwords, seed phrases, or sensitive tax IDs during initial opportunity exploration."
+        ]
+      },
+      {
+        "id": "link_domain_risk",
+        "name": "Link and Domain Risk",
+        "status": "warning_found",
+        "confidence": "high",
+        "summary": "Suspicious top-level domain, raw IP hosting, URL obfuscation, or unencrypted protocol detected.",
+        "dimension_score": 30,
+        "evidence": [
+          {
+            "source": "url",
+            "excerpt": ".xyz",
+            "reason": "The domain uses the '.xyz' top-level domain, which has higher statistical prevalence in disposable phishing."
+          }
+        ],
+        "limitations": [
+          "Technical structural inspection of observable URL authority and parameters."
+        ]
+      },
+      {
+        "id": "evidence_confidence",
+        "name": "Evidence Confidence",
+        "status": "no_indicator_detected",
+        "confidence": "medium",
+        "summary": "Assessment grounded reliably on client-observable deterministic heuristic rules.",
+        "dimension_score": 90,
+        "evidence": [],
+        "limitations": [
+          "AI semantic reasoning is offline; evaluation performed using local deterministic heuristics."
         ]
       }
     ],
@@ -467,10 +486,11 @@
     "request_id": "req-golden-selection-001",
     "status": "completed",
     "assessment_status": "suspicious",
+    "score": 1,
     "summary": "Significant warning indicators detected: Suspicious Top-Level Domain and Brand Lookalike / Typosquat Domain. Independent verification is strongly advised before proceeding.",
     "analyzed_url": "https://g00gle.xyz/verify",
     "mode": "selection",
-    "timestamp": "2026-11-01T15:55:47.163785Z",
+    "timestamp": "2026-11-01T17:37:46.107622Z",
     "findings": [
       {
         "id": "url-suspicious_tld",
@@ -560,84 +580,12 @@
     ],
     "trust_dna": [
       {
-        "id": "identity_domain",
-        "name": "Identity and Domain Signals",
-        "status": "concern",
-        "confidence": "medium",
-        "summary": "Domain or hostname patterns exhibit risk characteristics (e.g. lookalike, IP host, or high-risk TLD).",
-        "evidence": [
-          {
-            "source": "url",
-            "excerpt": "g00gle.xyz",
-            "reason": "Hostname segment 'g00gle' closely resembles official brand 'google' but is not an official domain."
-          },
-          {
-            "source": "url",
-            "excerpt": ".xyz",
-            "reason": "The domain uses the '.xyz' top-level domain, which has higher statistical prevalence in disposable phishing."
-          }
-        ],
-        "limitations": [
-          "Automated heuristic detection; legitimate organizations occasionally register campaign domains."
-        ]
-      },
-      {
-        "id": "connection_technical",
-        "name": "Connection and Technical Signals",
-        "status": "positive",
+        "id": "payment_risk",
+        "name": "Payment Risk",
+        "status": "warning_found",
         "confidence": "high",
-        "summary": "Secure HTTPS protocol used with standard link structure.",
-        "evidence": [],
-        "limitations": [
-          "Transport encryption verified; does not verify backend server integrity."
-        ]
-      },
-      {
-        "id": "transparency",
-        "name": "Transparency",
-        "status": "unknown",
-        "confidence": "low",
-        "summary": "Organizational registration and corporate legal entity records were not independently checked.",
-        "evidence": [],
-        "limitations": [
-          "External corporate registrar and WHOIS lookups are not performed for user privacy in MVP.",
-          "Users should verify organization independently on official channels."
-        ]
-      },
-      {
-        "id": "page_behavior",
-        "name": "Page Behavior",
-        "status": "positive",
-        "confidence": "medium",
-        "summary": "No structural obfuscation detected in submitted page address or links.",
-        "evidence": [],
-        "limitations": [
-          "Active runtime browser script execution is not inspected."
-        ]
-      },
-      {
-        "id": "content_consistency",
-        "name": "Content and Offer Consistency",
-        "status": "concern",
-        "confidence": "high",
-        "summary": "Content displays unrealistic promises, guaranteed outcomes, or artificial urgency.",
-        "evidence": [
-          {
-            "source": "selection",
-            "excerpt": "Deposit refundable fee of $500 immediately to confirm your appointment",
-            "reason": "Language creating artificial urgency or pressure to act quickly without independent review."
-          }
-        ],
-        "limitations": [
-          "Language patterns are contextual indicators, not proof of intent."
-        ]
-      },
-      {
-        "id": "credential_payment",
-        "name": "Credential and Payment Pressure",
-        "status": "concern",
-        "confidence": "high",
-        "summary": "Explicit requests for upfront money, deposits, credentials, or sensitive identity documents detected.",
+        "summary": "Explicit requests for upfront money, deposits, equipment fees, or cryptocurrency transfers detected.",
+        "dimension_score": 20,
         "evidence": [
           {
             "source": "selection",
@@ -646,7 +594,85 @@
           }
         ],
         "limitations": [
-          "Legitimate job recruitment does not require applicants to transfer funds."
+          "Legitimate job recruitment never requires applicants to transfer money or buy supplies in advance."
+        ]
+      },
+      {
+        "id": "identity_risk",
+        "name": "Identity Risk",
+        "status": "warning_found",
+        "confidence": "high",
+        "summary": "Domain employs brand typosquatting, character substitution, or lookalike impersonation patterns.",
+        "dimension_score": 25,
+        "evidence": [
+          {
+            "source": "url",
+            "excerpt": "g00gle.xyz",
+            "reason": "Hostname segment 'g00gle' closely resembles official brand 'google' but is not an official domain."
+          }
+        ],
+        "limitations": [
+          "Heuristic character comparison against known corporate brands."
+        ]
+      },
+      {
+        "id": "social_engineering_risk",
+        "name": "Social Engineering Risk",
+        "status": "warning_found",
+        "confidence": "high",
+        "summary": "High-pressure urgency tactics, artificial countdowns, or unrealistic compensation guarantees detected.",
+        "dimension_score": 35,
+        "evidence": [
+          {
+            "source": "selection",
+            "excerpt": "Deposit refundable fee of $500 immediately to confirm your appointment",
+            "reason": "Language creating artificial urgency or pressure to act quickly without independent review."
+          }
+        ],
+        "limitations": [
+          "Language heuristics identify pressure tactics; tone analysis is contextual."
+        ]
+      },
+      {
+        "id": "data_exposure_risk",
+        "name": "Data Exposure Risk",
+        "status": "no_indicator_detected",
+        "confidence": "high",
+        "summary": "No illicit credential harvesting or premature personal identity document collection observed.",
+        "dimension_score": 100,
+        "evidence": [],
+        "limitations": [
+          "Only visible text is evaluated; do not input credentials into unverified forms."
+        ]
+      },
+      {
+        "id": "link_domain_risk",
+        "name": "Link and Domain Risk",
+        "status": "warning_found",
+        "confidence": "high",
+        "summary": "Suspicious top-level domain, raw IP hosting, URL obfuscation, or unencrypted protocol detected.",
+        "dimension_score": 30,
+        "evidence": [
+          {
+            "source": "url",
+            "excerpt": ".xyz",
+            "reason": "The domain uses the '.xyz' top-level domain, which has higher statistical prevalence in disposable phishing."
+          }
+        ],
+        "limitations": [
+          "Technical structural inspection of observable URL authority and parameters."
+        ]
+      },
+      {
+        "id": "evidence_confidence",
+        "name": "Evidence Confidence",
+        "status": "no_indicator_detected",
+        "confidence": "medium",
+        "summary": "Assessment grounded reliably on client-observable deterministic heuristic rules.",
+        "dimension_score": 90,
+        "evidence": [],
+        "limitations": [
+          "AI semantic reasoning is offline; evaluation performed using local deterministic heuristics."
         ]
       }
     ],

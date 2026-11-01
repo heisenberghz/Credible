@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AssessmentStatus, AnalysisReport, AnalysisMode } from '../../types/analysis';
+import { ScoreGauge } from './ScoreGauge';
 
 interface AssessmentSummaryProps {
   report: AnalysisReport;
@@ -124,6 +125,9 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
           <span>{copied ? 'Copied' : 'Copy'}</span>
         </button>
       </div>
+
+      {/* Dynamic Animated Heuristic Score Gauge */}
+      <ScoreGauge score={report.score ?? 100} />
 
       {/* Plain Language Summary */}
       <p

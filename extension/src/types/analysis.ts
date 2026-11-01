@@ -38,11 +38,14 @@ export enum FindingSource {
 }
 
 export enum TrustDnaStatus {
-  POSITIVE = 'positive',
-  CONCERN = 'concern',
-  MIXED = 'mixed',
+  WARNING_FOUND = 'warning_found',
+  NO_INDICATOR_DETECTED = 'no_indicator_detected',
   UNKNOWN = 'unknown',
-  NOT_CHECKED = 'not_checked',
+  // Backward compatibility aliases
+  POSITIVE = 'no_indicator_detected',
+  CONCERN = 'warning_found',
+  MIXED = 'warning_found',
+  NOT_CHECKED = 'unknown',
 }
 
 export enum AssessmentStatus {
@@ -122,6 +125,7 @@ export interface TrustDnaDimension {
   status: TrustDnaStatus;
   confidence: Confidence;
   summary: string;
+  dimension_score?: number;
   evidence: Evidence[];
   limitations: string[];
 }
@@ -149,6 +153,7 @@ export interface AnalysisReport {
   request_id: string;
   status: string;
   assessment_status: AssessmentStatus;
+  score?: number;
   summary: string;
   analyzed_url: string;
   mode: AnalysisMode;

@@ -60,8 +60,8 @@ class TestFullAnalysisPipeline:
 
         # Trust DNA must reflect concerns
         dna_map = {d["id"]: d for d in report["trust_dna"]}
-        assert dna_map["credential_payment"]["status"] == TrustDnaStatus.CONCERN.value
-        assert dna_map["identity_domain"]["status"] == TrustDnaStatus.CONCERN.value
+        assert dna_map["payment_risk"]["status"] == TrustDnaStatus.WARNING_FOUND.value
+        assert dna_map["identity_risk"]["status"] == TrustDnaStatus.WARNING_FOUND.value
 
         # Next Best Actions must prioritize payment guidance
         assert any("fee" in a.lower() or "money" in a.lower() for a in report["next_best_actions"])
