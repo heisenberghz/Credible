@@ -455,22 +455,22 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 19: UI Polish + Animations
+## - [x] ~~Task 19: UI Polish + Animations~~
 
-**Build:**
-- Popup: smooth CSS pulse animation, hover effects, status transition animations, micro-interactions
-- Side panel: color-coded severity with gradients, expandable finding cards with smooth accordion, Proof Mode slide-in, trust DNA visual indicators
-- Consistent typography, spacing, color palette
-- Light/clean visual design throughout
-- Responsive layout within panel constraints
+~~**Build:**~~
+- ~~Popup: smooth CSS pulse animation, hover effects, status transition animations, micro-interactions~~
+- ~~Side panel: color-coded severity with gradients, expandable finding cards with smooth accordion, Proof Mode slide-in, trust DNA visual indicators~~
+- ~~Consistent typography, spacing, color palette~~
+- ~~Light/clean visual design throughout~~
+- ~~Responsive layout within panel constraints~~
 
-**Tests:** Visual regression (manual). Animation performance (no jank). Component snapshot tests.
+~~**Tests:** Visual regression (manual). Animation performance (no jank). Component snapshot tests.~~
 
-**Acceptance:**
-- [ ] Popup animations are smooth and Apple-like
-- [ ] Side panel looks polished and professional
-- [ ] No animation jank or layout shift
-- [ ] `pnpm test` passes
+~~**Acceptance:**~~
+- [x] ~~Popup animations are smooth and Apple-like~~
+- [x] ~~Side panel looks polished and professional~~
+- [x] ~~No animation jank or layout shift~~
+- [x] ~~`pnpm test` passes~~
 
 ---
 

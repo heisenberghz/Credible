@@ -37,6 +37,13 @@ body {
   overflow: hidden;
 }
 
+/* Accessible Keyboard Navigation */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-blue) !important;
+  outline-offset: 2px !important;
+}
+
 .popup-container {
   display: flex;
   flex-direction: column;
@@ -69,6 +76,11 @@ body {
   justify-content: center;
   color: #ffffff;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.brand-icon:hover {
+  transform: scale(1.05);
 }
 
 .brand-title {
@@ -92,7 +104,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 24px;
-  padding: 20px 0;
+  padding: 16px 0;
 }
 
 .pulse-wrapper {
@@ -116,17 +128,20 @@ body {
   justify-content: center;
   position: relative;
   z-index: 2;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pulse-core.completed {
   background: var(--success-subtle);
   color: var(--success-green);
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.25);
 }
 
 .pulse-core.failed {
   background: var(--error-subtle);
   color: var(--error-red);
+  box-shadow: 0 0 24px rgba(239, 68, 68, 0.25);
 }
 
 /* Pulsing rings for scanning states */
@@ -172,6 +187,7 @@ body {
   font-weight: 600;
   color: var(--text-secondary);
   margin-bottom: 8px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .status-badge.scanning {
@@ -204,7 +220,8 @@ body {
   color: var(--text-secondary);
   text-align: center;
   max-width: 240px;
-  line-height: 1.4;
+  line-height: 1.45;
+  transition: opacity 0.2s ease;
 }
 
 /* Actions Section */
@@ -228,13 +245,14 @@ body {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover:not(:disabled) {
   background: var(--accent-blue-hover);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -261,12 +279,13 @@ body {
   justify-content: center;
   gap: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-secondary:hover {
   background: var(--bg-subtle);
   border-color: #cbd5e1;
+  transform: translateY(-1px);
 }
 
 .btn-secondary:active {
@@ -283,4 +302,3 @@ body {
   font-size: 11px;
   color: var(--text-muted);
 }
-

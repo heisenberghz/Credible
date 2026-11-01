@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AssessmentStatus, AnalysisReport, AnalysisMode } from '../../types/analysis';
 
 interface AssessmentSummaryProps {
@@ -7,7 +7,7 @@ interface AssessmentSummaryProps {
 
 const STATUS_CONFIG: Record<
   string,
-  { label: string; bg: string; text: string; border: string; icon: string }
+  { label: string; bg: string; text: string; border: string; icon: string; gradient: string }
 > = {
   [AssessmentStatus.SUSPICIOUS]: {
     label: 'Suspicious Indicators Detected',
@@ -15,6 +15,7 @@ const STATUS_CONFIG: Record<
     text: '#991B1B',
     border: '#FECACA',
     icon: '⚠️',
+    gradient: 'linear-gradient(135deg, #FEF2F2 0%, #FFF1F2 100%)',
   },
   [AssessmentStatus.NEEDS_VERIFICATION]: {
     label: 'Verification Recommended',
@@ -22,6 +23,7 @@ const STATUS_CONFIG: Record<
     text: '#92400E',
     border: '#FDE68A',
     icon: '🔍',
+    gradient: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
   },
   [AssessmentStatus.CAUTION]: {
     label: 'Caution Warranted',
@@ -29,6 +31,7 @@ const STATUS_CONFIG: Record<
     text: '#92400E',
     border: '#FDE68A',
     icon: '⚡',
+    gradient: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
   },
   [AssessmentStatus.BENIGN]: {
     label: 'Standard Patterns Observed',
@@ -36,6 +39,7 @@ const STATUS_CONFIG: Record<
     text: '#065F46',
     border: '#A7F3D0',
     icon: '✓',
+    gradient: 'linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%)',
   },
   [AssessmentStatus.INCONCLUSIVE]: {
     label: 'Inconclusive Signals',
@@ -43,16 +47,31 @@ const STATUS_CONFIG: Record<
     text: '#334155',
     border: '#CBD5E1',
     icon: 'ℹ️',
+    gradient: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
   },
 };
 
 export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) => {
+  const [copied, setCopied] = useState<boolean>(false);
   const statusKey = report.assessment_status || AssessmentStatus.INCONCLUSIVE;
   const config = STATUS_CONFIG[statusKey] || STATUS_CONFIG[AssessmentStatus.INCONCLUSIVE];
 
+  const handleCopySummary = async () => {
+    try {
+      const summaryText = `[Credible Assessment]\nVerdict: ${config.label}\nTarget: ${report.analyzed_url}\nSummary: ${report.summary}`;
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(summaryText);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch {
+      // Graceful fallback if clipboard API is restricted
+    }
+  };
+
   return (
     <div
-      className="assessment-summary-card"
+      className="assessment-summary-card credible-card fade-in"
       data-testid="assessment-summary"
       style={{
         backgroundColor: '#FFFFFF',
@@ -63,28 +82,50 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
         marginBottom: '16px',
       }}
     >
-      {/* Verdict Header Badge */}
+      {/* Verdict Header Badge with Copy Button */}
       <div
-        data-testid="verdict-banner"
         style={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between',
           gap: '8px',
-          padding: '8px 12px',
-          borderRadius: '8px',
-          backgroundColor: config.bg,
-          color: config.text,
-          border: `1px solid ${config.border}`,
-          fontWeight: 600,
-          fontSize: '13px',
           marginBottom: '12px',
         }}
       >
-        <span aria-hidden="true">{config.icon}</span>
-        <span data-testid="assessment-status-label">{config.label}</span>
+        <div
+          data-testid="verdict-banner"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 12px',
+            borderRadius: '8px',
+            background: config.gradient,
+            backgroundColor: config.bg,
+            color: config.text,
+            border: `1px solid ${config.border}`,
+            fontWeight: 600,
+            fontSize: '13px',
+            flexGrow: 1,
+          }}
+        >
+          <span aria-hidden="true">{config.icon}</span>
+          <span data-testid="assessment-status-label">{config.label}</span>
+        </div>
+
+        <button
+          onClick={handleCopySummary}
+          data-testid="copy-summary-btn"
+          className={`btn-copy ${copied ? 'copied' : ''}`}
+          title="Copy assessment summary to clipboard"
+          aria-label="Copy assessment summary"
+        >
+          <span>{copied ? '✓' : '📋'}</span>
+          <span>{copied ? 'Copied' : 'Copy'}</span>
+        </button>
       </div>
 
-      {/* Plain Language Summary (No opaque numerical score) */}
+      {/* Plain Language Summary */}
       <p
         data-testid="summary-text"
         style={{
@@ -145,4 +186,3 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
     </div>
   );
 };
-

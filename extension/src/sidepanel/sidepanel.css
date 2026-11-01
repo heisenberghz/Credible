@@ -1,12 +1,42 @@
-/* Credible Side Panel Styling */
+/* Credible Side Panel Styling - Apple Minimal & Clean Design */
 :root {
   --bg-panel: #f8fafc;
   --bg-card: #ffffff;
+  --bg-card-hover: #fcfcfc;
   --text-main: #0f172a;
   --text-sub: #475569;
-  --text-muted: #94a3b8;
-  --accent: #2563eb;
+  --text-muted: #64748b;
+  --accent-blue: #2563eb;
+  --accent-blue-hover: #1d4ed8;
+  --accent-blue-subtle: #eff6ff;
   --border-light: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --border-focus: #2563eb;
+
+  /* Severity system colors */
+  --severity-critical: #dc2626;
+  --severity-critical-bg: #fef2f2;
+  --severity-critical-border: #fecaca;
+  --severity-high: #ea580c;
+  --severity-high-bg: #fff7ed;
+  --severity-high-border: #fed7aa;
+  --severity-medium: #d97706;
+  --severity-medium-bg: #fffbeb;
+  --severity-medium-border: #fde68a;
+  --severity-low: #2563eb;
+  --severity-low-bg: #eff6ff;
+  --severity-low-border: #bfdbfe;
+  --severity-info: #64748b;
+  --severity-info-bg: #f8fafc;
+  --severity-info-border: #e2e8f0;
+
+  /* Radii & Shadows */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-hover: 0 4px 8px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
 }
 
 * {
@@ -24,6 +54,35 @@ body {
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Accessible Keyboard Focus Rings */
+button:focus-visible,
+[tabindex="0"]:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--border-focus) !important;
+  outline-offset: 2px !important;
 }
 
 .sidepanel-container {
@@ -35,8 +94,108 @@ body {
 .sidepanel-content {
   flex: 1;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 100%;
 }
 
+/* Cards Base Styling */
+.credible-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.credible-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: #cbd5e1;
+}
+
+/* Interactive Card Accordions */
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.chevron-icon {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-muted);
+}
+
+.chevron-icon.expanded {
+  transform: rotate(180deg);
+}
+
+/* Finding Card Polish with Color Accent Borders */
+.finding-card {
+  position: relative;
+  border-left-width: 4px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.finding-card.severity-critical {
+  border-left-color: var(--severity-critical) !important;
+}
+
+.finding-card.severity-high {
+  border-left-color: var(--severity-high) !important;
+}
+
+.finding-card.severity-medium {
+  border-left-color: var(--severity-medium) !important;
+}
+
+.finding-card.severity-low {
+  border-left-color: var(--severity-low) !important;
+}
+
+.finding-card.severity-informational {
+  border-left-color: var(--severity-info) !important;
+}
+
+/* Copy Action Button Feedback */
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-copy:hover {
+  background-color: #f1f5f9;
+  color: var(--text-main);
+  border-color: #cbd5e1;
+}
+
+.btn-copy.copied {
+  background-color: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+/* Animations */
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -48,4 +207,35 @@ body {
 
 .loading-spinner {
   animation: spin 0.8s linear infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-box {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
 }

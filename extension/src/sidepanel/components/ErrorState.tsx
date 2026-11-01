@@ -16,14 +16,14 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   if (type === 'loading') {
     return (
       <div
-        className="state-container loading-state"
+        className="state-container loading-state fade-in"
         data-testid="state-loading"
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '60px 20px',
+          padding: '40px 20px',
           textAlign: 'center',
         }}
       >
@@ -44,10 +44,17 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         </h4>
         <p
           data-testid="loading-status-text"
-          style={{ fontSize: '13px', color: '#64748B', maxWidth: '240px', lineHeight: '1.4' }}
+          style={{ fontSize: '13px', color: '#64748B', maxWidth: '240px', lineHeight: '1.4', marginBottom: '24px' }}
         >
           {message || 'Reconciling deterministic checks and threat intelligence...'}
         </p>
+
+        {/* Loading Skeleton Placeholders */}
+        <div style={{ width: '100%', maxWidth: '280px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div className="skeleton-box" style={{ height: '38px', width: '100%' }} />
+          <div className="skeleton-box" style={{ height: '56px', width: '100%' }} />
+          <div className="skeleton-box" style={{ height: '72px', width: '100%' }} />
+        </div>
       </div>
     );
   }
@@ -55,7 +62,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   if (type === 'idle') {
     return (
       <div
-        className="state-container idle-state"
+        className="state-container idle-state fade-in"
         data-testid="state-idle"
         style={{
           display: 'flex',
@@ -68,16 +75,17 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       >
         <div
           style={{
-            width: '48px',
-            height: '48px',
-            borderRadius: '12px',
+            width: '52px',
+            height: '52px',
+            borderRadius: '14px',
             backgroundColor: '#EFF6FF',
             color: '#2563EB',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: '16px',
-            fontSize: '22px',
+            fontSize: '24px',
+            boxShadow: '0 2px 8px rgba(37, 99, 235, 0.15)',
           }}
         >
           🛡️
@@ -85,7 +93,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         <h4 style={{ fontSize: '15px', fontWeight: 600, color: '#0F172A', marginBottom: '6px' }}>
           Ready for Safety Assessment
         </h4>
-        <p style={{ fontSize: '13px', color: '#64748B', maxWidth: '240px', lineHeight: '1.4', marginBottom: '20px' }}>
+        <p style={{ fontSize: '13px', color: '#64748B', maxWidth: '250px', lineHeight: '1.4', marginBottom: '20px' }}>
           Open the Credible popup or click below to evaluate the current active tab for deception and threats.
         </p>
         {onRetry && (
@@ -93,7 +101,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
             onClick={onRetry}
             data-testid="scan-action-btn"
             style={{
-              padding: '10px 18px',
+              padding: '10px 20px',
               backgroundColor: '#2563EB',
               color: '#FFFFFF',
               border: 'none',
@@ -102,6 +110,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
               fontSize: '13px',
               cursor: 'pointer',
               boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
+              transition: 'all 0.15s ease',
             }}
           >
             Scan Current Page
@@ -129,7 +138,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
   return (
     <div
-      className="state-container error-state"
+      className="state-container error-state fade-in"
       data-testid="state-error"
       data-error-type={type}
       style={{
@@ -137,11 +146,12 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '40px 20px',
+        padding: '36px 20px',
         textAlign: 'center',
         backgroundColor: '#FFFFFF',
         borderRadius: '14px',
         border: '1px solid #FEE2E2',
+        boxShadow: '0 2px 6px rgba(220, 38, 38, 0.05)',
         margin: '12px 0',
       }}
     >
@@ -181,7 +191,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
           onClick={onRetry}
           data-testid="retry-btn"
           style={{
-            padding: '8px 16px',
+            padding: '9px 18px',
             backgroundColor: '#0F172A',
             color: '#FFFFFF',
             border: 'none',
@@ -189,6 +199,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
             fontSize: '12px',
             fontWeight: 600,
             cursor: 'pointer',
+            transition: 'background-color 0.15s ease',
           }}
         >
           Try Again
@@ -197,4 +208,3 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
     </div>
   );
 };
-

@@ -27,9 +27,11 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
     }
   };
 
+  const severityClass = `severity-${finding.severity?.toLowerCase() || 'informational'}`;
+
   return (
     <div
-      className="finding-card"
+      className={`finding-card credible-card ${severityClass}`}
       data-testid="finding-card"
       data-finding-id={finding.id}
       style={{
@@ -124,6 +126,7 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           data-testid="proof-toggle-btn"
+          aria-expanded={isExpanded}
           style={{
             background: 'none',
             border: 'none',
@@ -133,12 +136,19 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '4px',
-            padding: '4px 0',
+            gap: '5px',
+            padding: '4px 6px',
+            borderRadius: '4px',
+            transition: 'background-color 0.15s ease',
           }}
         >
           <span>{isExpanded ? 'Hide Evidence' : 'View Proof & Evidence'}</span>
-          <span style={{ fontSize: '10px' }}>{isExpanded ? '▲' : '▼'}</span>
+          <span
+            className={`chevron-icon ${isExpanded ? 'expanded' : ''}`}
+            style={{ fontSize: '10px', display: 'inline-block' }}
+          >
+            {isExpanded ? '▲' : '▼'}
+          </span>
         </button>
       </div>
 
@@ -146,6 +156,7 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
       {isExpanded && (
         <div
           data-testid="proof-section"
+          className="fade-in"
           style={{
             marginTop: '10px',
             paddingTop: '10px',
@@ -218,4 +229,3 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
     </div>
   );
 };
-
