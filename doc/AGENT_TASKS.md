@@ -259,25 +259,25 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 11: Content Extraction + Sensitive Data Safeguards
+## - [x] ~~Task 11: Content Extraction + Sensitive Data Safeguards~~
 
-**Build:** Content script (`extractor.ts`) that extracts from active tab ONLY after user action:
-- Page URL (string)
-- Page title
-- Bounded visible text (max 50,000 chars)
-- Links with text and href (max 100 links)
+~~**Build:** Content script (`extractor.ts`) that extracts from active tab ONLY after user action:~~
+- ~~Page URL (string)~~
+- ~~Page title~~
+- ~~Bounded visible text (max 50,000 chars)~~
+- ~~Links with text and href (max 100 links)~~
 
-**Never collects:** password field values, hidden input values, payment field values, unrelated form data, cookies, localStorage, sessionStorage.
+~~**Never collects:** password field values, hidden input values, payment field values, unrelated form data, cookies, localStorage, sessionStorage.~~
 
-Size limits enforced. Truncation noted in metadata.
+~~Size limits enforced. Truncation noted in metadata.~~
 
-**Tests:** Extraction bounds. Sensitive field exclusion (password, hidden inputs). Size limiting. Truncation handling. Empty page handling.
+~~**Tests:** Extraction bounds. Sensitive field exclusion (password, hidden inputs). Size limiting. Truncation handling. Empty page handling.~~
 
-**Acceptance:**
-- [ ] Extraction runs only after user action
-- [ ] Password/hidden fields never collected
-- [ ] Content bounded to limits
-- [ ] `pnpm test` passes
+~~**Acceptance:**~~
+- [x] ~~Extraction runs only after user action~~
+- [x] ~~Password/hidden fields never collected~~
+- [x] ~~Content bounded to limits~~
+- [x] ~~`pnpm test` passes~~
 
 ---
 

@@ -13,11 +13,15 @@ export default defineConfig({
         popup: resolve(__dirname, 'src/popup/index.html'),
         sidepanel: resolve(__dirname, 'src/sidepanel/index.html'),
         background: resolve(__dirname, 'src/background/service-worker.ts'),
+        content: resolve(__dirname, 'src/content/extractor.ts'),
       },
       output: {
         entryFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'background') {
             return 'background.js';
+          }
+          if (chunkInfo.name === 'content') {
+            return 'content.js';
           }
           return 'assets/[name]-[hash].js';
         },

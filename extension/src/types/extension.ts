@@ -13,11 +13,43 @@ export enum MessageType {
   SCAN_ERROR = 'SCAN_ERROR',
   OPEN_SIDEPANEL = 'OPEN_SIDEPANEL',
   GET_LATEST_REPORT = 'GET_LATEST_REPORT',
+  EXTRACT_PAGE_CONTENT = 'EXTRACT_PAGE_CONTENT',
+  EXTRACT_SELECTION_CONTENT = 'EXTRACT_SELECTION_CONTENT',
 }
 
 export interface RequestScanMessage {
   type: MessageType.REQUEST_SCAN;
   tabId?: number;
+}
+
+export interface ExtractPageContentMessage {
+  type: MessageType.EXTRACT_PAGE_CONTENT;
+}
+
+export interface ExtractSelectionContentMessage {
+  type: MessageType.EXTRACT_SELECTION_CONTENT;
+}
+
+export interface ExtractedMetadata {
+  truncated: boolean;
+  character_count: number;
+  link_count: number;
+  timestamp: string;
+}
+
+export interface ExtractedPageResult {
+  url: string;
+  title: string;
+  visible_text: string;
+  links: Array<{ text: string; href: string }>;
+  metadata: ExtractedMetadata;
+}
+
+export interface ExtractedSelectionResult {
+  url: string;
+  text: string;
+  link?: { text: string; href: string } | null;
+  metadata: ExtractedMetadata;
 }
 
 export interface ScanProgressMessage {
@@ -52,5 +84,7 @@ export type ExtensionMessage =
   | ScanSuccessMessage
   | ScanErrorMessage
   | OpenSidePanelMessage
-  | GetLatestReportMessage;
+  | GetLatestReportMessage
+  | ExtractPageContentMessage
+  | ExtractSelectionContentMessage;
 
