@@ -95,8 +95,29 @@ export const App: React.FC = () => {
   }, [isScanning]);
 
   const handleOpenSidePanel = useCallback(() => {
-    if (typeof chrome !== 'undefined' && chrome.runtime?.sendMessage) {
-      chrome.runtime.sendMessage({ type: MessageType.OPEN_SIDEPANEL });
+    if (typeof chrome !== 'undefined') {
+      // 1. Broadcast to runtime/background (keeps test contracts and message bus in sync)
+      if (chrome.runtime?.sendMessage) {
+        chrome.runtime.sendMessage({ type: MessageType.OPEN_SIDEPANEL });
+      }
+
+      // 2. Directly open side panel using the popup user gesture
+      if (chrome.sidePanel?.open && chrome.tabs?.query) {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const tabId = tabs?.[0]?.id;
+          if (tabId) {
+            chrome.sidePanel.open({ tabId }).then(() => {
+              try {
+                window.close();
+              } catch {
+                // Ignore in testing environments
+              }
+            }).catch((err) => {
+              console.warn('[Credible Popup] Failed to open side panel:', err);
+            });
+          }
+        });
+      }
     }
   }, []);
 
