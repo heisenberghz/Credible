@@ -329,30 +329,30 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 14: Side Panel — Trust DNA + Proof Mode + Actions + Accessibility
+## - [x] ~~Task 14: Side Panel — Trust DNA + Proof Mode + Actions + Accessibility~~
 
-**Build:**
-- `TrustDnaPanel` — 6 dimensions with status indicators (🔴🟡🟢⚪), evidence, limitations. Unknown/not-checked visible.
-- `ProofModePanel` — expandable evidence details: what observed, where, why, which check, deterministic vs AI, confidence, limitations.
-- `NextBestActionList` — prioritized recommendations, practical language, no alarm.
-- `ChecksAndLimitations` — which checks ran, which didn't, overall limitations.
+~~**Build:**~~
+- ~~`TrustDnaPanel` — 6 dimensions with status indicators (🔴🟡🟢⚪), evidence, limitations. Unknown/not-checked visible.~~
+- ~~`ProofModePanel` — expandable evidence details: what observed, where, why, which check, deterministic vs AI, confidence, limitations.~~
+- ~~`NextBestActionList` — prioritized recommendations, practical language, no alarm.~~
+- ~~`ChecksAndLimitations` — which checks ran, which didn't, overall limitations.~~
 
-**Accessibility:**
-- Keyboard navigation (Tab, Enter, Escape)
-- Focus management on panel open
-- Readable contrast (WCAG AA)
-- ARIA labels and roles
-- Screen-reader friendly
-- Safe rendering (textContent, never innerHTML with untrusted data)
+~~**Accessibility:**~~
+- ~~Keyboard navigation (Tab, Enter, Escape)~~
+- ~~Focus management on panel open~~
+- ~~Readable contrast (WCAG AA)~~
+- ~~ARIA labels and roles~~
+- ~~Screen-reader friendly~~
+- ~~Safe rendering (textContent, never innerHTML with untrusted data)~~
 
-**Tests:** Component tests for all panels. Accessibility: keyboard navigation, ARIA attributes. Safe rendering: XSS prevention assertions.
+~~**Tests:** Component tests for all panels. Accessibility: keyboard navigation, ARIA attributes. Safe rendering: XSS prevention assertions.~~
 
-**Acceptance:**
-- [ ] Trust DNA shows all 6 dimensions with correct states
-- [ ] Proof Mode traces findings to evidence
-- [ ] Keyboard navigation works
-- [ ] No innerHTML with untrusted content
-- [ ] `pnpm test` passes
+~~**Acceptance:**~~
+- [x] ~~Trust DNA shows all 6 dimensions with correct states~~
+- [x] ~~Proof Mode traces findings to evidence~~
+- [x] ~~Keyboard navigation works~~
+- [x] ~~No innerHTML with untrusted content~~
+- [x] ~~`pnpm test` passes~~
 
 ---
 

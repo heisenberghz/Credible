@@ -8,6 +8,10 @@ import { AnalysisReport } from '../types/analysis';
 import { Header } from './components/Header';
 import { AssessmentSummary } from './components/AssessmentSummary';
 import { FindingList } from './components/FindingList';
+import { NextBestActionList } from './components/NextBestActionList';
+import { TrustDnaPanel } from './components/TrustDnaPanel';
+import { ProofModePanel } from './components/ProofModePanel';
+import { ChecksAndLimitations } from './components/ChecksAndLimitations';
 import { ErrorState } from './components/ErrorState';
 import './sidepanel.css';
 
@@ -100,7 +104,14 @@ export const App: React.FC = () => {
         {report && !isScanning && (
           <>
             <AssessmentSummary report={report} />
+            <NextBestActionList actions={report.next_best_actions} />
             <FindingList findings={report.findings} />
+            <TrustDnaPanel dimensions={report.trust_dna} />
+            <ProofModePanel entries={report.proof_mode} />
+            <ChecksAndLimitations
+              checks={report.checks}
+              limitations={report.limitations}
+            />
           </>
         )}
       </main>
