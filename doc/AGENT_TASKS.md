@@ -152,18 +152,18 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 6: AI Output Validation + Failure Handling
+## - [x] ~~Task 6: AI Output Validation + Failure Handling~~
 
-**Build:** Strict validation of AI-returned JSON against output schema. Reject: fabricated verification claims, unsupported finding types, claims that unrun checks were run. Handle: timeout (15s), rate limit, provider outage, malformed JSON, missing config, partial response. When AI unavailable: return deterministic-only results with clear limitation.
+~~**Build:** Strict validation of AI-returned JSON against output schema. Reject: fabricated verification claims, unsupported finding types, claims that unrun checks were run. Handle: timeout (15s), rate limit, provider outage, malformed JSON, missing config, partial response. When AI unavailable: return deterministic-only results with clear limitation.~~
 
-**Tests:** Malformed AI output, timeout simulation, rate limit simulation, missing API key, invalid structured response, deterministic fallback when AI is down.
+~~**Tests:** Malformed AI output, timeout simulation, rate limit simulation, missing API key, invalid structured response, deterministic fallback when AI is down.~~
 
-**Acceptance:**
-- [ ] Malformed AI output is rejected, not rendered
-- [ ] AI cannot claim a check ran when it didn't
-- [ ] Timeout produces graceful fallback
-- [ ] Missing API key produces clear error, not crash
-- [ ] `pytest -v` passes
+~~**Acceptance:**~~
+- [x] ~~Malformed AI output is rejected, not rendered~~
+- [x] ~~AI cannot claim a check ran when it didn't~~
+- [x] ~~Timeout produces graceful fallback~~
+- [x] ~~Missing API key produces clear error, not crash~~
+- [x] ~~`pytest -v` passes~~
 
 
 ## - [ ] Task 7: Reconciliation Policy
