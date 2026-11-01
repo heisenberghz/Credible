@@ -166,23 +166,23 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 - [x] ~~`pytest -v` passes~~
 
 
-## - [ ] Task 7: Reconciliation Policy
+## - [x] ~~Task 7: Reconciliation Policy~~
 
-**Build:** Merge deterministic check results with AI interpretations. Rules:
-- Deterministic evidence wins on conflicts
-- AI cannot override a documented security guardrail
-- Severity and confidence remain separate (never merged into one score)
-- Deduplicate findings from both sources
-- Preserve uncertainty and limitations from both
-- Tag each finding's source (deterministic vs AI-interpreted)
+~~**Build:** Merge deterministic check results with AI interpretations. Rules:~~
+- ~~Deterministic evidence wins on conflicts~~
+- ~~AI cannot override a documented security guardrail~~
+- ~~Severity and confidence remain separate (never merged into one score)~~
+- ~~Deduplicate findings from both sources~~
+- ~~Preserve uncertainty and limitations from both~~
+- ~~Tag each finding's source (deterministic vs AI-interpreted)~~
 
-**Tests:** Conflict scenarios, deduplication, AI-override attempts, severity/confidence independence.
+~~**Tests:** Conflict scenarios, deduplication, AI-override attempts, severity/confidence independence.~~
 
-**Acceptance:**
-- [ ] Deterministic findings take precedence
-- [ ] AI cannot escalate/downgrade deterministic findings
-- [ ] Source tagging is accurate
-- [ ] `pytest -v` passes
+~~**Acceptance:**~~
+- [x] ~~Deterministic findings take precedence~~
+- [x] ~~AI cannot escalate/downgrade deterministic findings~~
+- [x] ~~Source tagging is accurate~~
+- [x] ~~`pytest -v` passes~~
 
 ---
 
