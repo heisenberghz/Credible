@@ -1,0 +1,14 @@
+:root {
+  --bg-primary: #ffffff;
+  --text-primary: #0f172a;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+

@@ -235,27 +235,27 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 # Phase 3 — Chrome Extension Core
 
-## - [ ] Task 10: Extension Scaffold + Popup + Service Worker
+## - [x] ~~Task 10: Extension Scaffold + Popup + Service Worker~~
 
-**Build:** Manifest V3 with permissions: `activeTab`, `sidePanel`, `contextMenus`, `scripting`. Vite multi-entry build config (popup + sidepanel entries). Service worker with message routing.
+~~**Build:** Manifest V3 with permissions: `activeTab`, `sidePanel`, `contextMenus`, `scripting`. Vite multi-entry build config (popup + sidepanel entries). Service worker with message routing.~~
 
-**Popup UI (Apple-style):**
-- Compact card (300×400px approx)
-- Credible branding + tagline
-- "Scan This Page" primary button
-- Pulsing ring animation during analysis (CSS keyframes)
-- Status text: Ready / Analyzing... / Done / Error
-- Clean, minimal — no clutter
+~~**Popup UI (Apple-style):**~~
+- ~~Compact card (300×400px approx)~~
+- ~~Credible branding + tagline~~
+- ~~"Scan This Page" primary button~~
+- ~~Pulsing ring animation during analysis (CSS keyframes)~~
+- ~~Status text: Ready / Analyzing... / Done / Error~~
+- ~~Clean, minimal — no clutter~~
 
-**Scan lifecycle state machine:** idle → extracting → analyzing → completed → failed. Prevents duplicate submissions.
+~~**Scan lifecycle state machine:** idle → extracting → analyzing → completed → failed. Prevents duplicate submissions.~~
 
-**Tests:** Manifest permission assertions. Build produces valid output. State machine transitions.
+~~**Tests:** Manifest permission assertions. Build produces valid output. State machine transitions.~~
 
-**Acceptance:**
-- [ ] Extension builds without errors (`pnpm build`)
-- [ ] Manifest has only required permissions
-- [ ] Popup renders scan button and animation states
-- [ ] `pnpm test` passes
+~~**Acceptance:**~~
+- [x] ~~Extension builds without errors (`pnpm build`)~~
+- [x] ~~Manifest has only required permissions~~
+- [x] ~~Popup renders scan button and animation states~~
+- [x] ~~`pnpm test` passes~~
 
 ---
 

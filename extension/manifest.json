@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Credible",
+  "version": "0.1.0",
+  "description": "Defensive cybersecurity intelligence with Trust DNA and Proof Mode.",
+  "permissions": [
+    "activeTab",
+    "sidePanel",
+    "contextMenus",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost:8000/*"
+  ],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "Credible"
+  },
+  "side_panel": {
+    "default_path": "src/sidepanel/index.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
+
