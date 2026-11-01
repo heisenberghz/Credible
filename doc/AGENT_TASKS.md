@@ -81,26 +81,26 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 # Phase 2 — Backend Intelligence
 
-## - [ ] Task 3: Check Framework + URL/Hostname Checks
+## - [x] ~~Task 3: Check Framework + URL/Hostname Checks~~
 
-**Build:** `BaseCheck` abstract class with typed `CheckResult` (check_id, status, severity, confidence, evidence, limitations). Check registry for registration and execution tracking. Execution tracker records which checks ran, didn't run, failed, or were unavailable.
+~~**Build:** `BaseCheck` abstract class with typed `CheckResult` (check_id, status, severity, confidence, evidence, limitations). Check registry for registration and execution tracking. Execution tracker records which checks ran, didn't run, failed, or were unavailable.~~
 
-**URL checks:**
-- `url.ip_host` — URL uses IP address instead of domain
-- `url.suspicious_tld` — Uncommon or suspicious TLD patterns
-- `url.obfuscation` — URL encoding tricks, excessive subdomains, misleading paths
-- `url.lookalike` — Homograph/typosquat detection for common brands
-- `url.length` — Abnormally long URLs
+~~**URL checks:**~~
+- ~~`url.ip_host` — URL uses IP address instead of domain~~
+- ~~`url.suspicious_tld` — Uncommon or suspicious TLD patterns~~
+- ~~`url.obfuscation` — URL encoding tricks, excessive subdomains, misleading paths~~
+- ~~`url.lookalike` — Homograph/typosquat detection for common brands~~
+- ~~`url.length` — Abnormally long URLs~~
 
-Each check: returns `CheckResult` with evidence, never claims proof of fraud.
+~~Each check: returns `CheckResult` with evidence, never claims proof of fraud.~~
 
-**Tests:** Each check tested with benign, suspicious, edge case, and empty inputs. Execution tracker tests.
+~~**Tests:** Each check tested with benign, suspicious, edge case, and empty inputs. Execution tracker tests.~~
 
-**Acceptance:**
-- [ ] All URL checks return typed `CheckResult`
-- [ ] `not_detected` only when check actually ran
-- [ ] Evidence references actual input
-- [ ] `pytest -v` passes
+~~**Acceptance:**~~
+- [x] ~~All URL checks return typed `CheckResult`~~
+- [x] ~~`not_detected` only when check actually ran~~
+- [x] ~~Evidence references actual input~~
+- [x] ~~`pytest -v` passes~~
 
 ---
 
@@ -165,7 +165,6 @@ AI output schema (Pydantic) for validation. All secrets stay in backend env vars
 - [ ] Missing API key produces clear error, not crash
 - [ ] `pytest -v` passes
 
----
 
 ## - [ ] Task 7: Reconciliation Policy
 
