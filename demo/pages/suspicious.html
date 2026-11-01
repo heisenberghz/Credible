@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scenario 2: Remote Operations Assistant — Apex Global Logistics</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="demo-nav">
+    <a href="index.html" class="demo-nav-brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Credible Security Sandbox
+    </a>
+    <nav class="demo-nav-links">
+      <a href="benign.html" class="demo-nav-link">1. Benign</a>
+      <a href="suspicious.html" class="demo-nav-link active">2. Suspicious</a>
+      <a href="ambiguous.html" class="demo-nav-link">3. Ambiguous</a>
+      <a href="prompt-injection.html" class="demo-nav-link">4. Prompt Injection</a>
+      <a href="error-demo.html" class="demo-nav-link">5. Error Demo</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <span class="scenario-badge badge-suspicious">Scenario 2: High Threat Scam</span>
+    
+    <article class="job-card">
+      <header class="job-header">
+        <h1 class="job-title">Remote Operations & Data Entry Specialist</h1>
+        <div class="job-meta">
+          <span class="job-meta-item">🏢 Apex Global Logistics Ltd.</span>
+          <span class="job-meta-item">📍 100% Work From Home (Worldwide)</span>
+          <span class="job-meta-item">💼 Immediate Start — No Experience Needed</span>
+          <span class="job-meta-item" style="color: var(--accent-red); font-weight: 700;">💰 $85.00 / Hour ($3,400/Week)</span>
+        </div>
+      </header>
+
+      <div class="callout-box callout-warning">
+        <strong>⚠️ Urgent Announcement:</strong> Only 2 openings remaining for immediate hire! This offer expires in 24 hours. Selected candidates are guaranteed placement with high pay and no interview needed.
+      </div>
+
+      <section class="job-section">
+        <h3>Role Description</h3>
+        <p>
+          Apex Global Logistics is urgently hiring remote data entry coordinators to manage digital parcel routing and clerical records. No skills or prior background required. Complete full training provided online.
+        </p>
+      </section>
+
+      <section class="job-section">
+        <h3>Equipment & Onboarding Requirement</h3>
+        <p>
+          You will receive a brand-new MacBook Pro and company smartphone. Prior to equipment shipment, selected applicants must pay a refundable security deposit of $250 via bitcoin wallet or wire transfer. This registration fee is 100% refundable upon your first payroll check.
+        </p>
+      </section>
+
+      <section class="job-section">
+        <h3>Identity & Direct Deposit Verification</h3>
+        <p>
+          To prepare direct deposit setup and tax verification today, you must complete the onboarding form below:
+        </p>
+        <ul>
+          <li>Upload your passport or driver's license scan.</li>
+          <li>Submit your social security card and full bank account number.</li>
+          <li>Provide your current email password and submit your login credentials to verify corporate SSO federation.</li>
+        </ul>
+      </section>
+
+      <div style="margin-top: 24px;">
+        <button class="btn-primary" style="background-color: var(--accent-red);" onclick="alert('Demo: This is a scam pattern page. Do not submit sensitive data.')">Pay Registration Deposit ($250)</button>
+      </div>
+
+      <div class="demo-instruction-card">
+        <strong>How to test with Credible:</strong>
+        <ol style="margin-top: 8px; padding-left: 20px;">
+          <li>Click the Credible extension icon in the toolbar and select <strong>"Scan This Page"</strong>.</li>
+          <li>Expected Assessment: <strong>MALICIOUS</strong> or <strong>SUSPICIOUS</strong>.</li>
+          <li>Verified Findings: <strong>Payment Pressure (Upfront fee / Crypto)</strong>, <strong>Urgency Pressure</strong>, <strong>Credential Harvesting (Password demand)</strong>, and <strong>Data Exposure (SSN / Passport)</strong>.</li>
+          <li>Try selecting just the sentence <em>"Selected applicants must pay a refundable security deposit of $250 via bitcoin wallet"</em>, right-click, and select <strong>"Verify selection with Credible"</strong>. Observe the specific contextual finding!</li>
+        </ol>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
+

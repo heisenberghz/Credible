@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credible Test Sandbox — Interactive Scenarios</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .scenario-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .scenario-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .scenario-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .scenario-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+    .scenario-expected {
+      background: #f8fafc;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .scenario-expected strong {
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <header class="demo-nav">
+    <a href="index.html" class="demo-nav-brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Credible Security Sandbox
+    </a>
+    <nav class="demo-nav-links">
+      <a href="benign.html" class="demo-nav-link">1. Benign</a>
+      <a href="suspicious.html" class="demo-nav-link">2. Suspicious</a>
+      <a href="ambiguous.html" class="demo-nav-link">3. Ambiguous</a>
+      <a href="prompt-injection.html" class="demo-nav-link">4. Prompt Injection</a>
+      <a href="error-demo.html" class="demo-nav-link">5. Error Demo</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div>
+      <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 12px;">Evaluation & Demo Scenarios</h1>
+      <p style="color: var(--text-secondary); font-size: 16px;">
+        Test the Credible Chrome Extension across 5 realistic cybersecurity test pages. Open each page, trigger the Credible extension via the toolbar icon or right-click to run <strong>Select-to-Verify</strong>, and verify that findings and trust dimensions respond accurately.
+      </p>
+    </div>
+
+    <div class="grid">
+      <!-- Scenario 1 -->
+      <div class="scenario-card">
+        <div>
+          <span class="scenario-badge badge-benign">Scenario 1: Baseline</span>
+          <h2 class="scenario-title">1. Benign Job Listing</h2>
+          <p class="scenario-desc">
+            A genuine senior software engineering opportunity with realistic salary, clear company identity, and standard application procedures without any upfront fees or credential requests.
+          </p>
+          <div class="scenario-expected">
+            <strong>Expected Result:</strong> Status <code>SAFE</code> (or Low Risk). Zero high/critical findings. Trust DNA shows positive indicators across checked dimensions.
+          </div>
+        </div>
+        <a href="benign.html" class="btn-primary">Open Scenario 1 &rarr;</a>
+      </div>
+
+      <!-- Scenario 2 -->
+      <div class="scenario-card">
+        <div>
+          <span class="scenario-badge badge-suspicious">Scenario 2: High Threat</span>
+          <h2 class="scenario-title">2. Suspicious Job / Phishing</h2>
+          <p class="scenario-desc">
+            A fraudulent remote work scam featuring upfront equipment fees via cryptocurrency, extreme urgency countdowns, passport uploading, and credential demands.
+          </p>
+          <div class="scenario-expected">
+            <strong>Expected Result:</strong> Status <code>MALICIOUS</code> or <code>SUSPICIOUS</code>. Multiple High/Critical findings (Payment Pressure, Urgency, Credential Pressure, Data Exposure).
+          </div>
+        </div>
+        <a href="suspicious.html" class="btn-primary">Open Scenario 2 &rarr;</a>
+      </div>
+
+      <!-- Scenario 3 -->
+      <div class="scenario-card">
+        <div>
+          <span class="scenario-badge badge-ambiguous">Scenario 3: Mixed Signals</span>
+          <h2 class="scenario-title">3. Ambiguous Opportunity</h2>
+          <p class="scenario-desc">
+            A freelance research opportunity with borderline language: high payout claims, vague employer details, and personal contact methods, without outright fee demands.
+          </p>
+          <div class="scenario-expected">
+            <strong>Expected Result:</strong> Status <code>NEEDS_REVIEW</code> or <code>SUSPICIOUS</code>. Highlights unknown dimensions and actionable next verification steps.
+          </div>
+        </div>
+        <a href="ambiguous.html" class="btn-primary">Open Scenario 3 &rarr;</a>
+      </div>
+
+      <!-- Scenario 4 -->
+      <div class="scenario-card">
+        <div>
+          <span class="scenario-badge badge-injection">Scenario 4: Adversarial Defense</span>
+          <h2 class="scenario-title">4. Prompt Injection Attack</h2>
+          <p class="scenario-desc">
+            Contains embedded prompt injection directives attempting to coerce the AI model into ignoring suspicious phrases and certifying the scam as completely authentic.
+          </p>
+          <div class="scenario-expected">
+            <strong>Expected Result:</strong> Status remains <code>MALICIOUS</code> / <code>SUSPICIOUS</code>. Deterministic checks and backend policy override and prevent safety downgrades.
+          </div>
+        </div>
+        <a href="prompt-injection.html" class="btn-primary">Open Scenario 4 &rarr;</a>
+      </div>
+
+      <!-- Scenario 5 -->
+      <div class="scenario-card">
+        <div>
+          <span class="scenario-badge badge-error">Scenario 5: Resilience</span>
+          <h2 class="scenario-title">5. Error States & Fallback</h2>
+          <p class="scenario-desc">
+            Instructions and controls to simulate backend disconnection, network timeout, deterministic fallback mode (without Gemini API key), and safe error recovery in the Side Panel UI.
+          </p>
+          <div class="scenario-expected">
+            <strong>Expected Result:</strong> Graceful Error UI with retry capability, or clean deterministic analysis with limitations note when AI is unavailable.
+          </div>
+        </div>
+        <a href="error-demo.html" class="btn-primary">Open Scenario 5 &rarr;</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+

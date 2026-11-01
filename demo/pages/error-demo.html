@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scenario 5: Error States & Fallback Resilience — Credible Sandbox</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .test-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .test-box h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .test-box p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .test-box pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <header class="demo-nav">
+    <a href="index.html" class="demo-nav-brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Credible Security Sandbox
+    </a>
+    <nav class="demo-nav-links">
+      <a href="benign.html" class="demo-nav-link">1. Benign</a>
+      <a href="suspicious.html" class="demo-nav-link">2. Suspicious</a>
+      <a href="ambiguous.html" class="demo-nav-link">3. Ambiguous</a>
+      <a href="prompt-injection.html" class="demo-nav-link">4. Prompt Injection</a>
+      <a href="error-demo.html" class="demo-nav-link active">5. Error Demo</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <span class="scenario-badge badge-error">Scenario 5: Fault Tolerance & Error Recovery</span>
+    
+    <article class="job-card">
+      <header class="job-header">
+        <h1 class="job-title">Resilience & Failure State Walkthrough</h1>
+        <p style="color: var(--text-secondary); font-size: 15px; margin-top: 6px;">
+          Credible is architected for zero-crash defensive cybersecurity: every failure path displays helpful, accessible user feedback and falls back safely to deterministic rules whenever possible.
+        </p>
+      </header>
+
+      <!-- Sub-experiment A -->
+      <div class="test-box">
+        <h4>Experiment A: Deterministic Fallback Mode (Works Without API Key)</h4>
+        <p>
+          Credible does <strong>not</strong> require an active Gemini API key or external cloud connectivity to protect users.
+          When run without an API key, the system seamlessly operates in deterministic mode:
+        </p>
+        <pre><code># Stop existing backend process and restart without GEMINI_API_KEY:
+set GEMINI_API_KEY=
+python -m uvicorn app.main:app --port 8000</code></pre>
+        <p style="margin-top: 10px;">
+          <strong>Expected Behavior:</strong> Go to <a href="suspicious.html" style="color: var(--accent-blue);">Scenario 2 (Suspicious)</a> and trigger a scan.
+          Credible detects upfront fee requests and password demands using local deterministic rule engines, while the Side Panel displays a transparent limitation note indicating the AI service was bypassed.
+        </p>
+      </div>
+
+      <!-- Sub-experiment B -->
+      <div class="test-box">
+        <h4>Experiment B: Backend Offline / Network Error Recovery</h4>
+        <p>
+          Simulates a scenario where the backend server is unreachable or crashed:
+        </p>
+        <pre><code># Stop the backend terminal (Ctrl+C in your FastAPI uvicorn terminal)</code></pre>
+        <p style="margin-top: 10px;">
+          <strong>Expected Behavior:</strong> Open Credible and click <strong>"Scan This Page"</strong>.
+          Instead of hanging, crashing, or opening DevTools errors, the Side Panel immediately presents an Apple-styled <strong>Error State Card</strong>:
+        </p>
+        <ul style="padding-left: 20px; font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
+          <li>States clearly: <em>"Connection Failed — Unable to reach the Credible security analysis service"</em>.</li>
+          <li>Provides an interactive <strong>"Retry Analysis"</strong> button so the user can easily re-run once the backend is restarted.</li>
+          <li>Never displays sensitive internal error traces or unformatted JSON errors to the end user.</li>
+        </ul>
+      </div>
+
+      <!-- Sub-experiment C -->
+      <div class="test-box">
+        <h4>Experiment C: Contextual Selection Scenarios</h4>
+        <p>
+          Test Credible's <strong>Select-to-Verify</strong> feature on distinct snippets below:
+        </p>
+        <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-top: 8px;">
+          <p style="font-size: 14px; margin-bottom: 8px;">
+            <em>Snippet 1 (Safe):</em> "Our core engineering values emphasize blameless post-mortems, inclusive code reviews, and continuous learning."
+          </p>
+          <p style="font-size: 14px; margin-bottom: 8px; color: var(--accent-red);">
+            <em>Snippet 2 (Threat):</em> "Please pay $150 refundable processing fee via bitcoin wallet before your technical assessment."
+          </p>
+          <p style="font-size: 14px; color: var(--accent-amber);">
+            <em>Snippet 3 (Borderline):</em> "Guaranteed income of $10,000 monthly with only 2 hours of daily task work."
+          </p>
+        </div>
+        <p style="margin-top: 10px; font-size: 13px; color: var(--text-muted);">
+          Highlight any of the snippets above, right-click, and select <strong>"Verify selection with Credible"</strong> to observe precise snippet verification!
+        </p>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
+

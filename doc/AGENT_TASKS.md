@@ -434,24 +434,24 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 # Phase 6 — Demo + Polish
 
-## - [ ] Task 18: Demo Scenarios + Test Pages
+## - [x] ~~Task 18: Demo Scenarios + Test Pages~~
 
-**Build:** Local HTML test pages in `demo/pages/`:
-- `benign.html` — Legitimate job listing, no warnings expected
-- `suspicious.html` — Upfront fee, urgency, credential requests
-- `ambiguous.html` — Mixed signals, low confidence findings
-- `prompt-injection.html` — Page contains "ignore all instructions" text
-- `error-demo.html` — For testing with backend offline
+~~**Build:** Local HTML test pages in `demo/pages/`:~~
+- ~~`benign.html` — Legitimate job listing, no warnings expected~~
+- ~~`suspicious.html` — Upfront fee, urgency, credential requests~~
+- ~~`ambiguous.html` — Mixed signals, low confidence findings~~
+- ~~`prompt-injection.html` — Page contains "ignore all instructions" text~~
+- ~~`error-demo.html` — For testing with backend offline~~
 
-Demo script documenting how to run each scenario. Deterministic fallback demo (works without API key). Backend-offline error demo.
+~~Demo script documenting how to run each scenario. Deterministic fallback demo (works without API key). Backend-offline error demo.~~
 
-**Tests:** Each demo page produces expected report category. Prompt injection page doesn't affect analysis.
+~~**Tests:** Each demo page produces expected report category. Prompt injection page doesn't affect analysis.~~
 
-**Acceptance:**
-- [ ] 5 demo pages exist and serve locally
-- [ ] Each produces expected analysis results
-- [ ] Demo script documented
-- [ ] Works without real API key (mocked/deterministic mode)
+~~**Acceptance:**~~
+- [x] ~~5 demo pages exist and serve locally~~
+- [x] ~~Each produces expected analysis results~~
+- [x] ~~Demo script documented~~
+- [x] ~~Works without real API key (mocked/deterministic mode)~~
 
 ---
 
