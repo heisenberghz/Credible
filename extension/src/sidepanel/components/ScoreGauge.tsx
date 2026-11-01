@@ -32,16 +32,16 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score }) => {
   }, [normalizedScore]);
 
   // Determine theme color based on score
-  let strokeColor = '#10b981'; // Green
+  let strokeColor = '#059669'; // Solid Signal Emerald
   let labelText = 'Clean Signals';
   let badgeClass = 'score-safe';
 
   if (normalizedScore < 50) {
-    strokeColor = '#ef4444'; // Red
+    strokeColor = '#E11D48'; // Solid Signal Crimson
     labelText = 'High Threat';
     badgeClass = 'score-danger';
   } else if (normalizedScore < 85) {
-    strokeColor = '#f59e0b'; // Amber
+    strokeColor = '#D97706'; // Solid Signal Amber
     labelText = 'Caution Warranted';
     badgeClass = 'score-caution';
   }
@@ -68,7 +68,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score }) => {
             cy="48"
             r={radius}
             fill="none"
-            stroke="rgba(255, 255, 255, 0.08)"
+            stroke="#F1F5F9"
             strokeWidth="7"
           />
           {/* Animated Progress Ring */}

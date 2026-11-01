@@ -346,6 +346,42 @@ if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
           sendResponse({ success: true, data: selectionData });
           return false;
         }
+
+        if ((message as any).type === 'CREDIBLE_LOCATE_ELEMENT') {
+          const quote = ((message as any).quote || '').trim().toLowerCase();
+          if (quote) {
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+            let node: Node | null;
+            let targetEl: HTMLElement | null = null;
+            while ((node = walker.nextNode())) {
+              if (node.nodeValue && node.nodeValue.toLowerCase().includes(quote.slice(0, 40))) {
+                targetEl = node.parentElement;
+                break;
+              }
+            }
+
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              const origOutline = targetEl.style.outline;
+              const origOffset = targetEl.style.outlineOffset;
+              const origTransition = targetEl.style.transition;
+              targetEl.style.transition = 'outline 0.2s ease';
+              targetEl.style.outline = '3px solid #0052FF';
+              targetEl.style.outlineOffset = '4px';
+              setTimeout(() => {
+                if (targetEl) {
+                  targetEl.style.outline = origOutline;
+                  targetEl.style.outlineOffset = origOffset;
+                  targetEl.style.transition = origTransition;
+                }
+              }, 3000);
+              sendResponse({ success: true });
+              return false;
+            }
+          }
+          sendResponse({ success: false, reason: 'Element not found' });
+          return false;
+        }
       } catch (err) {
         sendResponse({ success: false, error: String(err) });
         return false;

@@ -13,13 +13,13 @@ const STATUS_CONFIG: Record<
   [TrustDnaStatus.WARNING_FOUND]: {
     label: 'Warning Found',
     icon: '⚠️',
-    bg: '#FEF2F2',
-    text: '#991B1B',
-    border: '#FECACA',
+    bg: '#FFF1F2',
+    text: '#9F1239',
+    border: '#FECDD3',
   },
   [TrustDnaStatus.NO_INDICATOR_DETECTED]: {
     label: 'No Warning Detected',
-    icon: '🛡️',
+    icon: '✓',
     bg: '#ECFDF5',
     text: '#065F46',
     border: '#A7F3D0',
@@ -34,7 +34,7 @@ const STATUS_CONFIG: Record<
   // Backward compatibility aliases
   positive: {
     label: 'No Warning Detected',
-    icon: '🛡️',
+    icon: '✓',
     bg: '#ECFDF5',
     text: '#065F46',
     border: '#A7F3D0',
@@ -42,16 +42,16 @@ const STATUS_CONFIG: Record<
   concern: {
     label: 'Warning Found',
     icon: '⚠️',
-    bg: '#FEF2F2',
-    text: '#991B1B',
-    border: '#FECACA',
+    bg: '#FFF1F2',
+    text: '#9F1239',
+    border: '#FECDD3',
   },
   mixed: {
     label: 'Warning Found',
     icon: '⚠️',
-    bg: '#FEF2F2',
-    text: '#991B1B',
-    border: '#FECACA',
+    bg: '#FFF1F2',
+    text: '#9F1239',
+    border: '#FECDD3',
   },
   not_checked: {
     label: 'Unknown',
@@ -98,16 +98,17 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
           id="trust-dna-heading"
           data-testid="trust-dna-title"
           style={{
-            fontSize: '13px',
-            fontWeight: 700,
+            fontSize: '12px',
+            fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
-            color: '#475569',
+            color: '#0F172A',
+            fontFamily: 'monospace',
           }}
         >
           Trust DNA Profile (6 Dimensions)
         </h3>
-        <span style={{ fontSize: '11px', color: '#64748B' }}>Evidence-Grounded</span>
+        <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'monospace', fontWeight: 600 }}>EVIDENCE-GROUNDED</span>
       </div>
 
       {/* Permanent Core Defensive Philosophy Notice Banner */}

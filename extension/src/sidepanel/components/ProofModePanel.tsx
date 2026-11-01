@@ -166,18 +166,51 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({ entries }) => {
                     style={{
                       backgroundColor: '#F8FAFC',
                       border: '1px solid #E2E8F0',
-                      borderLeft: '3px solid #2563EB',
+                      borderLeft: '3px solid #0052FF',
                       borderRadius: '6px',
                       padding: '8px 10px',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#1E40AF', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#0052FF', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'monospace' }}>
                         1. Raw Observed Signal
                       </span>
-                      <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
-                        {entry.location}
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
+                          {entry.location}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (typeof chrome !== 'undefined' && chrome.tabs?.query) {
+                              chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                                if (tabs[0]?.id) {
+                                  chrome.tabs.sendMessage(tabs[0].id, {
+                                    type: 'CREDIBLE_LOCATE_ELEMENT',
+                                    quote: entry.observed,
+                                  });
+                                }
+                              });
+                            }
+                          }}
+                          data-testid={`proof-locate-${entry.finding_id}`}
+                          title="Locate and highlight element on active webpage"
+                          style={{
+                            fontSize: '10px',
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            padding: '1px 5px',
+                            backgroundColor: '#FFFFFF',
+                            color: '#0F172A',
+                            border: '1px solid #CBD5E1',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          LOCATE ↗
+                        </button>
+                      </div>
                     </div>
                     <blockquote
                       data-testid="proof-observed"
@@ -199,28 +232,28 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({ entries }) => {
                     className="proof-layer proof-layer-interpretation"
                     data-testid="proof-layer-interpretation"
                     style={{
-                      backgroundColor: '#FAF5FF',
-                      border: '1px solid #F3E8FF',
+                      backgroundColor: '#F8FAFC',
+                      border: '1px solid #E2E8F0',
                       borderLeft: '3px solid #7C3AED',
                       borderRadius: '6px',
                       padding: '8px 10px',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#6B21A8', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: 'monospace' }}>
                         2. Threat Interpretation
                       </span>
-                      <span style={{ fontSize: '10px', color: '#7E22CE', fontWeight: 600 }}>
+                      <span style={{ fontSize: '10px', color: '#64748B', fontWeight: 600, fontFamily: 'monospace' }}>
                         {entry.is_deterministic ? 'Deterministic Heuristic' : 'AI Semantic Inference'}
                       </span>
                     </div>
-                    <p data-testid="proof-why" style={{ margin: 0, color: '#3B0764', fontSize: '12px', lineHeight: '1.45' }}>
+                    <p data-testid="proof-why" style={{ margin: 0, color: '#0F172A', fontSize: '12px', lineHeight: '1.45' }}>
                       {entry.why_it_matters}
                     </p>
                     {entry.check_id && (
-                      <div style={{ marginTop: '4px', fontSize: '10px', color: '#9333EA' }}>
+                      <div style={{ marginTop: '4px', fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
                         <span>Rule ID: </span>
-                        <code>{entry.check_id}</code>
+                        <code style={{ color: '#0F172A', fontWeight: 600 }}>{entry.check_id}</code>
                       </div>
                     )}
                   </div>

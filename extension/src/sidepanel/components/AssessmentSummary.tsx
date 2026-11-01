@@ -12,11 +12,11 @@ const STATUS_CONFIG: Record<
 > = {
   [AssessmentStatus.SUSPICIOUS]: {
     label: 'Suspicious Indicators Detected',
-    bg: '#FEF2F2',
-    text: '#991B1B',
-    border: '#FECACA',
+    bg: '#FFF1F2',
+    text: '#9F1239',
+    border: '#FECDD3',
     icon: '⚠️',
-    gradient: 'linear-gradient(135deg, #FEF2F2 0%, #FFF1F2 100%)',
+    gradient: '#FFF1F2',
   },
   [AssessmentStatus.NEEDS_VERIFICATION]: {
     label: 'Verification Recommended',
@@ -24,7 +24,7 @@ const STATUS_CONFIG: Record<
     text: '#92400E',
     border: '#FDE68A',
     icon: '🔍',
-    gradient: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+    gradient: '#FFFBEB',
   },
   [AssessmentStatus.CAUTION]: {
     label: 'Caution Warranted',
@@ -32,7 +32,7 @@ const STATUS_CONFIG: Record<
     text: '#92400E',
     border: '#FDE68A',
     icon: '⚡',
-    gradient: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+    gradient: '#FFFBEB',
   },
   [AssessmentStatus.BENIGN]: {
     label: 'Standard Patterns Observed',
@@ -40,7 +40,7 @@ const STATUS_CONFIG: Record<
     text: '#065F46',
     border: '#A7F3D0',
     icon: '✓',
-    gradient: 'linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%)',
+    gradient: '#ECFDF5',
   },
   [AssessmentStatus.INCONCLUSIVE]: {
     label: 'Inconclusive Signals',
@@ -48,7 +48,7 @@ const STATUS_CONFIG: Record<
     text: '#334155',
     border: '#CBD5E1',
     icon: 'ℹ️',
-    gradient: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
+    gradient: '#F8FAFC',
   },
 };
 
