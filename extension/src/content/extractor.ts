@@ -4,13 +4,12 @@
  * ONLY executes upon explicit user action (never runs unprompted).
  */
 
-import {
+import type {
   ExtractedPageResult,
   ExtractedSelectionResult,
-  MessageType,
   ExtensionMessage,
 } from '../types/extension';
-import { LinkItem } from '../types/analysis';
+import type { LinkItem } from '../types/analysis';
 
 export const MAX_VISIBLE_TEXT_LENGTH = 50000;
 export const MAX_LINKS = 100;
@@ -324,6 +323,9 @@ export function extractSelectionData(doc: Document = document, win: Window = win
   };
 }
 
+const MSG_EXTRACT_PAGE_CONTENT = 'EXTRACT_PAGE_CONTENT';
+const MSG_EXTRACT_SELECTION_CONTENT = 'EXTRACT_SELECTION_CONTENT';
+
 // Runtime message listener for on-demand execution (ONLY triggers on explicit message)
 if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
   chrome.runtime.onMessage.addListener(
@@ -333,20 +335,20 @@ if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
       sendResponse: (res: any) => void
     ) => {
       try {
-        if (message.type === MessageType.EXTRACT_PAGE_CONTENT) {
+        if (message.type === MSG_EXTRACT_PAGE_CONTENT) {
           const pageData = extractPageData(document, window);
           sendResponse({ success: true, data: pageData });
-          return true;
+          return false;
         }
 
-        if (message.type === MessageType.EXTRACT_SELECTION_CONTENT) {
+        if (message.type === MSG_EXTRACT_SELECTION_CONTENT) {
           const selectionData = extractSelectionData(document, window);
           sendResponse({ success: true, data: selectionData });
-          return true;
+          return false;
         }
       } catch (err) {
         sendResponse({ success: false, error: String(err) });
-        return true;
+        return false;
       }
       return false;
     }

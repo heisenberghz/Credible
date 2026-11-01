@@ -132,6 +132,11 @@ export async function handleRequestScan(explicitTabId?: number) {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tabs.length > 0 && tabs[0].id) {
       targetTabId = tabs[0].id;
+    } else {
+      const fallbackTabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      if (fallbackTabs.length > 0 && fallbackTabs[0].id) {
+        targetTabId = fallbackTabs[0].id;
+      }
     }
   }
 
@@ -178,6 +183,7 @@ export async function handleRequestScan(explicitTabId?: number) {
   try {
     pageData = await extractPageFromTab(targetTabId);
   } catch (extractErr) {
+    console.error('[Credible SW] Extraction failed:', extractErr);
     const errMsg = 'Failed to extract content from tab. Ensure page is not a protected browser URL.';
     currentTabState = {
       tabId: targetTabId,
@@ -447,6 +453,11 @@ export async function handleOpenSidePanel(explicitTabId?: number) {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tabs.length > 0 && tabs[0].id) {
       targetTabId = tabs[0].id;
+    } else {
+      const fallbackTabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      if (fallbackTabs.length > 0 && fallbackTabs[0].id) {
+        targetTabId = fallbackTabs[0].id;
+      }
     }
   }
 
