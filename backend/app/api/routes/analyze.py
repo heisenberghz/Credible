@@ -1,21 +1,22 @@
-"""Analysis route for Credible API."""
+"""Analysis route for Credible API with end-to-end pipeline execution."""
 
-from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException, status
 from app.core.logging import log_request_event
 from app.schemas.errors import ErrorCode, ErrorDetail, ErrorResponse
-from app.schemas.findings import CheckStatus, Confidence
-from app.schemas.reports import (
-    AnalysisReport,
-    AssessmentStatus,
-    ExecutedChecksSummary,
-    TrustDnaDimension,
-    TrustDnaStatus,
-)
-from app.schemas.requests import AnalysisMode, AnalysisRequest
+from app.schemas.reports import AnalysisReport
+from app.schemas.requests import AnalysisRequest
+from app.services.ai.service import AIService
+from app.services.checks.registry import default_registry
+from app.services.next_actions import generate_next_best_actions
 from app.services.normalization import NormalizationError, normalize_request
+from app.services.proof_mode import build_proof_mode
+from app.services.reconciliation import reconcile_findings
+from app.services.report_composer import ReportComposer
+from app.services.trust_dna import build_trust_dna
 
 router = APIRouter(prefix="/api/v1", tags=["Analysis"])
+report_composer = ReportComposer()
+ai_service = AIService()
 
 
 @router.post(
@@ -27,10 +28,17 @@ router = APIRouter(prefix="/api/v1", tags=["Analysis"])
         500: {"model": ErrorResponse, "description": "Internal Server Error"},
     },
 )
-def analyze_content(request: AnalysisRequest) -> AnalysisReport:
+async def analyze_content(request: AnalysisRequest) -> AnalysisReport:
     """
-    Analyze user-initiated page or selection content.
-    Returns structured analysis report with Trust DNA, findings, Proof Mode, and actions.
+    Execute full defensive cybersecurity analysis:
+    1. Input normalization & content bounding
+    2. Deterministic URL and text security checks
+    3. AI contextual interpretation with prompt-injection defense
+    4. Deterministic-first reconciliation
+    5. Multidimensional Trust DNA generation
+    6. Proof Mode evidence attribution
+    7. Proportionate Next Best Actions
+    8. Structured report composition
     """
     log_request_event(
         event="analyze_request_received",
@@ -38,6 +46,7 @@ def analyze_content(request: AnalysisRequest) -> AnalysisReport:
         mode=request.mode.value,
     )
 
+    # 1. Normalization & bounding
     try:
         normalized_req, norm_limitations = normalize_request(request)
     except NormalizationError as exc:
@@ -56,109 +65,43 @@ def analyze_content(request: AnalysisRequest) -> AnalysisReport:
             },
         )
 
-    # In Task 2, we return a baseline structured report satisfying the complete schema contract.
-    # Phase 2 will execute real deterministic checks and AI pipeline here.
-    target_url = normalized_req.page.url if normalized_req.mode == AnalysisMode.PAGE else normalized_req.selection.url
+    # 2. Deterministic threat checks
+    check_results, tracker = default_registry.run_all(normalized_req)
 
-    # Initial default dimensions
-    initial_trust_dna = [
-        TrustDnaDimension(
-            id="identity_domain",
-            name="Identity and Domain Signals",
-            status=TrustDnaStatus.UNKNOWN,
-            confidence=Confidence.LOW,
-            summary="Awaiting full deterministic evaluation.",
-            evidence=[],
-            limitations=["External WHOIS and registry lookups are not performed for user privacy."],
-        ),
-        TrustDnaDimension(
-            id="connection_technical",
-            name="Connection and Technical Signals",
-            status=TrustDnaStatus.UNKNOWN,
-            confidence=Confidence.LOW,
-            summary="Protocol evaluation pending.",
-            evidence=[],
-            limitations=[],
-        ),
-        TrustDnaDimension(
-            id="transparency",
-            name="Transparency",
-            status=TrustDnaStatus.UNKNOWN,
-            confidence=Confidence.LOW,
-            summary="Organizational disclosures evaluation pending.",
-            evidence=[],
-            limitations=[],
-        ),
-        TrustDnaDimension(
-            id="page_behavior",
-            name="Page Behavior",
-            status=TrustDnaStatus.UNKNOWN,
-            confidence=Confidence.LOW,
-            summary="Behavioral scripts evaluation pending.",
-            evidence=[],
-            limitations=[],
-        ),
-        TrustDnaDimension(
-            id="content_consistency",
-            name="Content and Offer Consistency",
-            status=TrustDnaStatus.UNKNOWN,
-            confidence=Confidence.LOW,
-            summary="Content claim consistency evaluation pending.",
-            evidence=[],
-            limitations=[],
-        ),
-        TrustDnaDimension(
-            id="credential_payment",
-            name="Credential and Payment Pressure",
-            status=TrustDnaStatus.UNKNOWN,
-            confidence=Confidence.LOW,
-            summary="Payment and credential request evaluation pending.",
-            evidence=[],
-            limitations=[],
-        ),
-    ]
+    # 3. AI contextual analysis (with resilient fallback if offline/unconfigured)
+    ai_output, ai_limitations = await ai_service.run_ai_analysis(normalized_req, check_results)
 
-    all_limitations = [
-        "This assessment does not prove fraud or guarantee safety.",
-        "Analysis is based strictly on observable user-submitted content.",
-    ]
-    all_limitations.extend(norm_limitations)
+    # 4. Finding reconciliation (deterministic guardrails take precedence)
+    reconciled_findings, rec_limitations = reconcile_findings(check_results, ai_output)
 
-    report = AnalysisReport(
-        request_id=normalized_req.request_id,
-        status="completed",
-        assessment_status=AssessmentStatus.INCONCLUSIVE,
-        summary="Request received and normalized successfully. Ready for evaluation pipeline.",
-        analyzed_url=target_url,
-        mode=normalized_req.mode,
-        timestamp=datetime.now(timezone.utc),
-        findings=[],
-        trust_dna=initial_trust_dna,
-        proof_mode=[],
-        next_best_actions=[
-            "Inspect claims independently via official channels.",
-            "Do not submit credentials or payments without verification.",
-        ],
-        checks=ExecutedChecksSummary(
-            executed=["normalization"],
-            not_executed=[
-                "url.ip_host",
-                "url.obfuscation",
-                "content.payment_pressure",
-                "content.urgency",
-                "content.credential_pressure",
-            ],
-            unavailable=[],
-            failed=[],
-        ),
+    # 5. Trust DNA profile
+    trust_dna = build_trust_dna(normalized_req, check_results, ai_output)
+
+    # 6. Proof Mode inspection entries
+    proof_mode = build_proof_mode(reconciled_findings)
+
+    # 7. Next Best Actions
+    next_actions = generate_next_best_actions(reconciled_findings, trust_dna)
+
+    # 8. Compose structured report
+    all_limitations = norm_limitations + ai_limitations + rec_limitations
+
+    report = report_composer.compose(
+        request=normalized_req,
+        check_tracker=tracker,
+        findings=reconciled_findings,
+        trust_dna=trust_dna,
+        proof_mode=proof_mode,
+        next_actions=next_actions,
         limitations=all_limitations,
+        ai_output=ai_output,
     )
 
     log_request_event(
         event="analyze_request_completed",
         request_id=request.request_id,
         status="completed",
+        extra={"status": report.assessment_status.value, "findings": len(report.findings)},
     )
 
     return report
-

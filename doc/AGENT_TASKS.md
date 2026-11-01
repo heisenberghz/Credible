@@ -79,7 +79,7 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-# Phase 2 — Backend Intelligence
+# ~~Phase 2 — Backend Intelligence~~
 
 ## - [x] ~~Task 3: Check Framework + URL/Hostname Checks~~
 
@@ -214,22 +214,22 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 9: Report Composer + Full Pipeline
+## - [x] ~~Task 9: Report Composer + Full Pipeline~~
 
-**Build:** `ReportComposer` assembles: summary, findings, Trust DNA, Proof Mode, Next Best Actions, executed checks, not-executed checks, limitations. Wire the complete analysis pipeline into `POST /api/v1/analyze`: validate → normalize → extract signals → deterministic checks → AI interpretation → validate AI → reconcile → Trust DNA → Proof Mode → actions → compose report → return.
+~~**Build:** `ReportComposer` assembles: summary, findings, Trust DNA, Proof Mode, Next Best Actions, executed checks, not-executed checks, limitations. Wire the complete analysis pipeline into `POST /api/v1/analyze`: validate → normalize → extract signals → deterministic checks → AI interpretation → validate AI → reconcile → Trust DNA → Proof Mode → actions → compose report → return.~~
 
-**Golden fixture tests:** Benign page report, suspicious page report, ambiguous page report, AI-unavailable report, selection-mode report.
+~~**Golden fixture tests:** Benign page report, suspicious page report, ambiguous page report, AI-unavailable report, selection-mode report.~~
 
-**Tests:** Full pipeline integration tests. Golden fixture comparison. Report completeness assertions.
+~~**Tests:** Full pipeline integration tests. Golden fixture comparison. Report completeness assertions.~~
 
-**Acceptance:**
-- [ ] `POST /api/v1/analyze` returns complete structured report
-- [ ] Report includes all sections (findings, Trust DNA, Proof Mode, actions, limitations)
-- [ ] Golden fixtures match expected structure
-- [ ] `curl` test with suspicious content returns real findings
-- [ ] `pytest -v` passes — full backend suite
+~~**Acceptance:**~~
+- [x] ~~`POST /api/v1/analyze` returns complete structured report~~
+- [x] ~~Report includes all sections (findings, Trust DNA, Proof Mode, actions, limitations)~~
+- [x] ~~Golden fixtures match expected structure~~
+- [x] ~~`curl` test with suspicious content returns real findings~~
+- [x] ~~`pytest -v` passes — full backend suite~~
 
-**Phase 2 test gate:** `cd backend && pytest -v` — ALL backend tests pass.
+~~**Phase 2 test gate:** `cd backend && pytest -v` — ALL backend tests pass.~~
 
 ---
 
