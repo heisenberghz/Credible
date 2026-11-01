@@ -43,6 +43,7 @@ describe('Background Service Worker', () => {
     currentTabState.state = 'idle';
     currentTabState.statusText = 'Ready';
     currentTabState.report = null;
+    currentTabState.selectionData = null;
     currentTabState.error = null;
 
     (apiClient.analyzePage as any).mockResolvedValue(mockReport);

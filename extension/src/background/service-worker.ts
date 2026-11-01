@@ -18,12 +18,14 @@ export let currentTabState: {
   state: ScanLifecycleState;
   statusText: string;
   report: AnalysisReport | null;
+  selectionData: SelectionData | null;
   error: string | null;
 } = {
   tabId: null,
   state: 'idle',
   statusText: 'Ready',
   report: null,
+  selectionData: null,
   error: null,
 };
 
@@ -52,7 +54,7 @@ chrome.runtime?.onInstalled?.addListener?.(() => {
 // Context menu click listener: Select-to-Verify
 chrome.contextMenus?.onClicked?.addListener?.((info, tab) => {
   if (info.menuItemId === 'credible-verify-selection' && tab?.id) {
-    handleSelectionScan(tab.id).catch((err) => {
+    handleSelectionScan(tab.id, info.selectionText).catch((err) => {
       console.warn('[Credible SW] Selection scan failed:', err);
     });
   }
@@ -87,6 +89,7 @@ chrome.runtime?.onMessage?.addListener?.(
           state: currentTabState.state,
           statusText: currentTabState.statusText,
           report: currentTabState.report,
+          selectionData: currentTabState.selectionData,
           error: currentTabState.error,
         });
         return false;
@@ -102,6 +105,7 @@ chrome.runtime?.onMessage?.addListener?.(
         currentTabState.state = 'completed';
         currentTabState.statusText = 'Scan Complete';
         currentTabState.report = message.report;
+        currentTabState.selectionData = message.selectionData || null;
         currentTabState.error = null;
         return false;
       }
@@ -153,6 +157,7 @@ export async function handleRequestScan(explicitTabId?: number) {
     state: 'extracting',
     statusText: 'Reading visible page signals...',
     report: null,
+    selectionData: null,
     error: null,
   };
   broadcastMessage({
@@ -179,6 +184,7 @@ export async function handleRequestScan(explicitTabId?: number) {
       state: 'failed',
       statusText: 'Extraction Failed',
       report: null,
+      selectionData: null,
       error: errMsg,
     };
     broadcastMessage({
@@ -205,6 +211,7 @@ export async function handleRequestScan(explicitTabId?: number) {
       state: 'completed',
       statusText: 'Scan Complete',
       report,
+      selectionData: null,
       error: null,
     };
 
@@ -226,6 +233,7 @@ export async function handleRequestScan(explicitTabId?: number) {
       state: 'failed',
       statusText: 'Scan Failed',
       report: null,
+      selectionData: null,
       error: friendlyError,
     };
 
@@ -246,7 +254,7 @@ export async function handleRequestScan(explicitTabId?: number) {
 /**
  * Handle selection scan triggered from context menu.
  */
-export async function handleSelectionScan(tabId: number) {
+export async function handleSelectionScan(tabId: number, fallbackText?: string) {
   // Open side panel
   if (chrome.sidePanel?.open) {
     await chrome.sidePanel.open({ tabId }).catch(() => {});
@@ -257,6 +265,7 @@ export async function handleSelectionScan(tabId: number) {
     state: 'extracting',
     statusText: 'Extracting selected text...',
     report: null,
+    selectionData: null,
     error: null,
   };
   broadcastMessage({
@@ -265,16 +274,38 @@ export async function handleSelectionScan(tabId: number) {
     statusText: 'Extracting selected text...',
   });
 
-  let selectionData: SelectionData;
+  let selectionData: SelectionData | null = null;
   try {
     selectionData = await extractSelectionFromTab(tabId);
-  } catch (err) {
-    const errMsg = 'Failed to extract text selection from tab.';
+  } catch {
+    // If content script extract fails, fall back to context menu selection text
+    if (fallbackText && fallbackText.trim()) {
+      selectionData = {
+        url: '',
+        text: fallbackText.trim(),
+        link: null,
+      };
+    }
+  }
+
+  // If extraction succeeded but had empty text and fallback text exists
+  if ((!selectionData || !selectionData.text.trim()) && fallbackText && fallbackText.trim()) {
+    selectionData = {
+      url: selectionData?.url || '',
+      text: fallbackText.trim(),
+      link: selectionData?.link || null,
+    };
+  }
+
+  // Validate non-empty selection
+  if (!selectionData || !selectionData.text || !selectionData.text.trim()) {
+    const errMsg = 'Selection is empty. Please select visible text to verify.';
     currentTabState = {
       tabId,
       state: 'failed',
-      statusText: 'Extraction Failed',
+      statusText: 'Selection Empty',
       report: null,
+      selectionData: null,
       error: errMsg,
     };
     broadcastMessage({
@@ -284,6 +315,24 @@ export async function handleSelectionScan(tabId: number) {
     return;
   }
 
+  // Enforce 5,000 character maximum bound
+  if (selectionData.text.length > 5000) {
+    selectionData.text = selectionData.text.slice(0, 5000);
+  }
+
+  // Resolve target tab URL if missing
+  if (!selectionData.url) {
+    try {
+      const tab = await chrome.tabs.get(tabId);
+      if (tab?.url) {
+        selectionData.url = tab.url;
+      }
+    } catch {
+      // Non-fatal
+    }
+  }
+
+  currentTabState.selectionData = selectionData;
   currentTabState.state = 'analyzing';
   currentTabState.statusText = 'Evaluating selection...';
   broadcastMessage({
@@ -299,11 +348,13 @@ export async function handleSelectionScan(tabId: number) {
       state: 'completed',
       statusText: 'Scan Complete',
       report,
+      selectionData,
       error: null,
     };
     broadcastMessage({
       type: MessageType.SCAN_SUCCESS,
       report,
+      selectionData,
     });
   } catch (err) {
     const friendlyError = mapErrorToUserMessage(err);
@@ -312,6 +363,7 @@ export async function handleSelectionScan(tabId: number) {
       state: 'failed',
       statusText: 'Scan Failed',
       report: null,
+      selectionData: null,
       error: friendlyError,
     };
     broadcastMessage({

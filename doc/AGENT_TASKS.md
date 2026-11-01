@@ -356,20 +356,20 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-## - [ ] Task 15: Select-to-Verify
+## - [x] ~~Task 15: Select-to-Verify~~
 
-**Build:** Context menu: "Analyze with Credible" appears on text selection. Selection capture: only selected text + optional link metadata. Size limits (max 5,000 chars). Sensitive-data safeguards. Backend integration in `selection` mode. Results displayed in side panel with selection context highlighted.
+~~**Build:** Context menu: "Analyze with Credible" appears on text selection. Selection capture: only selected text + optional link metadata. Size limits (max 5,000 chars). Sensitive-data safeguards. Backend integration in `selection` mode. Results displayed in side panel with selection context highlighted.~~
 
-**Tests:** Empty selection, long selection, selected link, malicious content in selection, size limits, prompt-injection text in selection.
+~~**Tests:** Empty selection, long selection, selected link, malicious content in selection, size limits, prompt-injection text in selection.~~
 
-**Acceptance:**
-- [ ] Context menu appears on text selection
-- [ ] Only selected text is captured (not full page)
-- [ ] Size limits enforced
-- [ ] Results display in side panel
-- [ ] `pnpm test` passes
+~~**Acceptance:**~~
+- [x] ~~Context menu appears on text selection~~
+- [x] ~~Only selected text is captured (not full page)~~
+- [x] ~~Size limits enforced~~
+- [x] ~~Results display in side panel~~
+- [x] ~~`pnpm test` passes~~
 
-**Phase 4 test gate:** `cd extension && pnpm test` — all pass. Side panel displays all report sections.
+~~**Phase 4 test gate:** `cd extension && pnpm test` — all pass. Side panel displays all report sections.~~
 
 ---
 

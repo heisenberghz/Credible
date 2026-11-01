@@ -2,7 +2,7 @@
  * Extension internal messaging and state machine types
  */
 
-import { AnalysisReport, ErrorResponse } from './analysis';
+import { AnalysisReport, ErrorResponse, SelectionData } from './analysis';
 
 export type ScanLifecycleState = 'idle' | 'extracting' | 'analyzing' | 'completed' | 'failed';
 
@@ -61,6 +61,7 @@ export interface ScanProgressMessage {
 export interface ScanSuccessMessage {
   type: MessageType.SCAN_SUCCESS;
   report: AnalysisReport;
+  selectionData?: SelectionData | null;
 }
 
 export interface ScanErrorMessage {

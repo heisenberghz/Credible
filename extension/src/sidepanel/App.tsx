@@ -4,8 +4,9 @@ import {
   MessageType,
   ScanLifecycleState,
 } from '../types/extension';
-import { AnalysisReport } from '../types/analysis';
+import { AnalysisMode, AnalysisReport, SelectionData } from '../types/analysis';
 import { Header } from './components/Header';
+import { SelectionContextBanner } from './components/SelectionContextBanner';
 import { AssessmentSummary } from './components/AssessmentSummary';
 import { FindingList } from './components/FindingList';
 import { NextBestActionList } from './components/NextBestActionList';
@@ -19,6 +20,7 @@ export const App: React.FC = () => {
   const [state, setState] = useState<ScanLifecycleState>('idle');
   const [statusText, setStatusText] = useState<string>('Ready');
   const [report, setReport] = useState<AnalysisReport | null>(null);
+  const [selectionData, setSelectionData] = useState<SelectionData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Fetch initial report & listen for live background updates
@@ -32,6 +34,7 @@ export const App: React.FC = () => {
             if (res.state) setState(res.state);
             if (res.statusText) setStatusText(res.statusText);
             if (res.report) setReport(res.report);
+            if (res.selectionData) setSelectionData(res.selectionData);
             if (res.error) setErrorMessage(res.error);
           }
         }
@@ -45,6 +48,9 @@ export const App: React.FC = () => {
           setState('completed');
           setStatusText('Scan Complete');
           setReport(message.report);
+          if (message.selectionData) {
+            setSelectionData(message.selectionData);
+          }
           setErrorMessage(null);
         } else if (message.type === MessageType.SCAN_ERROR) {
           setState('failed');
@@ -103,6 +109,9 @@ export const App: React.FC = () => {
 
         {report && !isScanning && (
           <>
+            {report.mode === AnalysisMode.SELECTION && (
+              <SelectionContextBanner selection={selectionData} />
+            )}
             <AssessmentSummary report={report} />
             <NextBestActionList actions={report.next_best_actions} />
             <FindingList findings={report.findings} />
