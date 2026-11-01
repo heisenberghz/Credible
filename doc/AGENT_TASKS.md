@@ -375,26 +375,26 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 # Phase 5 — Integration + Security
 
-## - [ ] Task 16: End-to-End Integration
+## - [x] ~~Task 16: End-to-End Integration~~
 
-**Build:** Test the complete flows:
+~~**Build:** Test the complete flows:~~
 
-**Page scan:** User opens popup → clicks Scan → content extracted → backend analyzes → side panel opens with full report.
+~~**Page scan:** User opens popup → clicks Scan → content extracted → backend analyzes → side panel opens with full report.~~
 
-**Selection scan:** User selects text → right-click → Analyze with Credible → backend analyzes → side panel shows selection results.
+~~**Selection scan:** User selects text → right-click → Analyze with Credible → backend analyzes → side panel shows selection results.~~
 
-**Contract verification:** TypeScript types match Pydantic schemas (enum values, optional fields, error shapes).
+~~**Contract verification:** TypeScript types match Pydantic schemas (enum values, optional fields, error shapes).~~
 
-**Failure paths:** Backend offline, slow response (timeout), AI provider outage, malformed JSON response, rate limit, partial checks.
+~~**Failure paths:** Backend offline, slow response (timeout), AI provider outage, malformed JSON response, rate limit, partial checks.~~
 
-**Tests:** Integration tests with mock backend. Contract fixture validation. All failure scenarios.
+~~**Tests:** Integration tests with mock backend. Contract fixture validation. All failure scenarios.~~
 
-**Acceptance:**
-- [ ] Page scan works end-to-end
-- [ ] Selection scan works end-to-end
-- [ ] TS types match backend contracts
-- [ ] All failure paths show appropriate UI states
-- [ ] Both test suites pass: `pytest -v` + `pnpm test`
+~~**Acceptance:**~~
+- [x] ~~Page scan works end-to-end~~
+- [x] ~~Selection scan works end-to-end~~
+- [x] ~~TS types match backend contracts~~
+- [x] ~~All failure paths show appropriate UI states~~
+- [x] ~~Both test suites pass: `pytest -v` + `pnpm test`~~
 
 ---
 
