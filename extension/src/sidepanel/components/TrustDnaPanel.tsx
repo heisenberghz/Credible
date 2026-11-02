@@ -86,11 +86,11 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
       aria-labelledby="trust-dna-heading"
       style={{
         backgroundColor: '#FFFFFF',
-        borderRadius: '14px',
-        border: '1px solid #E2E8F0',
+        borderRadius: '18px',
+        border: '1px solid #ECEFF5',
         padding: '16px',
-        marginBottom: '16px',
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+        marginBottom: '14px',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -102,13 +102,12 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
             fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
-            color: '#0F172A',
-            fontFamily: 'monospace',
+            color: '#111827',
           }}
         >
           Trust DNA Profile (6 Dimensions)
         </h3>
-        <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'monospace', fontWeight: 600 }}>EVIDENCE-GROUNDED</span>
+        <span style={{ fontSize: '10.5px', color: '#8E95A5', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700 }}>EVIDENCE-GROUNDED</span>
       </div>
 
       {/* Permanent Core Defensive Philosophy Notice Banner */}
@@ -120,9 +119,9 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
           alignItems: 'flex-start',
           gap: '8px',
           padding: '10px 12px',
-          borderRadius: '8px',
+          borderRadius: '12px',
           backgroundColor: '#F8FAFC',
-          border: '1px solid #E2E8F0',
+          border: '1px solid #ECEFF5',
           marginBottom: '14px',
           fontSize: '11px',
           lineHeight: '1.45',
@@ -133,7 +132,7 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
           ℹ️
         </span>
         <div>
-          <strong style={{ color: '#0F172A', display: 'block', marginBottom: '2px' }}>
+          <strong style={{ color: '#111827', display: 'block', marginBottom: '2px' }}>
             Absence of a warning is not proof of safety.
           </strong>
           <span>

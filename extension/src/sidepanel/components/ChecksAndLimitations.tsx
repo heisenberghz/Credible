@@ -22,11 +22,11 @@ export const ChecksAndLimitations: React.FC<ChecksAndLimitationsProps> = ({
       aria-labelledby="checks-heading"
       style={{
         backgroundColor: '#FFFFFF',
-        borderRadius: '14px',
-        border: '1px solid #E2E8F0',
+        borderRadius: '18px',
+        border: '1px solid #ECEFF5',
         padding: '16px',
-        marginBottom: '16px',
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+        marginBottom: '14px',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -34,11 +34,11 @@ export const ChecksAndLimitations: React.FC<ChecksAndLimitationsProps> = ({
           id="checks-heading"
           data-testid="checks-title"
           style={{
-            fontSize: '13px',
-            fontWeight: 700,
+            fontSize: '12px',
+            fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
-            color: '#475569',
+            color: '#111827',
           }}
         >
           Check Scope & Limitations

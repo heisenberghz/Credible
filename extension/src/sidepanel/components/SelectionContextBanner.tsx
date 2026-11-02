@@ -13,11 +13,12 @@ export const SelectionContextBanner: React.FC<SelectionContextBannerProps> = ({
       className="selection-context-card"
       data-testid="selection-context-banner"
       style={{
-        backgroundColor: '#EFF6FF',
-        borderRadius: '12px',
-        padding: '12px 14px',
-        border: '1px solid #BFDBFE',
+        backgroundColor: '#FFFFFF',
+        borderRadius: '16px',
+        padding: '14px 16px',
+        border: '1px solid #ECEFF5',
         marginBottom: '14px',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
       }}
     >
       <div
@@ -33,8 +34,8 @@ export const SelectionContextBanner: React.FC<SelectionContextBannerProps> = ({
           data-testid="selection-badge-label"
           style={{
             fontSize: '11px',
-            fontWeight: 700,
-            color: '#1D4ED8',
+            fontWeight: 800,
+            color: '#2563EB',
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
           }}
@@ -49,14 +50,14 @@ export const SelectionContextBanner: React.FC<SelectionContextBannerProps> = ({
           style={{
             fontSize: '13px',
             fontStyle: 'italic',
-            color: '#0F172A',
+            color: '#111827',
             lineHeight: '1.45',
-            backgroundColor: '#FFFFFF',
-            padding: '8px 12px',
-            borderRadius: '6px',
-            border: '1px solid #BFDBFE',
+            backgroundColor: '#F8FAFC',
+            padding: '10px 14px',
+            borderRadius: '10px',
+            border: '1px solid #ECEFF5',
             wordBreak: 'break-word',
-            margin: '4px 0',
+            margin: '6px 0',
           }}
         >
           "{selection.text}"

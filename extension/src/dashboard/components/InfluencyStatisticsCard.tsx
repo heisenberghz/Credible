@@ -35,8 +35,6 @@ export const InfluencyStatisticsCard: React.FC<InfluencyStatisticsCardProps> = (
     scoreText: `${val.score} / 100`,
   }));
 
-  const activeCol = chartColumns.find((c) => c.label === selectedDimension) || chartColumns[0];
-
   return (
     <div className="influency-card influency-stats-card">
       {/* Header */}
@@ -153,7 +151,7 @@ export const InfluencyStatisticsCard: React.FC<InfluencyStatisticsCardProps> = (
                     {/* Tooltip on active bar */}
                     {isSelected && (
                       <div className="influency-bar-tooltip">
-                        <span className="tooltip-amount">{activeCol.scoreText}</span>
+                        <span className="tooltip-amount">{col.scoreText}</span>
                         <span className="tooltip-date">{col.label} Trust Score</span>
                         <div className="tooltip-pin-dot" />
                       </div>

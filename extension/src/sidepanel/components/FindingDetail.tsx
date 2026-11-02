@@ -36,11 +36,11 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
       data-finding-id={finding.id}
       style={{
         backgroundColor: '#FFFFFF',
-        borderRadius: '12px',
-        border: '1px solid #E2E8F0',
-        padding: '14px',
+        borderRadius: '16px',
+        border: '1px solid #ECEFF5',
+        padding: '15px',
         marginBottom: '10px',
-        boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
       }}
     >
       {/* Badges Row */}

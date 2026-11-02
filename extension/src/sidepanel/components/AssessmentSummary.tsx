@@ -120,11 +120,11 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
       data-testid="assessment-summary"
       style={{
         backgroundColor: '#FFFFFF',
-        borderRadius: '14px',
+        borderRadius: '18px',
         padding: '16px',
-        border: '1px solid #E2E8F0',
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
-        marginBottom: '16px',
+        border: '1px solid #ECEFF5',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
+        marginBottom: '14px',
       }}
     >
       {/* Verdict Header Badge with Copy Button */}
@@ -144,12 +144,12 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
             alignItems: 'center',
             gap: '8px',
             padding: '8px 12px',
-            borderRadius: '8px',
+            borderRadius: '12px',
             backgroundColor: config.bg,
             color: config.text,
             border: `1px solid ${config.border}`,
             fontWeight: 700,
-            fontSize: '13px',
+            fontSize: '12.5px',
             flexGrow: 1,
           }}
         >
@@ -185,10 +185,10 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
       <p
         data-testid="summary-text"
         style={{
-          fontSize: '14px',
-          lineHeight: '1.5',
-          color: '#1E293B',
-          fontWeight: 400,
+          fontSize: '13.5px',
+          lineHeight: '1.55',
+          color: '#111827',
+          fontWeight: 500,
           marginBottom: '12px',
         }}
       >
@@ -200,10 +200,10 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '4px',
+          gap: '5px',
           fontSize: '11px',
-          color: '#64748B',
-          borderTop: '1px solid #F1F5F9',
+          color: '#8E95A5',
+          borderTop: '1px solid #ECEFF5',
           paddingTop: '10px',
         }}
       >

@@ -32,11 +32,11 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
       aria-labelledby="next-actions-heading"
       style={{
         backgroundColor: '#FFFFFF',
-        borderRadius: '14px',
-        border: '1px solid #E2E8F0',
-        padding: '14px 16px',
-        marginBottom: '16px',
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+        borderRadius: '18px',
+        border: '1px solid #ECEFF5',
+        padding: '16px',
+        marginBottom: '14px',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -48,8 +48,7 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
             fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
-            color: '#0F172A',
-            fontFamily: 'monospace',
+            color: '#111827',
           }}
         >
           Recommended Next Actions
@@ -59,12 +58,11 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
           style={{
             fontSize: '11px',
             fontWeight: 700,
-            fontFamily: 'monospace',
-            padding: '2px 8px',
-            borderRadius: '4px',
-            backgroundColor: isAllChecked ? '#ECFDF5' : '#F1F5F9',
-            color: isAllChecked ? '#059669' : '#0052FF',
-            border: isAllChecked ? '1px solid #A7F3D0' : '1px solid #CBD5E1',
+            fontFamily: 'var(--font-mono, monospace)',
+            padding: '2.5px 8px',
+            borderRadius: '999px',
+            backgroundColor: isAllChecked ? '#D4FF00' : '#E0EAFF',
+            color: isAllChecked ? '#111827' : '#2563EB',
             transition: 'all 0.2s ease',
           }}
         >
@@ -100,9 +98,9 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
                 alignItems: 'flex-start',
                 gap: '10px',
                 padding: '10px 12px',
-                borderRadius: '8px',
+                borderRadius: '12px',
                 backgroundColor: isChecked ? '#F8FAFC' : '#FFFFFF',
-                border: isChecked ? '1px solid #CBD5E1' : '1px solid #E2E8F0',
+                border: isChecked ? '1px solid #E2E8F0' : '1px solid #ECEFF5',
                 cursor: 'pointer',
                 opacity: isChecked ? 0.65 : 1,
                 transition: 'all 0.15s ease-in-out',
@@ -116,7 +114,7 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
                 style={{
                   marginTop: '3px',
                   cursor: 'pointer',
-                  accentColor: isChecked ? '#059669' : '#0F172A',
+                  accentColor: isChecked ? '#111827' : '#2563EB',
                 }}
                 aria-label={`Mark action ${idx + 1} as verified`}
               />
@@ -124,7 +122,7 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
                 data-testid="action-text"
                 style={{
                   fontSize: '13px',
-                  color: isChecked ? '#64748B' : '#1E293B',
+                  color: isChecked ? '#8E95A5' : '#111827',
                   lineHeight: '1.45',
                   fontWeight: 500,
                   textDecoration: isChecked ? 'line-through' : 'none',

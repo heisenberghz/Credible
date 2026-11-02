@@ -25,11 +25,11 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
         aria-labelledby="proof-mode-heading"
         style={{
           backgroundColor: '#FFFFFF',
-          borderRadius: '14px',
-          border: '1px solid #E2E8F0',
+          borderRadius: '18px',
+          border: '1px solid #ECEFF5',
           padding: '16px',
-          marginBottom: '16px',
-          boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+          marginBottom: '14px',
+          boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -112,11 +112,11 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
       aria-labelledby="proof-mode-heading"
       style={{
         backgroundColor: '#FFFFFF',
-        borderRadius: '14px',
-        border: '1px solid #E2E8F0',
+        borderRadius: '18px',
+        border: '1px solid #ECEFF5',
         padding: '16px',
-        marginBottom: '16px',
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
+        marginBottom: '14px',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -124,16 +124,16 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
           id="proof-mode-heading"
           data-testid="proof-mode-title"
           style={{
-            fontSize: '13px',
-            fontWeight: 700,
+            fontSize: '12px',
+            fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.04em',
-            color: '#475569',
+            color: '#111827',
           }}
         >
           Proof Mode Trace ({entries.length})
         </h3>
-        <span style={{ fontSize: '11px', color: '#64748B' }}>Audit Evidence</span>
+        <span style={{ fontSize: '10.5px', color: '#8E95A5', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700 }}>AUDIT EVIDENCE</span>
       </div>
 
       <div

@@ -1,5 +1,4 @@
 import React from 'react';
-import { CredibleLogoMark } from '../../components/CredibleLogoMark';
 
 interface HeaderProps {
   onScan: () => void;
@@ -15,43 +14,44 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px 16px',
-        borderBottom: '1px solid #1E293B',
-        backgroundColor: '#090D16',
+        padding: '12px 14px',
+        borderBottom: '1px solid #ECEFF5',
+        backgroundColor: '#FFFFFF',
         position: 'sticky',
         top: 0,
         zIndex: 30,
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
+        boxShadow: '0 2px 8px rgba(17, 24, 39, 0.03)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <div
           style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #1E293B, #0F172A)',
-            border: '1px solid #334155',
+            width: '28px',
+            height: '28px',
+            borderRadius: '50%',
+            backgroundColor: '#111827',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 0 12px rgba(0, 82, 255, 0.3)',
           }}
           aria-hidden="true"
         >
-          <CredibleLogoMark size={20} />
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L3 7V12C3 17.5 6.8 22.7 12 24C17.2 22.7 21 17.5 21 12V7L12 2Z" fill="#111827" stroke="#FFFFFF" strokeWidth="1.5" />
+            <path d="M12 6L7 12L12 18L17 12L12 6Z" fill="#D4FF00" />
+          </svg>
         </div>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <h2 style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em', textTransform: 'uppercase', lineHeight: 1.2, margin: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <h2 style={{ fontSize: '13px', fontWeight: 800, color: '#111827', letterSpacing: '-0.01em', margin: 0, lineHeight: 1.1 }}>
               CREDIBLE
             </h2>
-            <span style={{ fontSize: '9px', fontWeight: 800, fontFamily: 'monospace', padding: '1px 5px', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#E2E8F0', border: '1px solid rgba(255, 255, 255, 0.18)', letterSpacing: '0.04em' }}>
-              v2.4 AUDIT
+            <span style={{ fontSize: '9px', fontWeight: 800, backgroundColor: '#D4FF00', color: '#111827', padding: '1px 5px', borderRadius: '4px', letterSpacing: '0.04em' }}>
+              PRO
             </span>
           </div>
-          <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 500, letterSpacing: '-0.01em', display: 'block' }}>
+          <span style={{ fontSize: '10.5px', color: '#8E95A5', fontWeight: 500, display: 'block' }}>
             Defensive Security Engine
           </span>
         </div>
@@ -70,14 +70,13 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '5px',
-            padding: '6px 10px',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            color: '#F1F5F9',
-            border: '1px solid rgba(255, 255, 255, 0.16)',
-            borderRadius: '6px',
-            fontSize: '11px',
-            fontFamily: 'monospace',
+            gap: '4px',
+            padding: '5px 9px',
+            backgroundColor: '#F4F5F8',
+            color: '#111827',
+            border: '1px solid #ECEFF5',
+            borderRadius: '999px',
+            fontSize: '10.5px',
             fontWeight: 700,
             cursor: 'pointer',
             transition: 'all 0.15s ease',
@@ -99,20 +98,17 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '5px',
             padding: '6px 12px',
-            backgroundColor: isScanning ? 'rgba(255, 255, 255, 0.1)' : '#0052FF',
-            color: isScanning ? '#64748B' : '#FFFFFF',
-            border: '1px solid',
-            borderColor: isScanning ? 'transparent' : '#0052FF',
-            borderRadius: '6px',
+            backgroundColor: isScanning ? '#E5E7EB' : '#111827',
+            color: isScanning ? '#6B7280' : '#FFFFFF',
+            border: 'none',
+            borderRadius: '999px',
             fontSize: '11px',
-            fontFamily: 'monospace',
-            fontWeight: 800,
-            letterSpacing: '0.04em',
-            textTransform: 'uppercase',
+            fontWeight: 700,
+            letterSpacing: '0.02em',
             cursor: isScanning ? 'not-allowed' : 'pointer',
-            boxShadow: isScanning ? 'none' : '0 0 14px rgba(0, 82, 255, 0.4)',
+            boxShadow: isScanning ? 'none' : '0 2px 8px rgba(17, 24, 39, 0.12)',
             transition: 'all 0.15s ease',
           }}
         >
@@ -122,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
               <path d="M12 2a10 10 0 0 1 10 10" />
             </svg>
           ) : (
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#D4FF00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
             </svg>
           )}

@@ -37,18 +37,24 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
   let strokeColor = '#059669'; // Solid Signal Emerald
   let labelText = 'Clean Signals';
   let badgeClass = 'score-safe';
-  let glowColor = 'rgba(5, 150, 105, 0.45)';
+  let glowColor = 'rgba(5, 150, 105, 0.35)';
 
   if (normalizedScore < 50) {
     strokeColor = '#E11D48'; // Solid Signal Crimson
     labelText = 'High Threat';
     badgeClass = 'score-danger';
-    glowColor = 'rgba(225, 29, 72, 0.5)';
+    glowColor = 'rgba(225, 29, 72, 0.35)';
   } else if (normalizedScore < 85) {
     strokeColor = '#D97706'; // Solid Signal Amber
     labelText = 'Caution Warranted';
     badgeClass = 'score-caution';
-    glowColor = 'rgba(217, 119, 6, 0.45)';
+    glowColor = 'rgba(217, 119, 6, 0.35)';
+  } else {
+    // Top tier safety - Electric lime accent
+    strokeColor = '#10B981';
+    labelText = 'Clean Signals';
+    badgeClass = 'score-safe';
+    glowColor = 'rgba(16, 185, 129, 0.35)';
   }
 
   // Circular gauge geometry
@@ -182,11 +188,11 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
         flexWrap: 'nowrap',
         alignItems: 'center',
         gap: '16px',
-        padding: '14px 16px',
+        padding: '16px',
         backgroundColor: '#FFFFFF',
-        border: '1px solid #CBD5E1',
-        borderRadius: '12px',
-        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05), 0 6px 18px -4px rgba(15, 23, 42, 0.04)',
+        border: '1px solid #ECEFF5',
+        borderRadius: '18px',
+        boxShadow: '0 4px 16px rgba(17, 24, 39, 0.02)',
         marginBottom: '14px',
       }}
     >
@@ -199,7 +205,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
         >
           <span
             className="gauge-title"
-            style={{ fontSize: '12px', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'monospace' }}
+            style={{ fontSize: '12px', fontWeight: 800, color: '#111827', textTransform: 'uppercase', letterSpacing: '0.04em' }}
           >
             Safety Index
           </span>
@@ -209,14 +215,14 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
               fontSize: '10px',
               fontWeight: 800,
               textTransform: 'uppercase',
-              padding: '2px 8px',
+              padding: '2.5px 8px',
               borderRadius: '9999px',
             }}
           >
             {labelText}
           </span>
         </div>
-        <p className="gauge-caption" style={{ fontSize: '11px', color: '#64748B', lineHeight: 1.45, margin: 0 }}>
+        <p className="gauge-caption" style={{ fontSize: '11px', color: '#8E95A5', lineHeight: 1.45, margin: 0 }}>
           Deterministic multi-vector risk evaluation of observable indicators.
         </p>
       </div>
