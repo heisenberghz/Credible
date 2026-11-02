@@ -123,75 +123,82 @@ export const App: React.FC = () => {
 
   return (
     <div className="popup-container" data-testid="popup-container">
-      {/* Header */}
+      {/* Curved Header Bar */}
       <header className="popup-header">
         <div className="brand-wrapper">
-          <div className="brand-icon" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div className="brand-icon-shield" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
           <div>
-            <h1 className="brand-title">Credible</h1>
+            <div className="brand-title-row">
+              <h1 className="brand-title"><span>Credible</span></h1>
+              <span className="brand-pro-chip">PRO</span>
+            </div>
             <p className="brand-tagline">Defensive Security</p>
           </div>
         </div>
+        <div className="popup-engine-badge">
+          <span className="engine-status-dot" />
+          <span>ACTIVE</span>
+        </div>
       </header>
 
-      {/* Center Radar / Pulse / Status Area */}
+      {/* Center Radar / Pulse / Status Area with Curved Container Card */}
       <main className="status-display">
-        <div className="pulse-wrapper" data-testid="pulse-wrapper">
-          {isScanning && (
-            <>
-              <div className="pulse-ring" />
-              <div className="pulse-ring" />
-            </>
-          )}
-          <div
-            className={`pulse-core ${state === 'completed' ? 'completed' : ''} ${state === 'failed' ? 'failed' : ''}`}
-            data-testid="pulse-core"
-          >
-            {state === 'completed' ? (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            ) : state === 'failed' ? (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-            ) : (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4" />
-                <path d="M12 8h.01" />
-              </svg>
+        <div className="status-card-inner">
+          <div className="pulse-wrapper" data-testid="pulse-wrapper">
+            {isScanning && (
+              <>
+                <div className="pulse-ring pulse-ring-lime" />
+                <div className="pulse-ring pulse-ring-blue" />
+              </>
             )}
+            <div
+              className={`pulse-core ${state === 'completed' ? 'completed' : ''} ${state === 'failed' ? 'failed' : ''}`}
+              data-testid="pulse-core"
+            >
+              {state === 'completed' ? (
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : state === 'failed' ? (
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+              ) : (
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div
-          className={`status-badge ${isScanning ? 'scanning' : ''} ${state === 'completed' ? 'completed' : ''} ${state === 'failed' ? 'failed' : ''}`}
-          data-testid="status-badge"
-        >
-          <span className="status-dot" />
-          <span data-testid="status-text">{statusText}</span>
-        </div>
+          <div
+            className={`status-badge ${isScanning ? 'scanning' : ''} ${state === 'completed' ? 'completed' : ''} ${state === 'failed' ? 'failed' : ''}`}
+            data-testid="status-badge"
+          >
+            <span className="status-dot" />
+            <span data-testid="status-text">{statusText}</span>
+          </div>
 
-        <p className="status-description" data-testid="status-description">
-          {state === 'idle' && 'Click below to inspect the active tab for security, deception, and phishing threats.'}
-          {state === 'extracting' && 'Extracting visible DOM text, forms, and security signals safely...'}
-          {state === 'analyzing' && 'Reconciling deterministic rules and defensive intelligence...'}
-          {state === 'completed' &&
-            (report
-              ? `Status: ${report.assessment_status.replace(/_/g, ' ').toUpperCase()}`
-              : 'Scan complete. View deep Trust DNA in side panel.')}
-          {state === 'failed' && (errorMessage || 'Scan could not complete. Check backend connection.')}
-        </p>
+          <p className="status-description" data-testid="status-description">
+            {state === 'idle' && 'Click below to inspect the active tab for security, deception, and phishing threats.'}
+            {state === 'extracting' && 'Extracting visible DOM text, forms, and security signals safely...'}
+            {state === 'analyzing' && 'Reconciling deterministic rules and defensive intelligence...'}
+            {state === 'completed' &&
+              (report
+                ? `Status: ${report.assessment_status.replace(/_/g, ' ').toUpperCase()}`
+                : 'Scan complete. View deep Trust DNA in side panel.')}
+            {state === 'failed' && (errorMessage || 'Scan could not complete. Check backend connection.')}
+          </p>
+        </div>
       </main>
 
-      {/* Actions */}
+      {/* Curved Action Buttons */}
       <footer className="actions-section">
         {state === 'completed' ? (
           <>
@@ -201,7 +208,7 @@ export const App: React.FC = () => {
               data-testid="view-sidepanel-btn"
             >
               <span>View Full Analysis in Side Panel</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
                 <line x1="10" y1="14" x2="21" y2="3" />
@@ -211,8 +218,11 @@ export const App: React.FC = () => {
               className="btn-secondary"
               onClick={handleScan}
               data-testid="rescan-btn"
-              style={{ marginTop: '6px' }}
             >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
               <span>Scan Current Page</span>
             </button>
           </>
@@ -223,6 +233,9 @@ export const App: React.FC = () => {
             disabled={isScanning}
             data-testid="scan-btn"
           >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
             {isScanning ? (
               <span>Analyzing Page...</span>
             ) : state === 'failed' ? (
@@ -238,7 +251,12 @@ export const App: React.FC = () => {
           onClick={handleOpenSidePanel}
           data-testid="open-sidepanel-link"
         >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="15" y1="3" x2="15" y2="21" />
+          </svg>
           <span>Open Side Panel</span>
+          <span className="arrow-chip">↗</span>
         </button>
 
         <button
@@ -249,13 +267,21 @@ export const App: React.FC = () => {
             }
           }}
           data-testid="open-dashboard-link"
-          style={{ marginTop: '6px' }}
         >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="9" rx="1" />
+            <rect x="14" y="3" width="7" height="5" rx="1" />
+            <rect x="14" y="12" width="7" height="9" rx="1" />
+            <rect x="3" y="16" width="7" height="5" rx="1" />
+          </svg>
           <span>Open Full Dashboard ↗</span>
         </button>
 
         <div className="popup-footer">
-          <span className="footer-hint">Privacy-preserving • Zero passwords collected</span>
+          <div className="footer-pill">
+            <span className="footer-shield" aria-hidden="true">🛡️</span>
+            <span className="footer-hint">Privacy-preserving • Zero passwords collected</span>
+          </div>
         </div>
       </footer>
     </div>
