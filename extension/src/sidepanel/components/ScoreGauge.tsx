@@ -117,6 +117,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           fill="none"
           stroke="#E2E8F0"
           strokeWidth={strokeWidth}
+          strokeOpacity={1}
         />
 
         {/* Animated Progress Ring with Illuminated Glow */}
@@ -149,7 +150,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           data-testid="score-value"
           style={{ fontVariantNumeric: 'tabular-nums' }}
         >
-          {animatedScore}
+          {animatedScore < 10 ? `0${animatedScore}` : animatedScore}
         </text>
         <text
           x={center}
@@ -216,7 +217,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           </span>
         </div>
         <p className="gauge-caption" style={{ fontSize: '11px', color: '#64748B', lineHeight: 1.45, margin: 0 }}>
-          Transparent multi-factor heuristic assessment of observable indicators.
+          Deterministic multi-vector risk evaluation of observable indicators.
         </p>
       </div>
     </div>

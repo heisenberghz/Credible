@@ -84,8 +84,22 @@ const renderVerdictIcon = (status: string) => {
 
 export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) => {
   const [copied, setCopied] = useState<boolean>(false);
+  const [copiedUrl, setCopiedUrl] = useState<boolean>(false);
   const statusKey = report.assessment_status || AssessmentStatus.INCONCLUSIVE;
   const config = STATUS_CONFIG[statusKey] || STATUS_CONFIG[AssessmentStatus.INCONCLUSIVE];
+
+  const handleCopyUrl = async () => {
+    if (!report?.analyzed_url) return;
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(report.analyzed_url);
+        setCopiedUrl(true);
+        setTimeout(() => setCopiedUrl(false), 2000);
+      }
+    } catch {
+      // Graceful fallback
+    }
+  };
 
   const handleCopySummary = async () => {
     try {
@@ -193,22 +207,44 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
           paddingTop: '10px',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px' }}>
-          <span style={{ fontWeight: 500 }}>Target:</span>
-          <span
-            data-testid="target-url"
-            style={{
-              fontFamily: 'monospace',
-              color: '#0F172A',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              maxWidth: '220px',
-            }}
-            title={report.analyzed_url}
-          >
-            {report.analyzed_url}
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+          <span style={{ fontWeight: 500, flexShrink: 0 }}>Target:</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+            <span
+              data-testid="target-url"
+              className="target-url-truncated"
+              style={{
+                fontFamily: 'monospace',
+                color: '#0F172A',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '200px',
+                display: 'inline-block',
+              }}
+              title={report.analyzed_url}
+            >
+              {report.analyzed_url}
+            </span>
+            <button
+              type="button"
+              onClick={handleCopyUrl}
+              className={`btn-copy-url-mini ${copiedUrl ? 'copied' : ''}`}
+              title="Copy Target URL"
+              aria-label="Copy Target URL"
+            >
+              {copiedUrl ? (
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : (
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>

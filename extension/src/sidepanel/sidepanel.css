@@ -194,6 +194,50 @@ a:focus-visible {
   border-color: #a7f3d0;
 }
 
+.target-url-truncated {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-copy-url-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background-color: #F8FAFC;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-copy-url-mini:hover {
+  background-color: #F1F5F9;
+  color: #0F172A;
+  border-color: #94A3B8;
+}
+
+.btn-copy-url-mini.copied {
+  background-color: #ECFDF5;
+  color: #059669;
+  border-color: #A7F3D0;
+}
+
+.action-checklist-item {
+  transition: all 0.15s ease-in-out;
+}
+
+.action-checklist-item:hover {
+  border-color: #CBD5E1 !important;
+  background-color: #FAFAFA !important;
+}
+
 /* Animations */
 @keyframes spin {
   from {

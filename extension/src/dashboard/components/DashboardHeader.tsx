@@ -32,11 +32,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               </span>
               <span className="engine-beacon" title="FastAPI Forensic Heuristic Engine Online">
                 <span className="engine-beacon-dot" />
-                ENGINE LIVE :8000
+                ENGINE ACTIVE :8080
               </span>
             </div>
             <p className="brand-subtitle">
-              Defensive Cybersecurity Workstation · Client-Observable Heuristics & Epistemic Verification
+              Defensive Cybersecurity Workstation · Client-Side Heuristic Engine & Detection Pipeline
             </p>
           </div>
         </div>
@@ -69,7 +69,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   <polyline points="16 18 22 12 16 6" />
                   <polyline points="8 6 2 12 8 18" />
                 </svg>
-                <span>JSON</span>
+                <span>&lt;&gt; JSON</span>
               </button>
             </>
           )}

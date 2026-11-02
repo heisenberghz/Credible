@@ -23,6 +23,8 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
     });
   };
 
+  const isAllChecked = actions.length > 0 && checkedSet.size === actions.length;
+
   return (
     <section
       className="next-actions-section"
@@ -32,7 +34,7 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
         backgroundColor: '#FFFFFF',
         borderRadius: '14px',
         border: '1px solid #E2E8F0',
-        padding: '16px',
+        padding: '14px 16px',
         marginBottom: '16px',
         boxShadow: '0 1px 3px rgba(15, 23, 42, 0.04)',
       }}
@@ -58,11 +60,12 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
             fontSize: '11px',
             fontWeight: 700,
             fontFamily: 'monospace',
-            padding: '2px 6px',
+            padding: '2px 8px',
             borderRadius: '4px',
-            backgroundColor: '#F1F5F9',
-            color: '#0052FF',
-            border: '1px solid #CBD5E1',
+            backgroundColor: isAllChecked ? '#ECFDF5' : '#F1F5F9',
+            color: isAllChecked ? '#059669' : '#0052FF',
+            border: isAllChecked ? '1px solid #A7F3D0' : '1px solid #CBD5E1',
+            transition: 'all 0.2s ease',
           }}
         >
           {checkedSet.size} / {actions.length} VERIFIED
@@ -91,6 +94,7 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
               role="listitem"
               data-testid={`action-item-${idx}`}
               onClick={() => toggleCheck(idx)}
+              className="action-checklist-item"
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
@@ -98,10 +102,10 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
                 padding: '10px 12px',
                 borderRadius: '8px',
                 backgroundColor: isChecked ? '#F8FAFC' : '#FFFFFF',
-                border: '1px solid #E2E8F0',
+                border: isChecked ? '1px solid #CBD5E1' : '1px solid #E2E8F0',
                 cursor: 'pointer',
-                opacity: isChecked ? 0.5 : 1,
-                transition: 'all 0.15s ease',
+                opacity: isChecked ? 0.65 : 1,
+                transition: 'all 0.15s ease-in-out',
               }}
             >
               <input
@@ -112,7 +116,7 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
                 style={{
                   marginTop: '3px',
                   cursor: 'pointer',
-                  accentColor: '#0F172A',
+                  accentColor: isChecked ? '#059669' : '#0F172A',
                 }}
                 aria-label={`Mark action ${idx + 1} as verified`}
               />
@@ -120,10 +124,11 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
                 data-testid="action-text"
                 style={{
                   fontSize: '13px',
-                  color: '#1E293B',
+                  color: isChecked ? '#64748B' : '#1E293B',
                   lineHeight: '1.45',
                   fontWeight: 500,
                   textDecoration: isChecked ? 'line-through' : 'none',
+                  transition: 'color 0.15s ease',
                 }}
               >
                 {action}
