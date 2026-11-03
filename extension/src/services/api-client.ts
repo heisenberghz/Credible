@@ -14,6 +14,7 @@ import {
   PageData,
   SelectionData,
 } from '../types/analysis';
+import { AIStatusResponse } from '../types/status';
 
 export class AnalysisClientError extends Error {
   public code: string;
@@ -159,6 +160,41 @@ export function validateAnalysisReport(data: unknown): AnalysisReport {
 }
 
 /**
+ * Validate the backend AI status payload. Status is an optional enhancement:
+ * malformed status must never break a scan or the UI.
+ */
+export function validateAIStatus(data: unknown): AIStatusResponse {
+  if (!data || typeof data !== 'object') {
+    throw new AnalysisClientError(
+      'Malformed AI status response: expected an object.',
+      'INVALID_RESPONSE'
+    );
+  }
+
+  const obj = data as Record<string, any>;
+  if (typeof obj.ai_enabled !== 'boolean') {
+    throw new AnalysisClientError(
+      "Invalid AI status: 'ai_enabled' must be a boolean.",
+      'INVALID_RESPONSE'
+    );
+  }
+  if (obj.mode !== 'ai_assisted' && obj.mode !== 'deterministic_only') {
+    throw new AnalysisClientError(
+      "Invalid AI status: unknown 'mode'.",
+      'INVALID_RESPONSE'
+    );
+  }
+  if (!Array.isArray(obj.providers) || !Array.isArray(obj.provider_order)) {
+    throw new AnalysisClientError(
+      'Invalid AI status: providers and provider_order must be arrays.',
+      'INVALID_RESPONSE'
+    );
+  }
+
+  return obj as AIStatusResponse;
+}
+
+/**
  * Map error objects or codes to concise, calm, user-friendly messages.
  */
 export function mapErrorToUserMessage(error: unknown): string {
@@ -213,6 +249,75 @@ export class CredibleApiClient {
   constructor(baseUrl: string = CONFIG.BACKEND_BASE_URL, timeoutMs: number = CONFIG.API_TIMEOUT_MS) {
     this.baseUrl = baseUrl.replace(/\/+$/, '');
     this.defaultTimeoutMs = timeoutMs;
+  }
+
+  /**
+   * Fetch backend/AI capability status. This is a cheap, configuration-only
+   * endpoint; it never spends AI tokens. Failures are intentionally cheap to
+   * handle so the UI can show an offline/deterministic badge without blocking.
+   */
+  async getAiStatus(options?: RequestOptions): Promise<AIStatusResponse> {
+    const timeoutMs = options?.timeoutMs ?? 4000;
+    const controller = new AbortController();
+    let timedOut = false;
+
+    const timer = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, timeoutMs);
+
+    if (options?.signal) {
+      options.signal.addEventListener('abort', () => controller.abort());
+    }
+
+    const endpoint = `${options?.baseUrl || this.baseUrl}/api/v1/ai/status`;
+
+    let response: Response;
+    try {
+      response = await fetch(endpoint, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+      });
+    } catch (fetchErr: any) {
+      clearTimeout(timer);
+      if (timedOut) {
+        throw new AnalysisClientError(
+          `AI status request timed out after ${timeoutMs / 1000} seconds.`,
+          'TIMEOUT',
+          504
+        );
+      }
+      if (fetchErr.name === 'AbortError') {
+        throw new AnalysisClientError('AI status request aborted.', 'ABORTED');
+      }
+      throw new AnalysisClientError(
+        'Failed to connect to Credible backend service.',
+        'BACKEND_OFFLINE'
+      );
+    } finally {
+      clearTimeout(timer);
+    }
+
+    if (!response.ok) {
+      throw new AnalysisClientError(
+        `Backend returned HTTP status ${response.status}`,
+        `HTTP_${response.status}`,
+        response.status
+      );
+    }
+
+    let rawJson: unknown;
+    try {
+      rawJson = await response.json();
+    } catch {
+      throw new AnalysisClientError(
+        'Backend returned non-JSON AI status response.',
+        'INVALID_RESPONSE'
+      );
+    }
+
+    return validateAIStatus(rawJson);
   }
 
   /**

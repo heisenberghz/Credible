@@ -288,6 +288,47 @@ body {
   padding: 2.5px 9px;
   border-radius: 999px;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.influency-pill-badge.engine-online {
+  background-color: #059669;
+}
+
+.influency-pill-badge.engine-deterministic {
+  background-color: #92400E;
+}
+
+.influency-pill-badge.engine-degraded {
+  background-color: #B45309;
+}
+
+.influency-pill-badge.engine-offline {
+  background-color: #E11D48;
+}
+
+.influency-pill-badge.engine-checking {
+  background-color: #475569;
+}
+
+.influency-engine-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.influency-pill-badge.engine-online .influency-engine-dot,
+.influency-pill-badge.engine-checking .influency-engine-dot {
+  animation: engine-beacon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes engine-beacon-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
 
 .influency-system-tag {

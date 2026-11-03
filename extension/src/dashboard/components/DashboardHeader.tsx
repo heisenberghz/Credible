@@ -1,5 +1,6 @@
 import React from 'react';
 import { AnalysisReport } from '../../types/analysis';
+import { useEngineStatus } from '../../hooks/useEngineStatus';
 import { downloadDossier } from '../utils/dossierExporter';
 import { CredibleLogoMark } from '../../components/CredibleLogoMark';
 
@@ -14,6 +15,18 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onScan,
   isScanning,
 }) => {
+  const engine = useEngineStatus(report?.timestamp ?? null);
+  const beaconColor =
+    engine.state === 'online'
+      ? '#059669'
+      : engine.state === 'degraded'
+        ? '#D97706'
+        : engine.state === 'deterministic'
+          ? '#D97706'
+          : engine.state === 'offline'
+            ? '#E11D48'
+            : '#475569';
+
   return (
     <header className="dashboard-header" data-testid="dashboard-header">
       <div className="dashboard-header-inner">
@@ -30,9 +43,16 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               <span className="badge-audit">
                 v2.4 AUDIT
               </span>
-              <span className="engine-beacon" title="FastAPI Forensic Heuristic Engine Online">
-                <span className="engine-beacon-dot" />
-                ENGINE ACTIVE :8080
+              <span
+                className={`engine-beacon engine-${engine.state}`}
+                title={engine.detail}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+              >
+                <span
+                  className="engine-beacon-dot"
+                  style={{ width: 5, height: 5, borderRadius: '50%', background: beaconColor }}
+                />
+                {engine.label}
               </span>
             </div>
             <p className="brand-subtitle">

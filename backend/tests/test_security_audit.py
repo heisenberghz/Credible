@@ -59,11 +59,14 @@ class TestSecurityAudit:
         ]
 
         violations = []
+        # The Gemini adapter calls a fixed, vendor-owned endpoint and never
+        # fetches user-supplied URLs. It is the only allowed network call site
+        # in the backend.
+        allowed_network_modules = {"gemini.py"}
         for path in BACKEND_SRC.rglob("*.py"):
             content = path.read_text(encoding="utf-8")
             for pattern in forbidden_calls:
-                # Exclude the official google-genai client or test fixtures
-                if "gemini.py" in path.name:
+                if path.name in allowed_network_modules:
                     continue
                 if pattern.search(content):
                     violations.append(f"{path.name} contains forbidden network call: {pattern.pattern}")

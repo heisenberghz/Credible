@@ -4,6 +4,7 @@ import {
   buildPageRequest,
   buildSelectionRequest,
   validateAnalysisReport,
+  validateAIStatus,
   mapErrorToUserMessage,
   AnalysisClientError,
   generateRequestId,
@@ -254,6 +255,75 @@ describe('Credible API Client', () => {
         expect(err.code).toBe('INVALID_REQUEST');
         expect(err.statusCode).toBe(422);
         expect(err.message).toBe('Selection text must not be empty.');
+      }
+    });
+  });
+
+  describe('AI Status Client', () => {
+    const validStatus = {
+      ai_enabled: true,
+      mode: 'ai_assisted',
+      provider_order: ['gemini'],
+      active_provider: 'gemini',
+      providers: [
+        { name: 'gemini', configured: true, model: 'gemini-3.5-flash-lite', role: 'primary' },
+      ],
+      timeout_seconds: 10,
+      total_timeout_seconds: 12,
+      checked_at: '2026-11-02T00:00:00Z',
+    };
+
+    it('validates a well-formed status payload', () => {
+      const status = validateAIStatus(validStatus);
+      expect(status.active_provider).toBe('gemini');
+      expect(status.mode).toBe('ai_assisted');
+    });
+
+    it('rejects malformed status payloads', () => {
+      expect(() => validateAIStatus(null)).toThrow(AnalysisClientError);
+      expect(() => validateAIStatus({ ...validStatus, mode: 'unknown' })).toThrow(
+        AnalysisClientError
+      );
+      expect(() => validateAIStatus({ ...validStatus, providers: 'nope' })).toThrow(
+        AnalysisClientError
+      );
+    });
+
+    it('fetches status from the backend configuration endpoint', async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => validStatus,
+      });
+
+      const status = await apiClient.getAiStatus();
+
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        'http://localhost:8000/api/v1/ai/status',
+        expect.objectContaining({ method: 'GET' })
+      );
+      expect(status.ai_enabled).toBe(true);
+    });
+
+    it('surfaces a backend error for non-2xx status responses', async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: async () => ({}),
+      });
+
+      await expect(apiClient.getAiStatus()).rejects.toThrow('HTTP status 500');
+    });
+
+    it('maps an unreachable backend to BACKEND_OFFLINE', async () => {
+      globalThis.fetch = vi.fn().mockRejectedValue(new TypeError('Failed to fetch'));
+
+      try {
+        await apiClient.getAiStatus();
+        expect.unreachable();
+      } catch (err: any) {
+        expect(err).toBeInstanceOf(AnalysisClientError);
+        expect(err.code).toBe('BACKEND_OFFLINE');
       }
     });
   });

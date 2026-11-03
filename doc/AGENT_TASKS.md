@@ -33,7 +33,7 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ## - [x] ~~Task 1: Project Scaffold + Schemas~~
 
-~~**Build:** Monorepo structure with `backend/` and `extension/` skeletons. All dependencies installed. `.env.example` (with placeholder for `GEMINI_API_KEY` — user adds real key later). `.gitignore`. Root `README.md` with setup commands.~~
+~~**Build:** Monorepo structure with `backend/` and `extension/` skeletons. All dependencies installed. `.gitignore`. Root `README.md` with setup commands.~~
 
 ~~**Backend schemas (Pydantic):**~~
 - ~~`AnalysisRequest` (page mode + selection mode)~~

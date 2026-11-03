@@ -5,6 +5,7 @@ import {
   ExtensionMessage,
 } from '../types/extension';
 import { AnalysisReport } from '../types/analysis';
+import { useEngineStatus } from '../hooks/useEngineStatus';
 import './popup.css';
 
 export const App: React.FC = () => {
@@ -12,6 +13,7 @@ export const App: React.FC = () => {
   const [statusText, setStatusText] = useState<string>('Ready');
   const [report, setReport] = useState<AnalysisReport | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const engine = useEngineStatus(report?.timestamp ?? null);
 
   // Poll or fetch latest report from background on mount
   useEffect(() => {
@@ -139,9 +141,13 @@ export const App: React.FC = () => {
             <p className="brand-tagline">Defensive Security</p>
           </div>
         </div>
-        <div className="popup-engine-badge">
-          <span className="engine-status-dot" />
-          <span>ACTIVE</span>
+        <div
+          className={`popup-engine-badge engine-${engine.state}`}
+          title={engine.detail}
+          data-testid="engine-status-badge"
+        >
+          <span className={`engine-status-dot engine-${engine.state}`} />
+          <span>{engine.shortLabel}</span>
         </div>
       </header>
 

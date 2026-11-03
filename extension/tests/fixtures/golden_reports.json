@@ -7,7 +7,7 @@
     "summary": "No immediate deceptive indicators or fee requests detected in analyzed content. Always confirm listings on official channels.",
     "analyzed_url": "https://careers.google.com/jobs/results/12345678-software-engineering-intern",
     "mode": "page",
-    "timestamp": "2026-11-01T19:33:53.834225Z",
+    "timestamp": "2026-11-03T15:00:21.804515Z",
     "findings": [],
     "trust_dna": [
       {
@@ -122,7 +122,7 @@
     "summary": "Significant warning indicators detected: Suspicious Top-Level Domain and Brand Lookalike / Typosquat Domain. Independent verification is strongly advised before proceeding.",
     "analyzed_url": "https://g00gle-careers-portal.xyz/internship-offer",
     "mode": "page",
-    "timestamp": "2026-11-01T19:33:53.843172Z",
+    "timestamp": "2026-11-03T15:00:21.815585Z",
     "findings": [
       {
         "id": "url-suspicious_tld",
@@ -490,7 +490,7 @@
     "summary": "Significant warning indicators detected: Suspicious Top-Level Domain and Brand Lookalike / Typosquat Domain. Independent verification is strongly advised before proceeding.",
     "analyzed_url": "https://g00gle.xyz/verify",
     "mode": "selection",
-    "timestamp": "2026-11-01T19:33:53.852184Z",
+    "timestamp": "2026-11-03T15:00:21.873218Z",
     "findings": [
       {
         "id": "url-suspicious_tld",

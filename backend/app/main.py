@@ -7,6 +7,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from app.api.routes.ai import router as ai_router
 from app.api.routes.analyze import router as analyze_router
 from app.api.routes.health import router as health_router
 from app.core.config import settings
@@ -22,11 +23,21 @@ def create_app() -> FastAPI:
         redoc_url="/redoc",
     )
 
-    # CORS configuration
+    # CORS configuration. Extension origins are matched by regex because
+    # "chrome-extension://*" is not a supported wildcard in Starlette.
+    cors_origins = [
+        origin
+        for origin in settings.CORS_ORIGINS
+        if origin and "*" not in origin
+    ]
+    if "*" in settings.CORS_ORIGINS:
+        cors_origins = ["*"]
+
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.CORS_ORIGINS if isinstance(settings.CORS_ORIGINS, list) else ["*"],
-        allow_credentials=True,
+        allow_origins=cors_origins,
+        allow_origin_regex=settings.CORS_ORIGIN_REGEX or None,
+        allow_credentials=False,
         allow_methods=["GET", "POST", "OPTIONS"],
         allow_headers=["*"],
     )
@@ -115,6 +126,7 @@ def create_app() -> FastAPI:
 
     # Include routers
     app.include_router(health_router)
+    app.include_router(ai_router)
     app.include_router(analyze_router)
 
     return app

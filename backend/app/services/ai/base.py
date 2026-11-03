@@ -1,7 +1,8 @@
 """Provider-neutral AI adapter interface."""
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List
+
 from app.schemas.findings import CheckResult
 from app.schemas.requests import AnalysisRequest
 from app.services.ai.schemas import AIAnalysisOutput
@@ -11,6 +12,7 @@ class AIProvider(ABC):
     """Abstract interface for AI analysis providers."""
 
     provider_name: str
+    model_name: str = ""
 
     @abstractmethod
     async def analyze(
@@ -26,3 +28,10 @@ class AIProvider(ABC):
         """Check if provider credentials/configuration are present."""
         pass
 
+    async def check_connectivity(self) -> bool:
+        """Optional cheap credential/connectivity probe used by the CLI check.
+
+        The default implementation only verifies configuration. Providers that
+        can perform a low-cost authenticated call should override this.
+        """
+        return self.is_configured()

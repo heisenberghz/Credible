@@ -1,5 +1,6 @@
 import React from 'react';
 import { AnalysisReport } from '../../types/analysis';
+import { useEngineStatus } from '../../hooks/useEngineStatus';
 import { downloadDossier } from '../utils/dossierExporter';
 
 interface InfluencyTopBarProps {
@@ -14,6 +15,7 @@ export const InfluencyTopBar: React.FC<InfluencyTopBarProps> = ({
   isScanning,
 }) => {
   const threatCount = report?.findings?.length || 0;
+  const engine = useEngineStatus(report?.timestamp ?? null);
 
   return (
     <header className="influency-topbar" data-testid="dashboard-header">
@@ -21,7 +23,14 @@ export const InfluencyTopBar: React.FC<InfluencyTopBarProps> = ({
       <div className="influency-title-stack">
         <div className="influency-title-row">
           <h1 className="influency-heading">Security Overview</h1>
-          <span className="influency-pill-badge">ENGINE ACTIVE</span>
+          <span
+            className={`influency-pill-badge engine-${engine.state}`}
+            title={engine.detail}
+            data-testid="engine-status-badge"
+          >
+            <span className={`influency-engine-dot engine-${engine.state}`} aria-hidden="true" />
+            {engine.label}
+          </span>
           <span className="influency-system-tag" title="Credible Forensic System Active">
             CREDIBLE COMMAND CENTER
           </span>

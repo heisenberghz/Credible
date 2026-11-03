@@ -13,7 +13,7 @@ cd backend
 # With virtual environment activated:
 python -m uvicorn app.main:app --reload --port 8000
 ```
-> **Note on API Keys:** Credible works in **deterministic fallback mode** without an API key! If you want AI synthesis, provide `GEMINI_API_KEY` in `backend/.env`.
+> **Note on API Keys:** Credible works in **deterministic fallback mode** without an API key! For AI-assisted analysis, add `GEMINI_API_KEY` to `backend/.env`, restart the backend, and run `python scripts/check_ai.py` to verify. See `doc/API_INTEGRATION.md` for the full design.
 
 ### Step 2: Build the Chrome Extension
 In your second terminal:

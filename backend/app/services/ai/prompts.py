@@ -2,6 +2,7 @@
 
 import json
 from typing import List
+from app.core.config import settings
 from app.schemas.findings import CheckResult, CheckStatus
 from app.schemas.requests import AnalysisMode, AnalysisRequest
 
@@ -41,6 +42,15 @@ def build_analysis_prompt(request: AnalysisRequest, check_results: List[CheckRes
         target_url = request.selection.url
         target_title = "Selected Text from Webpage"
         target_text = request.selection.text
+
+    # Bound AI token usage/latency. Deterministic checks still run over the full
+    # page text; only the model input is truncated.
+    if target_text and len(target_text) > settings.AI_MAX_INPUT_CHARS:
+        target_text = (
+            target_text[: settings.AI_MAX_INPUT_CHARS]
+            + "\n\n[Content truncated for AI analysis. "
+            "Deterministic checks used the full text.]"
+        )
 
     # Summarize deterministic signals already detected by rules
     detected_rules = []

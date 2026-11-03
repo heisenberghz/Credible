@@ -1,69 +1,190 @@
-"""AI service orchestrator with resilient fallback handling."""
+"""AI service orchestrator with graceful degradation.
 
-from typing import List, Optional, Tuple
+Credible uses Gemini only. Configuration problems, provider outages, timeouts,
+and malformed output all degrade to deterministic-only results with an explicit
+limitation instead of failing the scan. Runtime failures are also recorded so the
+status endpoint can report an honest ``degraded`` state.
+"""
+
+import asyncio
+from datetime import datetime, timezone
+from typing import List, Optional, Sequence, Tuple
+
+from app.core.config import settings
 from app.core.logging import logger
 from app.schemas.findings import CheckResult
 from app.schemas.requests import AnalysisMode, AnalysisRequest
 from app.services.ai.base import AIProvider
-from app.services.ai.gemini import GeminiProvider
+from app.services.ai.factory import build_ai_providers
 from app.services.ai.schemas import AIAnalysisOutput
 from app.services.ai.validator import validate_and_filter_ai_output
 
+UNCONFIGURED_MESSAGE = (
+    "AI contextual analysis was not executed because the AI provider is not "
+    "configured. Results reflect deterministic security checks only."
+)
+TIMEOUT_MESSAGE = (
+    "AI analysis timed out. The report is based on deterministic security rules."
+)
+UNAVAILABLE_MESSAGE = (
+    "AI contextual analysis was unavailable due to a service error. Results are "
+    "based on deterministic security rules."
+)
+
+# Process-local runtime state. The status endpoint is read-mostly, so a plain
+# dict is sufficient; the event loop serializes these assignments.
+_runtime = {
+    "degraded": False,
+    "last_error": None,
+    "last_error_at": None,
+    "last_success_at": None,
+}
+
+
+def _utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def reset_runtime_status() -> None:
+    """Clear recorded AI runtime state (used by tests and after config changes)."""
+    _runtime.update(
+        degraded=False,
+        last_error=None,
+        last_error_at=None,
+        last_success_at=None,
+    )
+
+
+def get_runtime_status() -> dict:
+    """Return a copy of the last AI execution outcome."""
+    return dict(_runtime)
+
+
+def _record_failure(message: str) -> None:
+    _runtime.update(
+        degraded=True,
+        last_error=message[:300],
+        last_error_at=_utc_now(),
+    )
+
+
+def _record_success() -> None:
+    _runtime.update(
+        degraded=False,
+        last_error=None,
+        last_error_at=None,
+        last_success_at=_utc_now(),
+    )
+
 
 class AIService:
-    """Orchestrates AI analysis with graceful fallback when provider is unavailable."""
+    """Run Gemini (or an injected provider) and degrade safely on failure."""
 
-    def __init__(self, provider: Optional[AIProvider] = None):
-        self.provider = provider or GeminiProvider()
+    def __init__(
+        self,
+        provider: Optional[AIProvider] = None,
+        providers: Optional[Sequence[AIProvider]] = None,
+    ):
+        if providers is not None:
+            self.providers: List[AIProvider] = list(providers)
+        elif provider is not None:
+            self.providers = [provider]
+        else:
+            self.providers = build_ai_providers()
+
+        # Kept for callers that previously read a single provider.
+        self.provider = self.providers[0] if self.providers else None
+
+    @staticmethod
+    def _content_text(request: AnalysisRequest) -> str:
+        if request.mode == AnalysisMode.PAGE and request.page:
+            return request.page.visible_text
+        if request.mode == AnalysisMode.SELECTION and request.selection:
+            return request.selection.text
+        return ""
 
     async def run_ai_analysis(
         self,
         request: AnalysisRequest,
         deterministic_checks: List[CheckResult],
     ) -> Tuple[Optional[AIAnalysisOutput], List[str]]:
+        """Execute the provider chain and return (output, limitations).
+
+        The chain is still ordered and mock providers are supported by tests,
+        but production configuration builds Gemini only. The total budget stays
+        below the extension's 15s HTTP timeout.
         """
-        Execute AI analysis. If AI fails, times out, or is unconfigured, returns (None, limitations)
-        so deterministic security checks can continue without disruption.
-        """
-        limitations: List[str] = []
+        configured = [p for p in self.providers if p.is_configured()]
+        if not configured:
+            return None, [UNCONFIGURED_MESSAGE]
 
-        if not self.provider.is_configured():
-            limitations.append(
-                "AI contextual analysis was not executed because the AI provider is not configured. Results reflect deterministic security checks only."
-            )
-            return None, limitations
-
-        try:
-            raw_ai_output = await self.provider.analyze(request, deterministic_checks)
-        except TimeoutError:
-            logger.warning("AI provider timed out. Proceeding with deterministic fallback.")
-            limitations.append(
-                "AI analysis timed out. The report is based on deterministic security rules."
-            )
-            return None, limitations
-        except Exception as e:
-            logger.error(f"AI provider failed: {type(e).__name__} - {e}")
-            limitations.append(
-                "AI contextual analysis was unavailable due to a service error. Results are based on deterministic security rules."
-            )
-            return None, limitations
-
-        # Extract text for quote grounding validation
-        content_text = ""
-        if request.mode == AnalysisMode.PAGE and request.page:
-            content_text = request.page.visible_text
-        elif request.mode == AnalysisMode.SELECTION and request.selection:
-            content_text = request.selection.text
-
+        content_text = self._content_text(request)
         executed_check_ids = [c.check_id for c in deterministic_checks]
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + max(1.0, settings.AI_TOTAL_TIMEOUT_SECONDS)
+        failures: List[str] = []
 
-        # Validate and ground AI findings
-        validated_output, val_limitations = validate_and_filter_ai_output(
-            raw_ai_output,
-            original_text=content_text,
-            executed_check_ids=executed_check_ids,
-        )
-        limitations.extend(val_limitations)
+        for index, provider in enumerate(configured):
+            remaining = deadline - loop.time()
+            if remaining <= 0:
+                failures.append("timeout")
+                _record_failure(f"{provider.provider_name}: total AI budget exhausted")
+                break
 
-        return validated_output, limitations
+            try:
+                raw_output = await asyncio.wait_for(
+                    provider.analyze(request, deterministic_checks),
+                    timeout=remaining,
+                )
+            except (asyncio.TimeoutError, TimeoutError):
+                logger.warning(
+                    f"AI provider {provider.provider_name} timed out; trying next provider."
+                )
+                failures.append("timeout")
+                _record_failure(f"{provider.provider_name}: timed out")
+                continue
+            except Exception as e:
+                logger.error(
+                    f"AI provider {provider.provider_name} failed: {type(e).__name__}"
+                )
+                failures.append("error")
+                _record_failure(
+                    f"{provider.provider_name}: {type(e).__name__}: {str(e)[:200]}"
+                )
+                continue
 
+            try:
+                validated_output, validation_limitations = validate_and_filter_ai_output(
+                    raw_output,
+                    original_text=content_text,
+                    executed_check_ids=executed_check_ids,
+                )
+            except Exception as e:
+                logger.error(
+                    f"AI output validation failed for {provider.provider_name}: "
+                    f"{type(e).__name__}"
+                )
+                failures.append("error")
+                _record_failure(
+                    f"{provider.provider_name}: invalid output ({type(e).__name__})"
+                )
+                continue
+
+            limitations = list(validation_limitations)
+            if index > 0:
+                reason = (
+                    "timed out"
+                    if failures and failures[-1] == "timeout"
+                    else "was unavailable"
+                )
+                limitations.insert(
+                    0,
+                    f"Primary AI provider {reason}; analysis continued with the "
+                    f"fallback provider ({provider.provider_name}).",
+                )
+            _record_success()
+            return validated_output, limitations
+
+        if failures and all(reason == "timeout" for reason in failures):
+            return None, [TIMEOUT_MESSAGE]
+        return None, [UNAVAILABLE_MESSAGE]

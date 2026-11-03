@@ -170,6 +170,49 @@ a:focus-visible {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
+.popup-engine-badge.engine-online {
+  background: #ECFDF5;
+  color: #047857;
+}
+.popup-engine-badge.engine-online .engine-status-dot {
+  background: #059669;
+}
+
+.popup-engine-badge.engine-deterministic {
+  background: #FFFBEB;
+  color: #92400E;
+}
+.popup-engine-badge.engine-deterministic .engine-status-dot {
+  background: #D97706;
+  animation: none;
+}
+
+.popup-engine-badge.engine-degraded {
+  background: #FFF7ED;
+  color: #B45309;
+}
+.popup-engine-badge.engine-degraded .engine-status-dot {
+  background: #F59E0B;
+  animation: none;
+}
+
+.popup-engine-badge.engine-offline {
+  background: #FFF1F2;
+  color: #9F1239;
+}
+.popup-engine-badge.engine-offline .engine-status-dot {
+  background: #E11D48;
+  animation: none;
+}
+
+.popup-engine-badge.engine-checking {
+  background: #F1F5F9;
+  color: #475569;
+}
+.popup-engine-badge.engine-checking .engine-status-dot {
+  background: #475569;
+}
+
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.85); }
