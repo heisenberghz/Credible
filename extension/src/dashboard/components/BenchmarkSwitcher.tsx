@@ -17,25 +17,25 @@ interface BenchmarkItem {
 const BENCHMARKS: BenchmarkItem[] = [
   {
     id: 'demo-scen-1-benign',
-    badge: '01 BENIGN',
+    badge: 'BENIGN',
     label: 'Corporate Career Portal',
-    scoreText: '[Score: 97]',
+    scoreText: 'Score 97',
     pipClass: 'pip-clean',
     tagColor: { bg: '#ECFDF5', text: '#059669', border: '#A7F3D0' },
   },
   {
     id: 'demo-scen-2-suspicious',
-    badge: '02 SUSPICIOUS',
+    badge: 'SUSPICIOUS',
     label: 'Urgent Crypto Deposit',
-    scoreText: '[Score: 01]',
+    scoreText: 'Score 01',
     pipClass: 'pip-threat',
     tagColor: { bg: '#FFF1F2', text: '#E11D48', border: '#FECDD3' },
   },
   {
     id: 'demo-scen-3-ambiguous',
-    badge: '03 AMBIGUOUS',
+    badge: 'AMBIGUOUS',
     label: 'Unverified Research Post',
-    scoreText: '[Score: 62]',
+    scoreText: 'Score 62',
     pipClass: 'pip-caution',
     tagColor: { bg: '#FFFBEB', text: '#D97706', border: '#FDE68A' },
   },
@@ -57,7 +57,7 @@ export const BenchmarkSwitcher: React.FC<BenchmarkSwitcherProps> = ({ selectedId
         </span>
       </div>
 
-      <div className="benchmark-pills-row" role="tablist">
+      <div className="benchmark-pills-row" role="group" aria-label="Calibration scenarios">
         {BENCHMARKS.map((b) => {
           const isSelected = selectedId === b.id;
 
@@ -66,8 +66,7 @@ export const BenchmarkSwitcher: React.FC<BenchmarkSwitcherProps> = ({ selectedId
               key={b.id}
               onClick={() => onSelect(b.id)}
               type="button"
-              role="tab"
-              aria-selected={isSelected}
+              aria-pressed={isSelected}
               data-testid={`benchmark-btn-${b.id}`}
               className={`benchmark-pill ${isSelected ? 'active' : ''}`}
             >

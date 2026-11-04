@@ -5,6 +5,7 @@ interface InfluencySidebarProps {
   onTabChange: (tab: string) => void;
   threatCount?: number;
   historyCount?: number;
+  heuristicsCount?: number;
 }
 
 export const InfluencySidebar: React.FC<InfluencySidebarProps> = ({
@@ -12,14 +13,15 @@ export const InfluencySidebar: React.FC<InfluencySidebarProps> = ({
   onTabChange,
   threatCount = 0,
   historyCount = 3,
+  heuristicsCount = 0,
 }) => {
   const navItems = [
-    { id: 'overview', label: 'Overview', icon: 'home' },
-    { id: 'scan', label: 'Live Audit', icon: 'radar' },
-    { id: 'trust-dna', label: 'Trust DNA', icon: 'dna', badge: '6' },
-    { id: 'heuristics', label: 'Heuristics', icon: 'matrix', badge: '10' },
-    { id: 'proof-mode', label: 'Proof Mode', icon: 'evidence', badge: threatCount > 0 ? String(threatCount) : undefined },
-    { id: 'ledger', label: 'Scan Ledger', icon: 'history', badge: String(historyCount) },
+    { id: 'overview', label: 'Overview', icon: 'home', target: 'dashboard-header' },
+    { id: 'scan', label: 'Verdict', icon: 'radar', target: 'forensic-workbench-section' },
+    { id: 'trust-dna', label: 'Trust DNA', icon: 'dna', badge: '6', target: 'trust-dna-panel' },
+    { id: 'heuristics', label: 'Heuristics', icon: 'matrix', badge: heuristicsCount > 0 ? String(heuristicsCount) : undefined, target: 'heuristic-matrix-panel' },
+    { id: 'proof-mode', label: 'Proof Mode', icon: 'evidence', badge: threatCount > 0 ? String(threatCount) : undefined, target: 'proof-mode-panel' },
+    { id: 'ledger', label: 'Scan Ledger', icon: 'history', badge: String(historyCount), target: 'scan-ledger' },
   ];
 
   const renderIcon = (type: string) => {
@@ -102,10 +104,8 @@ export const InfluencySidebar: React.FC<InfluencySidebarProps> = ({
                 type="button"
                 onClick={() => {
                   onTabChange(item.id);
-                  if (item.id !== 'overview') {
-                    const el = document.getElementById('forensic-workbench-section');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }
+                  const el = document.querySelector(`[data-testid="${item.target}"]`);
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
                 className={`influency-nav-item ${isActive ? 'active' : ''}`}
                 aria-current={isActive ? 'page' : undefined}
@@ -138,11 +138,14 @@ export const InfluencySidebar: React.FC<InfluencySidebarProps> = ({
           type="button"
           className="influency-upgrade-btn"
           onClick={() => {
-            const el = document.getElementById('forensic-workbench-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            const el = document.querySelector('[data-testid="proof-mode-panel"]');
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }}
         >
-          View Full Trace ↓
+          View Full Trace
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </button>
       </div>
     </aside>

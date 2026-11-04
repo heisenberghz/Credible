@@ -6,6 +6,11 @@ interface InfluencyKpiRowProps {
   historyCount?: number;
 }
 
+const scrollToSection = (testId: string) => {
+  const el = document.querySelector(`[data-testid="${testId}"]`);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
 export const InfluencyKpiRow: React.FC<InfluencyKpiRowProps> = ({ report, historyCount = 3 }) => {
   const score = report.score ?? 100;
   const executedCount = report.checks?.executed?.length || 10;
@@ -29,10 +34,7 @@ export const InfluencyKpiRow: React.FC<InfluencyKpiRowProps> = ({ report, histor
             className="influency-arrow-btn dark-pill"
             aria-label="Inspect trust score calculation"
             title="Inspect trust score calculation"
-            onClick={() => {
-              const el = document.getElementById('forensic-workbench-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => scrollToSection('trust-dna-panel')}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4FF00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <line x1="7" y1="17" x2="17" y2="7" />
@@ -66,10 +68,7 @@ export const InfluencyKpiRow: React.FC<InfluencyKpiRowProps> = ({ report, histor
             className="influency-arrow-btn outline-pill"
             aria-label="Inspect heuristic rules"
             title="Inspect heuristic rules"
-            onClick={() => {
-              const el = document.getElementById('forensic-workbench-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => scrollToSection('heuristic-matrix-panel')}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <line x1="7" y1="17" x2="17" y2="7" />
@@ -102,10 +101,7 @@ export const InfluencyKpiRow: React.FC<InfluencyKpiRowProps> = ({ report, histor
             className="influency-arrow-btn outline-pill"
             aria-label="Inspect threat findings"
             title="Inspect threat findings"
-            onClick={() => {
-              const el = document.getElementById('forensic-workbench-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => scrollToSection('findings-section')}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <line x1="7" y1="17" x2="17" y2="7" />
@@ -147,10 +143,7 @@ export const InfluencyKpiRow: React.FC<InfluencyKpiRowProps> = ({ report, histor
             className="influency-arrow-btn outline-pill"
             aria-label="View audit ledger"
             title="View audit ledger"
-            onClick={() => {
-              const el = document.getElementById('forensic-workbench-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => scrollToSection('scan-ledger')}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <line x1="7" y1="17" x2="17" y2="7" />

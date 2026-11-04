@@ -162,13 +162,13 @@ export const HeuristicMatrix: React.FC<HeuristicMatrixProps> = ({ report }) => {
           backgroundColor: '#FFFFFF',
         }}
       >
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px', tableLayout: 'fixed' }}>
           <thead>
             <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid #E2E8F0', color: '#475569', fontFamily: 'monospace', fontSize: '11px', textTransform: 'uppercase' }}>
-              <th style={{ padding: '10px 14px', width: '22%' }}>Rule & Identifier</th>
-              <th style={{ padding: '10px 14px', width: '14%' }}>Domain</th>
-              <th style={{ padding: '10px 14px', width: '14%' }}>Verification</th>
-              <th style={{ padding: '10px 14px' }}>Observable Heuristic Finding</th>
+              <th style={{ padding: '10px 14px', width: '24%' }}>Rule & Identifier</th>
+              <th style={{ padding: '10px 14px', width: '12%' }}>Domain</th>
+              <th style={{ padding: '10px 14px', width: '12%' }}>Verification</th>
+              <th style={{ padding: '10px 14px', width: '52%' }}>Observable Heuristic Finding</th>
             </tr>
           </thead>
           <tbody>
@@ -181,11 +181,11 @@ export const HeuristicMatrix: React.FC<HeuristicMatrixProps> = ({ report }) => {
                 }}
               >
                 {/* Rule Name & ID */}
-                <td style={{ padding: '12px 14px', verticalAlign: 'top' }}>
+                <td style={{ padding: '12px 14px', verticalAlign: 'top', wordBreak: 'break-word' }}>
                   <div style={{ fontWeight: 700, color: '#0F172A', marginBottom: '2px' }}>
                     {rule.name}
                   </div>
-                  <code style={{ fontSize: '10px', color: '#64748B', backgroundColor: '#F1F5F9', padding: '1px 4px', borderRadius: '3px' }}>
+                  <code style={{ fontSize: '10px', color: '#64748B', backgroundColor: '#F1F5F9', padding: '1px 4px', borderRadius: '3px', display: 'inline-block', maxWidth: '100%', wordBreak: 'break-all' }}>
                     {rule.id}
                   </code>
                 </td>

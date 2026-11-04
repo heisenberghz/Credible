@@ -30,6 +30,29 @@ describe('Task 20: Full-Tab Command Center Dashboard Suite', () => {
     expect(screen.getByTestId('scan-ledger')).toBeInTheDocument();
   });
 
+  it('puts the verdict and primary action above telemetry and deep-dive panels', async () => {
+    render(<DashboardApp />);
+
+    const hero = screen.getByTestId('dashboard-hero');
+    const priority = screen.getByTestId('dashboard-priority-action');
+    const telemetry = screen.getByLabelText('Forensic Telemetry Metrics');
+    const workbench = screen.getByTestId('trust-dna-panel');
+
+    expect(hero).toContainElement(priority);
+    expect(priority).toHaveTextContent('DO THIS FIRST');
+    expect(priority).toHaveTextContent(
+      "Navigate to the organization's official website directly by typing its address into your browser."
+    );
+
+    // Hero must come first, then telemetry, then the deep-dive workbench.
+    expect(hero.compareDocumentPosition(telemetry) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(telemetry.compareDocumentPosition(workbench) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+    // Template-only chart and venn cards are retired from the dashboard.
+    expect(screen.queryByText(/Trust DNA Multi-Factor Telemetry/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Threat Vector Distribution/i)).not.toBeInTheDocument();
+  });
+
   it('allows clicking an item in the scan ledger to switch active report view', async () => {
     render(<DashboardApp />);
 

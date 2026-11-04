@@ -4,8 +4,6 @@ import { ExtensionMessage, MessageType } from '../types/extension';
 import { InfluencySidebar } from './components/InfluencySidebar';
 import { InfluencyTopBar } from './components/InfluencyTopBar';
 import { InfluencyKpiRow } from './components/InfluencyKpiRow';
-import { InfluencyStatisticsCard } from './components/InfluencyStatisticsCard';
-import { InfluencyVisitorsCard } from './components/InfluencyVisitorsCard';
 import { BenchmarkSwitcher } from './components/BenchmarkSwitcher';
 import { HeuristicMatrix } from './components/HeuristicMatrix';
 import { ScanLedger } from './components/ScanLedger';
@@ -420,7 +418,7 @@ export const DashboardApp: React.FC = () => {
   const [report, setReport] = useState<AnalysisReport | null>(null);
   const [history, setHistory] = useState<AnalysisReport[]>(DEMO_REPORTS);
   const [isScanning, setIsScanning] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<string>('donators');
+  const [activeTab, setActiveTab] = useState<string>('overview');
   const [copiedSummary, setCopiedSummary] = useState<boolean>(false);
   const [copiedUrl, setCopiedUrl] = useState<boolean>(false);
   const elapsedSeconds = useElapsedSeconds(isScanning);
@@ -610,6 +608,7 @@ export const DashboardApp: React.FC = () => {
           onTabChange={setActiveTab}
           threatCount={report.findings.length}
           historyCount={history.length}
+          heuristicsCount={report.checks?.executed?.length || 0}
         />
 
         {/* Right Main Content Viewport */}
@@ -630,24 +629,10 @@ export const DashboardApp: React.FC = () => {
             testId="dashboard-scan-progress"
           />
 
-          {/* 4 KPI Cards Row */}
-          <InfluencyKpiRow report={report} historyCount={history.length} />
-
-          {/* 2-Column Analytics Deck: Statistics & Visitors */}
-          <div className="influency-analytics-deck">
-            <InfluencyStatisticsCard report={report} />
-            <InfluencyVisitorsCard report={report} />
-          </div>
-
-          {/* Ground-Truth Calibration Benchmarks Dock */}
-          <div style={{ marginTop: '24px', marginBottom: '16px' }}>
-            <BenchmarkSwitcher selectedId={report.request_id} onSelect={handleSelectBenchmark} />
-          </div>
-
-          {/* Forensic Horizon Dial & Narrative Card */}
+          {/* Verdict-first Forensic Horizon */}
           <section className="influency-forensic-horizon" data-testid="dashboard-hero" id="forensic-workbench-section">
             <div className="horizon-flex-row">
-              <div style={{ width: '84px', height: '84px', flexShrink: 0 }}>
+              <div className="horizon-score-frame" style={{ width: '84px', height: '84px', flexShrink: 0 }}>
                 <ScoreGauge score={score} size={84} variant="dial-only" />
               </div>
               <div className="horizon-verdict-info">
@@ -724,7 +709,41 @@ export const DashboardApp: React.FC = () => {
               </div>
               <p className="influency-narrative-text">{report.summary}</p>
             </div>
+
+            {/* Primary protective action — keep the single most useful step above the fold */}
+            {report.next_best_actions.length > 0 && (
+              <div className="influency-priority-action" data-testid="dashboard-priority-action">
+                <div className="priority-action-marker" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <polyline points="13 6 19 12 13 18" />
+                  </svg>
+                </div>
+                <div className="priority-action-content">
+                  <span className="horizon-micro-label">DO THIS FIRST</span>
+                  <p className="priority-action-text">{report.next_best_actions[0]}</p>
+                </div>
+                <button
+                  type="button"
+                  className="btn-priority-all"
+                  onClick={() => {
+                    const el = document.getElementById('next-actions-panel');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                >
+                  All {report.next_best_actions.length} actions
+                </button>
+              </div>
+            )}
           </section>
+
+          {/* Compact telemetry strip */}
+          <InfluencyKpiRow report={report} historyCount={history.length} />
+
+          {/* Ground-truth calibration benchmarks (secondary tooling) */}
+          <div className="influency-benchmark-dock">
+            <BenchmarkSwitcher selectedId={report.request_id} onSelect={handleSelectBenchmark} />
+          </div>
 
           {/* 2-Column Forensic Deep-Dive Workbench */}
           <div className="influency-workbench-grid">
@@ -732,7 +751,6 @@ export const DashboardApp: React.FC = () => {
             <div className="workbench-col">
               <FindingList findings={report.findings} />
               <TrustDnaPanel dimensions={report.trust_dna} />
-              <HeuristicMatrix report={report} />
               <ChecksAndLimitations checks={report.checks} limitations={report.limitations} />
             </div>
 
@@ -747,6 +765,11 @@ export const DashboardApp: React.FC = () => {
                 onClear={handleClearHistory}
               />
             </div>
+          </div>
+
+          {/* Full-width rules matrix: this table needs horizontal room */}
+          <div className="influency-matrix-section">
+            <HeuristicMatrix report={report} />
           </div>
         </div>
       </div>
