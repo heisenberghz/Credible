@@ -238,6 +238,7 @@ export const App: React.FC = () => {
             onClick={handleScan}
             disabled={isScanning}
             data-testid="scan-btn"
+            title={isScanning ? 'AI analysis can take up to about a minute on the free tier' : undefined}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />

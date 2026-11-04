@@ -1,10 +1,17 @@
 """Strict Pydantic schemas for AI model output validation."""
 
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from app.schemas.findings import Confidence, Severity
 from app.schemas.reports import AssessmentStatus, TrustDnaStatus
+
+_STATUS_ALIASES = {
+    "positive": TrustDnaStatus.NO_INDICATOR_DETECTED,
+    "concern": TrustDnaStatus.WARNING_FOUND,
+    "mixed": TrustDnaStatus.WARNING_FOUND,
+    "not_checked": TrustDnaStatus.UNKNOWN,
+}
 
 
 class AIFinding(BaseModel):
@@ -23,6 +30,17 @@ class AIDimensionAssessment(BaseModel):
     summary: str
     evidence_quote: Optional[str] = None
     limitations: List[str] = Field(default_factory=list)
+
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, value):
+        """Accept legacy prompt labels so one bad enum value cannot discard AI output."""
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in _STATUS_ALIASES:
+                return _STATUS_ALIASES[normalized]
+            return normalized
+        return value
 
 
 class AIAnalysisOutput(BaseModel):

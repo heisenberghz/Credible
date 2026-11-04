@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
           onClick={onScan}
           disabled={isScanning}
           data-testid="header-scan-btn"
-          title="Analyze current active tab"
+          title={isScanning ? 'AI analysis can take up to about a minute on the free tier' : 'Analyze current active tab'}
           style={{
             display: 'inline-flex',
             alignItems: 'center',

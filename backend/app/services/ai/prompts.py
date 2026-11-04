@@ -91,7 +91,7 @@ Analyze the untrusted content above. Return a JSON object with this exact struct
   "dimension_assessments": [
     {{
       "dimension_id": "identity_domain" | "connection_technical" | "transparency" | "page_behavior" | "content_consistency" | "credential_payment",
-      "status": "positive" | "concern" | "mixed" | "unknown" | "not_checked",
+      "status": "warning_found" | "no_indicator_detected" | "unknown",
       "confidence": "high" | "medium" | "low" | "unknown",
       "summary": "Brief dimension summary",
       "evidence_quote": "Optional quote or null",

@@ -11,8 +11,8 @@ honest when a key is missing, a provider is down, or the model returns garbage.
 3. **Never hide uncertainty.** Failures become explicit limitations, not silent
    clean results.
 4. **Never leak the key.** Credentials live only in the backend process.
-5. **Stay inside the client timeout.** The extension aborts at 15 s; the AI
-   chain must finish well before that.
+5. **Stay inside the client timeout.** The extension aborts at 80 s; the AI
+   stage gets up to 70 s so slow free-tier responses can still complete.
 6. **Prefer deterministic evidence.** Reconcile AI findings against rules and
    strip ungrounded quotes.
 
@@ -57,8 +57,8 @@ working directory) with environment variables taking precedence.
 | `AI_PROVIDER_ORDER` | `gemini` | Provider list; only `gemini` is registered. |
 | `GEMINI_API_KEY` | empty | Enables Gemini when non-empty. |
 | `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Gemini model id. |
-| `AI_TIMEOUT_SECONDS` | `10` | Per-attempt limit (one transient retry allowed). |
-| `AI_TOTAL_TIMEOUT_SECONDS` | `12` | Whole AI-stage budget. |
+| `AI_TIMEOUT_SECONDS` | `60` | Per-attempt limit (one transient retry allowed). |
+| `AI_TOTAL_TIMEOUT_SECONDS` | `70` | Whole AI-stage budget. |
 | `AI_MAX_INPUT_CHARS` | `20000` | Text sent to the model. |
 
 `backend/.env` is the single source of truth. No env template is committed.
@@ -116,8 +116,8 @@ Configuration-only; never calls a provider and never spends tokens.
   "providers": [
     { "name": "gemini", "configured": true, "model": "gemini-3.5-flash-lite", "role": "primary" }
   ],
-  "timeout_seconds": 10,
-  "total_timeout_seconds": 12,
+  "timeout_seconds": 60,
+  "total_timeout_seconds": 70,
   "degraded": false,
   "last_error": null,
   "checked_at": "2026-11-02T00:00:00Z"

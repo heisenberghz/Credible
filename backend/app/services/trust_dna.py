@@ -305,7 +305,7 @@ def build_trust_dna(
     ai_warnings = bool(ai_output and ai_output.findings)
 
     # Consensus determination
-    if ai_output and ai_output.analysis_mode == "ai_full":
+    if ai_output is not None:
         # Both models executed
         if deterministic_warnings and not ai_warnings:
             # Deterministic caught something that AI missed or suppressed

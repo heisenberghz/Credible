@@ -97,12 +97,16 @@ Credible builds Gemini only. If the key is missing, the model returns an error,
 or the call times out, the scan still succeeds with deterministic findings and a
 limitation explaining what happened.
 
-Timeouts keep the call inside the extension's 15-second request budget:
+Timeouts cover free-tier latency (responses have been observed at 20-60s):
 
-- `AI_TIMEOUT_SECONDS=10` — per attempt (one transient retry allowed).
-- `AI_TOTAL_TIMEOUT_SECONDS=12` — whole AI stage.
+- `AI_TIMEOUT_SECONDS=60` — per attempt (one transient retry allowed).
+- `AI_TOTAL_TIMEOUT_SECONDS=70` — whole AI stage.
+- The extension's client timeout is `80s`.
 - `AI_MAX_INPUT_CHARS=20000` — text sent to the model; deterministic checks still
   run over the full page text.
+
+Because the scan is synchronous, a slow Gemini response means the scan can take
+up to about a minute. The UI keeps the scanning state visible during that time.
 
 ### Free-tier limits
 
@@ -146,8 +150,8 @@ curl http://localhost:8000/health
   "providers": [
     { "name": "gemini", "configured": true, "model": "gemini-3.5-flash-lite", "role": "primary" }
   ],
-  "timeout_seconds": 10,
-  "total_timeout_seconds": 12,
+  "timeout_seconds": 60,
+  "total_timeout_seconds": 70,
   "degraded": false,
   "last_error": null,
   "checked_at": "2026-11-02T00:00:00Z"

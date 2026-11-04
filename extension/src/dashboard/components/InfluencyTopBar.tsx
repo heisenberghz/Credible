@@ -130,7 +130,7 @@ export const InfluencyTopBar: React.FC<InfluencyTopBarProps> = ({
           disabled={isScanning}
           data-testid="dashboard-scan-btn"
           className="influency-btn-scan"
-          title="Trigger full scan of active Chrome tab"
+          title={isScanning ? 'AI analysis can take up to about a minute on the free tier' : 'Trigger full scan of active Chrome tab'}
         >
           {isScanning ? (
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="influency-spinner" aria-hidden="true">

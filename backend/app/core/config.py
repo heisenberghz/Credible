@@ -52,10 +52,11 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-3.5-flash-lite"
 
-    # Per-attempt timeout. The extension's client timeout is 15s, so this must
-    # leave enough headroom for the deterministic response to be returned.
-    AI_TIMEOUT_SECONDS: float = 10.0
-    AI_TOTAL_TIMEOUT_SECONDS: float = 12.0
+    # Free-tier Gemini can take 20-60s to respond under load, so the AI stage
+    # gets a much larger budget than the rest of the scan. The extension's
+    # client timeout is 80s, which leaves headroom for deterministic work.
+    AI_TIMEOUT_SECONDS: float = 60.0
+    AI_TOTAL_TIMEOUT_SECONDS: float = 70.0
 
     # Cap the text sent to the AI. Deterministic checks still run over the full
     # page text; this only bounds token usage and model latency.

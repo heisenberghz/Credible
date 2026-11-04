@@ -99,7 +99,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             disabled={isScanning}
             data-testid="dashboard-scan-btn"
             className="btn-header-scan"
-            title="Trigger full scan of active Chrome tab"
+            title={isScanning ? 'AI analysis can take up to about a minute on the free tier' : 'Trigger full scan of active Chrome tab'}
           >
             {isScanning ? (
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="loading-spinner" aria-hidden="true">

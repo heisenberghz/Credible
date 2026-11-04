@@ -11,8 +11,9 @@ from app.schemas.findings import (
     FindingSource,
     Severity,
 )
-from app.schemas.reports import TrustDnaStatus
+from app.schemas.reports import AssessmentStatus, TrustDnaStatus
 from app.schemas.requests import AnalysisMode, AnalysisRequest, PageData
+from app.services.ai.schemas import AIAnalysisOutput, AIFinding
 from app.services.next_actions import generate_next_best_actions
 from app.services.proof_mode import build_proof_mode
 from app.services.trust_dna import build_trust_dna
@@ -67,6 +68,46 @@ class TestTrustDnaBuilder:
         assert dim_map["link_domain_risk"].status == TrustDnaStatus.WARNING_FOUND
         assert dim_map["payment_risk"].status == TrustDnaStatus.WARNING_FOUND
         assert "WHOIS" in dim_map["identity_risk"].limitations[0]
+
+    def test_ai_output_is_consumed_without_crashing(self):
+        req = AnalysisRequest(
+            request_id="test-dna-3",
+            mode=AnalysisMode.PAGE,
+            page=PageData(
+                url="http://192.168.1.50/pay",
+                visible_text="Pay 3000 registration fee immediately",
+            ),
+        )
+        checks = [
+            CheckResult(
+                check_id="content.payment_pressure",
+                status=CheckStatus.DETECTED,
+                severity=Severity.HIGH,
+                confidence=Confidence.HIGH,
+                evidence=[Evidence(source="visible_text", excerpt="Pay 3000", reason="Fee")],
+            )
+        ]
+        ai_output = AIAnalysisOutput(
+            assessment_status=AssessmentStatus.SUSPICIOUS,
+            summary="AI analysis flagged a payment request.",
+            findings=[
+                AIFinding(
+                    finding_type="payment_pressure",
+                    severity=Severity.HIGH,
+                    confidence=Confidence.HIGH,
+                    evidence_quote="Pay 3000 registration fee",
+                    explanation="Upfront payment request.",
+                    recommended_action="Do not pay.",
+                )
+            ],
+        )
+
+        dimensions = build_trust_dna(req, checks, ai_output)
+        dim_map = {d.id: d for d in dimensions}
+
+        assert len(dimensions) == 6
+        # Deterministic and AI signals agree, so consensus should be positive.
+        assert dim_map["evidence_confidence"].status == TrustDnaStatus.NO_INDICATOR_DETECTED
 
 
 class TestProofModeBuilder:

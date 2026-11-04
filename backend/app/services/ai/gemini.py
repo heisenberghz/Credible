@@ -130,11 +130,11 @@ class GeminiProvider(AIProvider):
         try:
             await asyncio.wait_for(
                 asyncio.to_thread(self._generate, "Reply with OK.", json_mode=False),
-                timeout=min(settings.AI_TIMEOUT_SECONDS, 15.0),
+                timeout=settings.AI_TIMEOUT_SECONDS,
             )
             return True, "OK"
         except asyncio.TimeoutError:
-            return False, f"timed out after {min(settings.AI_TIMEOUT_SECONDS, 15.0):.0f}s"
+            return False, f"timed out after {settings.AI_TIMEOUT_SECONDS:.0f}s"
         except Exception as e:
             return False, f"{type(e).__name__}: {str(e)[:240]}"
 
