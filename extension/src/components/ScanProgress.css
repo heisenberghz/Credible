@@ -1,0 +1,82 @@
+.scan-progress {
+  width: 100%;
+  box-sizing: border-box;
+  color: #334155;
+}
+
+.scan-progress--inline {
+  padding: 8px 0;
+}
+
+.scan-progress--full {
+  padding: 10px 12px;
+  background: #FFFFFF;
+  border: 1px solid #ECEFF5;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(17, 24, 39, 0.03);
+}
+
+.scan-progress__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.scan-progress__stage {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  min-width: 0;
+}
+
+.scan-progress__timer {
+  flex-shrink: 0;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #111827;
+}
+
+.scan-progress__track {
+  width: 100%;
+  height: 3px;
+  overflow: hidden;
+  background: #E2E8F0;
+  border-radius: 999px;
+}
+
+.scan-progress__bar {
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #111827 0%, #2563EB 55%, #D4FF00 100%);
+  animation: scan-progress-slide 1.4s ease-in-out infinite;
+}
+
+.scan-progress__hint {
+  margin: 6px 0 0;
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: #8E95A5;
+}
+
+@keyframes scan-progress-slide {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-progress__bar {
+    width: 100%;
+    animation: none;
+    opacity: 0.45;
+  }
+}

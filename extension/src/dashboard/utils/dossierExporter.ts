@@ -1,4 +1,18 @@
-import { AnalysisReport } from '../../types/analysis';
+import { AnalysisReport, FindingSource } from '../../types/analysis';
+
+function describeAttribution(source: FindingSource | undefined, isDeterministic: boolean): string {
+  const resolved =
+    source ?? (isDeterministic ? FindingSource.DETERMINISTIC : FindingSource.AI_INTERPRETED);
+
+  switch (resolved) {
+    case FindingSource.RECONCILED:
+      return 'Reconciled (Rules + AI)';
+    case FindingSource.AI_INTERPRETED:
+      return 'AI Semantic Inference';
+    default:
+      return 'Deterministic Heuristic';
+  }
+}
 
 export function generateMarkdownDossier(report: AnalysisReport): string {
   const timestamp = report.timestamp ? new Date(report.timestamp).toUTCString() : new Date().toUTCString();
@@ -41,7 +55,7 @@ export function generateMarkdownDossier(report: AnalysisReport): string {
     report.proof_mode.forEach((entry, idx) => {
       markdown += `### Finding ${idx + 1}: ${entry.title}\n`;
       markdown += `- **Location / Selector:** \`${entry.location}\`\n`;
-      markdown += `- **Engine Attribution:** ${entry.is_deterministic ? 'Deterministic Heuristic' : 'AI Semantic Inference'}${entry.check_id ? ` (Rule: \`${entry.check_id}\`)` : ''}\n`;
+      markdown += `- **Engine Attribution:** ${describeAttribution(entry.source, entry.is_deterministic)}${entry.check_id ? ` (Rule: \`${entry.check_id}\`)` : ''}\n`;
       markdown += `- **Certainty:** ${entry.confidence}\n\n`;
       markdown += `> **Observed DOM Signal:**  \n> "${entry.observed}"\n\n`;
       markdown += `**Threat Interpretation:**  \n${entry.why_it_matters}\n\n`;

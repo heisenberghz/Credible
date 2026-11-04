@@ -3,9 +3,10 @@ import React from 'react';
 interface HeaderProps {
   onScan: () => void;
   isScanning: boolean;
+  elapsedSeconds?: number;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
+export const Header: React.FC<HeaderProps> = ({ onScan, isScanning, elapsedSeconds }) => {
   return (
     <header
       className="sidepanel-header"
@@ -122,7 +123,11 @@ export const Header: React.FC<HeaderProps> = ({ onScan, isScanning }) => {
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
             </svg>
           )}
-          <span>{isScanning ? 'SCANNING...' : 'SCAN TAB'}</span>
+          <span>
+            {isScanning
+              ? `SCANNING${typeof elapsedSeconds === 'number' ? ` ${elapsedSeconds}s` : '...'}`
+              : 'SCAN TAB'}
+          </span>
         </button>
       </div>
     </header>

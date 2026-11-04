@@ -72,6 +72,11 @@ describe('Popup Component', () => {
     const rings = pulseWrapper.querySelectorAll('.pulse-ring');
     expect(rings.length).toBe(2);
 
+    // Should show an honest stage label and elapsed timer
+    const progress = screen.getByTestId('popup-scan-progress');
+    expect(progress).toHaveTextContent('Extracting page content');
+    expect(screen.getByTestId('scan-elapsed')).toHaveTextContent(/\d+s/);
+
     // Chrome runtime sendMessage should have been called
     expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
       expect.objectContaining({ type: MessageType.REQUEST_SCAN }),
@@ -95,6 +100,9 @@ describe('Popup Component', () => {
     expect(screen.getByTestId('status-text')).toHaveTextContent('Evaluating threats & Trust DNA...');
     expect(screen.getByTestId('status-badge')).toHaveClass('scanning');
     expect(screen.getByTestId('scan-btn')).toBeDisabled();
+    expect(screen.getByTestId('popup-scan-progress')).toHaveTextContent(
+      'Running deterministic checks + AI analysis'
+    );
   });
 
   it('updates state to completed on receiving SCAN_SUCCESS message', async () => {

@@ -137,6 +137,7 @@ export interface ProofModeEntry {
   location: string;
   why_it_matters: string;
   check_id?: string | null;
+  source?: FindingSource;
   is_deterministic: boolean;
   confidence: Confidence;
   limitations: string[];

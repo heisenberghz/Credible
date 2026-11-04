@@ -16,6 +16,8 @@ import { ProofModePanel } from '../sidepanel/components/ProofModePanel';
 import { NextBestActionList } from '../sidepanel/components/NextBestActionList';
 import { ScoreGauge } from '../sidepanel/components/ScoreGauge';
 import { apiClient } from '../services/api-client';
+import { useElapsedSeconds } from '../hooks/useElapsedSeconds';
+import { ScanProgress } from '../components/ScanProgress';
 
 const DEMO_REPORTS: AnalysisReport[] = [
   {
@@ -421,6 +423,7 @@ export const DashboardApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('donators');
   const [copiedSummary, setCopiedSummary] = useState<boolean>(false);
   const [copiedUrl, setCopiedUrl] = useState<boolean>(false);
+  const elapsedSeconds = useElapsedSeconds(isScanning);
 
   const handleCopyUrl = async () => {
     if (!report?.analyzed_url) return;
@@ -616,6 +619,15 @@ export const DashboardApp: React.FC = () => {
             report={report}
             onScan={handleTriggerScan}
             isScanning={isScanning}
+          />
+
+          <ScanProgress
+            active={isScanning}
+            elapsedSeconds={elapsedSeconds}
+            stage="Scanning page and running AI-assisted analysis"
+            hint="A free-tier AI response can take up to about a minute."
+            variant="inline"
+            testId="dashboard-scan-progress"
           />
 
           {/* 4 KPI Cards Row */}

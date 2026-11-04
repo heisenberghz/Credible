@@ -6,6 +6,7 @@ import { NextBestActionList } from '../src/sidepanel/components/NextBestActionLi
 import { ChecksAndLimitations } from '../src/sidepanel/components/ChecksAndLimitations';
 import {
   Confidence,
+  FindingSource,
   ProofModeEntry,
   TrustDnaDimension,
   TrustDnaStatus,
@@ -82,6 +83,7 @@ const mockProofEntries: ProofModeEntry[] = [
     location: 'body > form > p',
     why_it_matters: 'Upfront irreversible cryptocurrency transfers are a hallmark of scam operations.',
     check_id: 'content.payment_pressure',
+    source: FindingSource.DETERMINISTIC,
     is_deterministic: true,
     confidence: Confidence.HIGH,
     limitations: ['Static regex heuristic'],
@@ -93,6 +95,7 @@ const mockProofEntries: ProofModeEntry[] = [
     location: 'window.location.hostname',
     why_it_matters: 'Visual lookalike domain impersonating established financial institution.',
     check_id: 'url.lookalike',
+    source: FindingSource.RECONCILED,
     is_deterministic: true,
     confidence: Confidence.HIGH,
     limitations: [],
@@ -172,11 +175,43 @@ describe('Proof Mode Panel', () => {
     expect(screen.getByText('Impersonation Discrepancy')).toBeInTheDocument();
   });
 
-  it('distinguishes deterministic vs AI analysis engine attribution', () => {
-    render(<ProofModePanel entries={mockProofEntries} />);
+  it('distinguishes deterministic, reconciled, and AI analysis attribution', () => {
+    const aiEntry: ProofModeEntry = {
+      finding_id: 'proof-3',
+      title: 'Brand Impersonation',
+      observed: 'Page claims to represent Google careers',
+      location: 'visible_text',
+      why_it_matters: 'Unverified brand claims signal impersonation risk.',
+      check_id: null,
+      source: FindingSource.AI_INTERPRETED,
+      is_deterministic: false,
+      confidence: Confidence.MEDIUM,
+      limitations: [],
+    };
+
+    render(<ProofModePanel entries={[...mockProofEntries, aiEntry]} />);
 
     const engineTags = screen.getAllByTestId('proof-engine-tag');
     expect(engineTags[0]).toHaveTextContent('Deterministic');
+    expect(engineTags[1]).toHaveTextContent('Reconciled');
+    expect(engineTags[1]).toHaveAttribute(
+      'title',
+      'Deterministic rules and AI analysis agree on this finding'
+    );
+    expect(engineTags[2]).toHaveTextContent('AI Analysis');
+  });
+
+  it('falls back to is_deterministic for older reports without a source field', () => {
+    const legacyEntry: ProofModeEntry = {
+      ...mockProofEntries[0],
+      finding_id: 'proof-legacy',
+      source: undefined,
+      is_deterministic: false,
+    };
+
+    render(<ProofModePanel entries={[legacyEntry]} />);
+
+    expect(screen.getByTestId('proof-engine-tag')).toHaveTextContent('AI Analysis');
   });
 
   it('expands proof details revealing exact observation, why it matters, and check ID', () => {

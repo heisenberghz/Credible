@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, Field
 
-from app.schemas.findings import Confidence, Evidence, Finding
+from app.schemas.findings import Confidence, Evidence, Finding, FindingSource
 from app.schemas.requests import AnalysisMode
 
 
@@ -55,6 +55,7 @@ class ProofModeEntry(BaseModel):
     location: str
     why_it_matters: str
     check_id: Optional[str] = None
+    source: FindingSource = FindingSource.DETERMINISTIC
     is_deterministic: bool = True
     confidence: Confidence
     limitations: list[str] = Field(default_factory=list)

@@ -7,7 +7,7 @@
     "summary": "No immediate deceptive indicators or fee requests detected in analyzed content. Always confirm listings on official channels.",
     "analyzed_url": "https://careers.google.com/jobs/results/12345678-software-engineering-intern",
     "mode": "page",
-    "timestamp": "2026-11-03T15:51:19.317295Z",
+    "timestamp": "2026-11-04T14:10:50.091564Z",
     "findings": [],
     "trust_dna": [
       {
@@ -122,7 +122,7 @@
     "summary": "Significant warning indicators detected: Suspicious Top-Level Domain and Brand Lookalike / Typosquat Domain. Independent verification is strongly advised before proceeding.",
     "analyzed_url": "https://g00gle-careers-portal.xyz/internship-offer",
     "mode": "page",
-    "timestamp": "2026-11-03T15:51:19.330470Z",
+    "timestamp": "2026-11-04T14:10:50.104178Z",
     "findings": [
       {
         "id": "url-suspicious_tld",
@@ -379,6 +379,7 @@
         "location": "url",
         "why_it_matters": "The domain uses the '.xyz' top-level domain, which has higher statistical prevalence in disposable phishing.",
         "check_id": "url.suspicious_tld",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "medium",
         "limitations": [
@@ -392,6 +393,7 @@
         "location": "url",
         "why_it_matters": "Hostname segment 'g00gle-careers-portal' closely resembles official brand 'google' but is not an official domain.",
         "check_id": "url.lookalike",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "medium",
         "limitations": [
@@ -405,6 +407,7 @@
         "location": "visible_text",
         "why_it_matters": "Explicit request for upfront payment, registration fee, or security deposit detected.",
         "check_id": "content.payment_pressure",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "high",
         "limitations": [
@@ -419,6 +422,7 @@
         "location": "visible_text",
         "why_it_matters": "Language creating artificial urgency or pressure to act quickly without independent review.",
         "check_id": "content.urgency",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "medium",
         "limitations": [
@@ -432,6 +436,7 @@
         "location": "visible_text",
         "why_it_matters": "Premature collection of sensitive national identity documents or financial account details.",
         "check_id": "content.data_exposure",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "medium",
         "limitations": [
@@ -445,6 +450,7 @@
         "location": "visible_text",
         "why_it_matters": "Unrealistic opportunity promises such as guaranteed placement or extreme income without qualifications.",
         "check_id": "content.unrealistic_promises",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "high",
         "limitations": [
@@ -490,7 +496,7 @@
     "summary": "Significant warning indicators detected: Suspicious Top-Level Domain and Brand Lookalike / Typosquat Domain. Independent verification is strongly advised before proceeding.",
     "analyzed_url": "https://g00gle.xyz/verify",
     "mode": "selection",
-    "timestamp": "2026-11-03T15:51:19.343482Z",
+    "timestamp": "2026-11-04T14:10:50.114750Z",
     "findings": [
       {
         "id": "url-suspicious_tld",
@@ -684,6 +690,7 @@
         "location": "url",
         "why_it_matters": "The domain uses the '.xyz' top-level domain, which has higher statistical prevalence in disposable phishing.",
         "check_id": "url.suspicious_tld",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "medium",
         "limitations": [
@@ -697,6 +704,7 @@
         "location": "url",
         "why_it_matters": "Hostname segment 'g00gle' closely resembles official brand 'google' but is not an official domain.",
         "check_id": "url.lookalike",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "medium",
         "limitations": [
@@ -710,6 +718,7 @@
         "location": "selection",
         "why_it_matters": "Explicit request for upfront payment, registration fee, or security deposit detected.",
         "check_id": "content.payment_pressure",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "high",
         "limitations": [
@@ -724,6 +733,7 @@
         "location": "selection",
         "why_it_matters": "Language creating artificial urgency or pressure to act quickly without independent review.",
         "check_id": "content.urgency",
+        "source": "deterministic",
         "is_deterministic": true,
         "confidence": "medium",
         "limitations": [

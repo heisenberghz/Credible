@@ -1,10 +1,55 @@
 import React, { useState } from 'react';
-import { ProofModeEntry } from '../../types/analysis';
+import { FindingSource, ProofModeEntry } from '../../types/analysis';
 import { ConfidenceBadge } from './ConfidenceBadge';
 
 interface ProofModePanelProps {
   entries: ProofModeEntry[];
   showEmptyCleanState?: boolean;
+}
+
+interface ProofAttribution {
+  label: string;
+  engineLabel: string;
+  background: string;
+  color: string;
+  border: string;
+  tooltip: string;
+}
+
+function resolveAttribution(entry: ProofModeEntry): ProofAttribution {
+  const source =
+    entry.source ??
+    (entry.is_deterministic ? FindingSource.DETERMINISTIC : FindingSource.AI_INTERPRETED);
+
+  switch (source) {
+    case FindingSource.RECONCILED:
+      return {
+        label: 'Reconciled',
+        engineLabel: 'Reconciled (Rules + AI)',
+        background: '#ECFDF5',
+        color: '#047857',
+        border: '#A7F3D0',
+        tooltip: 'Deterministic rules and AI analysis agree on this finding',
+      };
+    case FindingSource.AI_INTERPRETED:
+      return {
+        label: 'AI Analysis',
+        engineLabel: 'AI Semantic Inference',
+        background: '#EEF2FF',
+        color: '#4338CA',
+        border: '#C7D2FE',
+        tooltip: 'Found by AI contextual analysis, not by a deterministic rule',
+      };
+    default:
+      return {
+        label: 'Deterministic',
+        engineLabel: 'Deterministic Heuristic',
+        background: '#F1F5F9',
+        color: '#334155',
+        border: '#CBD5E1',
+        tooltip: 'Found by deterministic security rules',
+      };
+  }
 }
 
 export const ProofModePanel: React.FC<ProofModePanelProps> = ({
@@ -145,6 +190,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
         {entries.map((entry) => {
           const isExpanded = expandedId === entry.finding_id;
           const detailId = `proof-detail-${entry.finding_id}`;
+          const attribution = resolveAttribution(entry);
 
           return (
             <div
@@ -193,17 +239,18 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span
                     data-testid="proof-engine-tag"
+                    title={attribution.tooltip}
                     style={{
                       fontSize: '10px',
                       padding: '2px 6px',
                       borderRadius: '4px',
-                      backgroundColor: entry.is_deterministic ? '#F1F5F9' : '#EEF2FF',
-                      color: entry.is_deterministic ? '#334155' : '#4338CA',
-                      border: '1px solid #CBD5E1',
+                      backgroundColor: attribution.background,
+                      color: attribution.color,
+                      border: `1px solid ${attribution.border}`,
                       fontWeight: 600,
                     }}
                   >
-                    {entry.is_deterministic ? 'Deterministic' : 'AI Analysis'}
+                    {attribution.label}
                   </span>
                   <ConfidenceBadge confidence={entry.confidence} />
                   <span
@@ -330,7 +377,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                         </span>
                       </div>
                       <span style={{ fontSize: '10px', color: '#64748B', fontWeight: 600, fontFamily: 'monospace' }}>
-                        {entry.is_deterministic ? 'Deterministic Heuristic' : 'AI Semantic Inference'}
+                        {attribution.engineLabel}
                       </span>
                     </div>
                     <p data-testid="proof-why" style={{ margin: 0, color: '#0F172A', fontSize: '12px', lineHeight: '1.45' }}>

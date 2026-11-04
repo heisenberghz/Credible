@@ -29,6 +29,7 @@ def build_proof_mode(findings: List[Finding]) -> List[ProofModeEntry]:
                 location=location_text,
                 why_it_matters=why_text,
                 check_id=f.check_id,
+                source=f.source,
                 is_deterministic=is_det,
                 confidence=f.confidence,
                 limitations=list(f.limitations),

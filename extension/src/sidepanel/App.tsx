@@ -14,6 +14,8 @@ import { TrustDnaPanel } from './components/TrustDnaPanel';
 import { ProofModePanel } from './components/ProofModePanel';
 import { ChecksAndLimitations } from './components/ChecksAndLimitations';
 import { ErrorState } from './components/ErrorState';
+import { useElapsedSeconds } from '../hooks/useElapsedSeconds';
+import { ScanProgress } from '../components/ScanProgress';
 import './sidepanel.css';
 
 export const App: React.FC = () => {
@@ -67,6 +69,7 @@ export const App: React.FC = () => {
   }, []);
 
   const isScanning = state === 'extracting' || state === 'analyzing';
+  const elapsedSeconds = useElapsedSeconds(isScanning);
 
   const handleScan = useCallback(() => {
     if (isScanning) return;
@@ -94,9 +97,24 @@ export const App: React.FC = () => {
 
   return (
     <div className="sidepanel-container" data-testid="sidepanel-root">
-      <Header onScan={handleScan} isScanning={isScanning} />
+      <Header onScan={handleScan} isScanning={isScanning} elapsedSeconds={elapsedSeconds} />
 
       <main className="sidepanel-content">
+        {isScanning && (
+          <ScanProgress
+            active={isScanning}
+            elapsedSeconds={elapsedSeconds}
+            stage={
+              state === 'extracting'
+                ? 'Extracting page content'
+                : 'Running deterministic checks + AI analysis'
+            }
+            hint="Free-tier AI can take up to about a minute."
+            variant="full"
+            testId="sidepanel-scan-progress"
+          />
+        )}
+
         {isScanning && <ErrorState type="loading" message={statusText} />}
 
         {state === 'failed' && !isScanning && (

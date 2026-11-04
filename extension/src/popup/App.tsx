@@ -6,6 +6,8 @@ import {
 } from '../types/extension';
 import { AnalysisReport } from '../types/analysis';
 import { useEngineStatus } from '../hooks/useEngineStatus';
+import { useElapsedSeconds } from '../hooks/useElapsedSeconds';
+import { ScanProgress } from '../components/ScanProgress';
 import './popup.css';
 
 export const App: React.FC = () => {
@@ -58,6 +60,7 @@ export const App: React.FC = () => {
   }, []);
 
   const isScanning = state === 'extracting' || state === 'analyzing';
+  const elapsedSeconds = useElapsedSeconds(isScanning);
 
   const handleScan = useCallback(async () => {
     if (isScanning) return; // Prevent duplicate concurrent submissions
@@ -201,6 +204,19 @@ export const App: React.FC = () => {
                 : 'Scan complete. View deep Trust DNA in side panel.')}
             {state === 'failed' && (errorMessage || 'Scan could not complete. Check backend connection.')}
           </p>
+
+          <ScanProgress
+            active={isScanning}
+            elapsedSeconds={elapsedSeconds}
+            stage={
+              state === 'extracting'
+                ? 'Extracting page content'
+                : 'Running deterministic checks + AI analysis'
+            }
+            hint="Free-tier AI can take up to about a minute."
+            variant="inline"
+            testId="popup-scan-progress"
+          />
         </div>
       </main>
 
@@ -244,7 +260,7 @@ export const App: React.FC = () => {
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
             </svg>
             {isScanning ? (
-              <span>Analyzing Page...</span>
+              <span>Analyzing Page... {elapsedSeconds}s</span>
             ) : state === 'failed' ? (
               <span>Retry Scan</span>
             ) : (

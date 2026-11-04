@@ -276,6 +276,9 @@ describe('Side Panel Components', () => {
       expect(screen.getByTestId('loading-status-text')).toHaveTextContent(
         'Evaluating Trust DNA...'
       );
+      expect(screen.getByTestId('sidepanel-scan-progress')).toHaveTextContent(
+        'Running deterministic checks + AI analysis'
+      );
     });
 
     it('renders full report when receiving SCAN_SUCCESS message', async () => {

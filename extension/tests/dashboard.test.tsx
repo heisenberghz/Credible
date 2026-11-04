@@ -91,6 +91,7 @@ describe('Task 20: Full-Tab Command Center Dashboard Suite', () => {
           observed: 'Pay $250 fee',
           location: 'form > input',
           why_it_matters: 'Employment fee scams',
+          source: 'reconciled' as any,
           is_deterministic: true,
           confidence: Confidence.HIGH,
           limitations: [],
@@ -110,6 +111,7 @@ describe('Task 20: Full-Tab Command Center Dashboard Suite', () => {
     expect(markdown).toContain('Payment Risk');
     expect(markdown).toContain('PROOF MODE FORENSIC TRACE');
     expect(markdown).toContain('Pay $250 fee');
+    expect(markdown).toContain('Engine Attribution:** Reconciled (Rules + AI)');
     expect(markdown).toContain('PROPORTIONATE NEXT BEST ACTIONS');
     expect(markdown).toContain('Do not pay money.');
   });

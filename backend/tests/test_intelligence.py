@@ -149,13 +149,39 @@ class TestProofModeBuilder:
         # First entry: deterministic
         assert proof_entries[0].finding_id == "content-payment_pressure"
         assert proof_entries[0].observed == "Pay ₹5000 deposit"
+        assert proof_entries[0].source == FindingSource.DETERMINISTIC
         assert proof_entries[0].is_deterministic is True
         assert proof_entries[0].check_id == "content.payment_pressure"
 
         # Second entry: AI interpreted
         assert proof_entries[1].finding_id == "ai-social-eng-1"
         assert proof_entries[1].observed == "Act now or miss out"
+        assert proof_entries[1].source == FindingSource.AI_INTERPRETED
         assert proof_entries[1].is_deterministic is False
+
+    def test_reconciled_finding_keeps_its_own_source(self):
+        findings = [
+            Finding(
+                id="content-urgency",
+                title="Urgency Pressure",
+                description="Artificial scarcity detected.",
+                severity=Severity.HIGH,
+                confidence=Confidence.HIGH,
+                status=CheckStatus.DETECTED,
+                evidence=[
+                    Evidence(source="visible_text", excerpt="Only 3 seats left", reason="Scarcity tactic")
+                ],
+                check_id="content.urgency",
+                source=FindingSource.RECONCILED,
+            )
+        ]
+
+        entry = build_proof_mode(findings)[0]
+
+        # Reconciled still counts as rule-origin for backward compatibility, but
+        # the source field must stay distinct so the UI can show "Reconciled".
+        assert entry.source == FindingSource.RECONCILED
+        assert entry.is_deterministic is True
 
 
 class TestNextBestActions:
