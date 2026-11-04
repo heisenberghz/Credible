@@ -62,6 +62,12 @@ class Settings(BaseSettings):
     # page text; this only bounds token usage and model latency.
     AI_MAX_INPUT_CHARS: int = 20000
 
+    # Short-lived cache for validated AI results. Identical content + model
+    # reuse the previous result instead of spending another free-tier call.
+    AI_CACHE_ENABLED: bool = True
+    AI_CACHE_TTL_SECONDS: int = 900
+    AI_CACHE_MAX_ENTRIES: int = 128
+
     # Content boundaries
     MAX_PAGE_TEXT_CHARS: int = 50000
     MAX_SELECTION_TEXT_CHARS: int = 5000

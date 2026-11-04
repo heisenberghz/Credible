@@ -60,6 +60,9 @@ working directory) with environment variables taking precedence.
 | `AI_TIMEOUT_SECONDS` | `60` | Per-attempt limit (one transient retry allowed). |
 | `AI_TOTAL_TIMEOUT_SECONDS` | `70` | Whole AI-stage budget. |
 | `AI_MAX_INPUT_CHARS` | `20000` | Text sent to the model. |
+| `AI_CACHE_ENABLED` | `true` | Cache validated AI results in memory. |
+| `AI_CACHE_TTL_SECONDS` | `900` | Cache entry lifetime. |
+| `AI_CACHE_MAX_ENTRIES` | `128` | Maximum cached results (LRU eviction). |
 
 `backend/.env` is the single source of truth. No env template is committed.
 
@@ -71,12 +74,15 @@ AIService.run_ai_analysis()
         ├─ configured = providers with a key
         ├─ if none             → UNCONFIGURED limitation
         │
+        ├─ cache lookup (SHA-256 of model + prompt)
+        │     └─ hit            → validated copy, no provider call
+        │
         ├─ Gemini analyze (bounded by total budget)
         │     ├─ 429/503/504    → one retry, then record the failure
         │     ├─ timeout        → TIMEOUT limitation
         │     ├─ exception      → UNAVAILABLE limitation
         │     ├─ malformed JSON → UNAVAILABLE limitation
-        │     └─ valid output   → validate quotes, return
+        │     └─ valid output   → validate quotes, cache, return
         │
         └─ runtime status records last_error for the status endpoint
 ```

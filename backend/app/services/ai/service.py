@@ -15,6 +15,7 @@ from app.core.logging import logger
 from app.schemas.findings import CheckResult
 from app.schemas.requests import AnalysisMode, AnalysisRequest
 from app.services.ai.base import AIProvider
+from app.services.ai.cache import AIResultCache
 from app.services.ai.factory import build_ai_providers
 from app.services.ai.schemas import AIAnalysisOutput
 from app.services.ai.validator import validate_and_filter_ai_output
@@ -84,6 +85,7 @@ class AIService:
         self,
         provider: Optional[AIProvider] = None,
         providers: Optional[Sequence[AIProvider]] = None,
+        cache: Optional[AIResultCache] = None,
     ):
         if providers is not None:
             self.providers: List[AIProvider] = list(providers)
@@ -91,6 +93,14 @@ class AIService:
             self.providers = [provider]
         else:
             self.providers = build_ai_providers()
+
+        # The process normally builds one AIService, so this cache survives
+        # across requests. Tests can inject an isolated cache.
+        self.cache = cache or AIResultCache(
+            ttl_seconds=settings.AI_CACHE_TTL_SECONDS,
+            max_entries=settings.AI_CACHE_MAX_ENTRIES,
+            enabled=settings.AI_CACHE_ENABLED,
+        )
 
         # Kept for callers that previously read a single provider.
         self.provider = self.providers[0] if self.providers else None
@@ -112,7 +122,7 @@ class AIService:
 
         The chain is still ordered and mock providers are supported by tests,
         but production configuration builds Gemini only. The total budget stays
-        below the extension's 15s HTTP timeout.
+        below the extension's 80s HTTP timeout.
         """
         configured = [p for p in self.providers if p.is_configured()]
         if not configured:
@@ -125,6 +135,16 @@ class AIService:
         failures: List[str] = []
 
         for index, provider in enumerate(configured):
+            cache_key = provider.cache_fingerprint(request, deterministic_checks)
+            if cache_key:
+                cached = self.cache.get(cache_key)
+                if cached is not None:
+                    logger.info(
+                        f"AI cache hit for {provider.provider_name}; "
+                        "reusing validated result."
+                    )
+                    return cached
+
             remaining = deadline - loop.time()
             if remaining <= 0:
                 failures.append("timeout")
@@ -182,6 +202,8 @@ class AIService:
                     f"Primary AI provider {reason}; analysis continued with the "
                     f"fallback provider ({provider.provider_name}).",
                 )
+            if cache_key:
+                self.cache.set(cache_key, validated_output, limitations)
             _record_success()
             return validated_output, limitations
 

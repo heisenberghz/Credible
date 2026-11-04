@@ -105,6 +105,18 @@ Timeouts cover free-tier latency (responses have been observed at 20-60s):
 - `AI_MAX_INPUT_CHARS=20000` — text sent to the model; deterministic checks still
   run over the full page text.
 
+Validated AI results are cached in memory so rescans of unchanged content do not
+spend another Gemini call:
+
+- `AI_CACHE_ENABLED=true` — turn the cache on or off.
+- `AI_CACHE_TTL_SECONDS=900` — entries expire after 15 minutes.
+- `AI_CACHE_MAX_ENTRIES=128` — least-recently-used entries are evicted.
+
+The cache key is a SHA-256 hash of the model name and the exact prompt, so any
+change to the URL, visible text, or deterministic signals produces a miss. Only
+validated successes are stored; failures, timeouts, and malformed output are
+never cached.
+
 Because the scan is synchronous, a slow Gemini response means the scan can take
 up to about a minute. The UI keeps the scanning state visible during that time.
 

@@ -1,6 +1,7 @@
 """Google Gemini AI provider implementation using the google-genai SDK."""
 
 import asyncio
+import hashlib
 import json
 import re
 from typing import List, Optional, Tuple
@@ -61,6 +62,16 @@ class GeminiProvider(AIProvider):
 
     def is_configured(self) -> bool:
         return bool(self._client is not None and self.api_key and self.api_key.strip())
+
+    def cache_fingerprint(
+        self,
+        request: AnalysisRequest,
+        deterministic_checks: List[CheckResult],
+    ) -> Optional[str]:
+        """Hash the model + exact prompt so any content change is a cache miss."""
+        prompt = build_analysis_prompt(request, deterministic_checks)
+        payload = f"{self.model_name}\x00{SYSTEM_PROMPT}\x00{prompt}"
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
     def _generate(self, contents: str, *, json_mode: bool = True) -> str:
         config = types.GenerateContentConfig(

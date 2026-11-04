@@ -1,7 +1,7 @@
 """Provider-neutral AI adapter interface."""
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from app.schemas.findings import CheckResult
 from app.schemas.requests import AnalysisRequest
@@ -27,6 +27,19 @@ class AIProvider(ABC):
     def is_configured(self) -> bool:
         """Check if provider credentials/configuration are present."""
         pass
+
+    def cache_fingerprint(
+        self,
+        request: AnalysisRequest,
+        deterministic_checks: List[CheckResult],
+    ) -> Optional[str]:
+        """Return a stable key for result caching, or ``None`` to disable caching.
+
+        Providers should hash everything that can change the model output,
+        including the model name and the exact prompt. The default keeps custom
+        and test providers uncached unless they opt in.
+        """
+        return None
 
     async def check_connectivity(self) -> bool:
         """Optional cheap credential/connectivity probe used by the CLI check.
