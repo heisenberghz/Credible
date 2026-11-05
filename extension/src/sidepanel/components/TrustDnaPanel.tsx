@@ -107,7 +107,7 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
         >
           Trust DNA Profile (6 Dimensions)
         </h3>
-        <span style={{ fontSize: '10.5px', color: '#8E95A5', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700 }}>EVIDENCE-GROUNDED</span>
+        <span style={{ fontSize: '11px', color: '#667085', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700 }}>EVIDENCE-GROUNDED</span>
       </div>
 
       {/* Permanent Core Defensive Philosophy Notice Banner */}
@@ -123,7 +123,7 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
           backgroundColor: '#F8FAFC',
           border: '1px solid #ECEFF5',
           marginBottom: '14px',
-          fontSize: '11px',
+          fontSize: '12px',
           lineHeight: '1.45',
           color: '#475569',
         }}
@@ -200,7 +200,7 @@ export const TrustDnaPanel: React.FC<TrustDnaPanelProps> = ({ dimensions }) => {
                   <span
                     data-testid="dim-status-badge"
                     style={{
-                      fontSize: '10px',
+                      fontSize: '11px',
                       fontWeight: 700,
                       textTransform: 'uppercase',
                       padding: '2px 6px',

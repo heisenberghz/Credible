@@ -123,7 +123,7 @@ export const HeuristicMatrix: React.FC<HeuristicMatrixProps> = ({ report }) => {
             </h3>
             <span
               style={{
-                fontSize: '10px',
+                fontSize: '11px',
                 fontWeight: 700,
                 padding: '2px 6px',
                 borderRadius: '4px',

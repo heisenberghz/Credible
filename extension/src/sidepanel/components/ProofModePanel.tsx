@@ -92,7 +92,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
           >
             Proof Mode Trace (0)
           </h3>
-          <span style={{ fontSize: '10.5px', color: '#475569', fontFamily: 'monospace', fontWeight: 700 }}>
+          <span style={{ fontSize: '11px', color: '#475569', fontFamily: 'monospace', fontWeight: 700 }}>
             NO FINDINGS LOGGED
           </span>
         </div>
@@ -163,7 +163,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
         >
           Proof Mode Trace ({entries.length})
         </h3>
-        <span style={{ fontSize: '10.5px', color: '#8E95A5', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700 }}>AUDIT EVIDENCE</span>
+        <span style={{ fontSize: '11px', color: '#667085', fontFamily: 'var(--font-mono, monospace)', fontWeight: 700 }}>AUDIT EVIDENCE</span>
       </div>
 
       <div
@@ -226,7 +226,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                     data-testid="proof-engine-tag"
                     title={attribution.tooltip}
                     style={{
-                      fontSize: '10px',
+                      fontSize: '11px',
                       padding: '2px 6px',
                       borderRadius: '4px',
                       backgroundColor: attribution.background,
@@ -241,7 +241,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                   <span
                     aria-hidden="true"
                     style={{
-                      fontSize: '10px',
+                      fontSize: '11px',
                       color: '#94A3B8',
                       transform: isExpanded ? 'rotate(180deg)' : 'none',
                       transition: 'transform 0.2s ease',
@@ -288,7 +288,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                         </span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
+                        <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'monospace' }}>
                           {entry.location}
                         </span>
                         <button
@@ -309,7 +309,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                           data-testid={`proof-locate-${entry.finding_id}`}
                           title="Locate and highlight element on active webpage"
                           style={{
-                            fontSize: '10px',
+                            fontSize: '11px',
                             fontFamily: 'monospace',
                             fontWeight: 700,
                             padding: '1px 5px',
@@ -361,7 +361,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                           2. Threat Interpretation
                         </span>
                       </div>
-                      <span style={{ fontSize: '10px', color: '#64748B', fontWeight: 600, fontFamily: 'monospace' }}>
+                      <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600, fontFamily: 'monospace' }}>
                         {attribution.engineLabel}
                       </span>
                     </div>
@@ -369,7 +369,7 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
                       {entry.why_it_matters}
                     </p>
                     {entry.check_id && (
-                      <div style={{ marginTop: '4px', fontSize: '10px', color: '#64748B', fontFamily: 'monospace' }}>
+                      <div style={{ marginTop: '4px', fontSize: '11px', color: '#64748B', fontFamily: 'monospace' }}>
                         <span>Rule ID: </span>
                         <code style={{ color: '#0F172A', fontWeight: 600 }}>{entry.check_id}</code>
                       </div>

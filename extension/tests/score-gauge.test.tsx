@@ -31,4 +31,13 @@ describe('ScoreGauge Component', () => {
     render(<ScoreGauge score={-20} />);
     expect(screen.getByText('High Threat')).toBeInTheDocument();
   });
+
+  it('renders an unscored state instead of claiming clean signals', () => {
+    render(<ScoreGauge score={undefined} />);
+
+    expect(screen.getByText('Not scored')).toBeInTheDocument();
+    expect(screen.queryByText('Clean Signals')).not.toBeInTheDocument();
+    expect(screen.getByTestId('score-value')).toHaveTextContent('—');
+    expect(screen.getByText('no score')).toBeInTheDocument();
+  });
 });

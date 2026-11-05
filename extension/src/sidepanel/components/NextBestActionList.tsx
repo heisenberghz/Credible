@@ -62,7 +62,7 @@ export const NextBestActionList: React.FC<NextBestActionListProps> = ({ actions 
             padding: '2.5px 8px',
             borderRadius: '999px',
             backgroundColor: isAllChecked ? '#D4FF00' : '#E0EAFF',
-            color: isAllChecked ? '#111827' : '#2563EB',
+            color: isAllChecked ? '#111827' : '#1E40AF',
             transition: 'all 0.2s ease',
           }}
         >

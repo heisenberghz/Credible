@@ -9,7 +9,7 @@ interface ScanLedgerProps {
 }
 
 const smallButtonStyle: React.CSSProperties = {
-  fontSize: '10px',
+  fontSize: '11px',
   fontFamily: 'monospace',
   fontWeight: 700,
   padding: '2px 8px',
@@ -32,7 +32,7 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
           <h3 style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#0F172A', fontFamily: 'monospace' }}>
             INVESTIGATION SCAN LEDGER ({history.length})
           </h3>
-          <p style={{ fontSize: '11px', color: '#64748B' }}>Audit history & benchmark comparison</p>
+          <p style={{ fontSize: '12px', color: '#64748B' }}>Audit history & benchmark comparison</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           {history.length > 0 && !confirmingClear && (
@@ -58,7 +58,7 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
               aria-label="Confirm clearing scan history"
               data-testid="ledger-clear-confirm"
             >
-              <span style={{ fontSize: '9px', fontFamily: 'monospace', fontWeight: 800, color: '#9F1239' }}>
+              <span style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 800, color: '#9F1239' }}>
                 CLEAR ALL?
               </span>
               <button
@@ -95,7 +95,7 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
 
       {/* Quick Scenario Benchmark Selector */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px', flexWrap: 'wrap' }}>
-        <span style={{ fontSize: '10px', fontFamily: 'monospace', color: '#64748B', fontWeight: 700 }}>
+        <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#64748B', fontWeight: 700 }}>
           BENCHMARKS:
         </span>
         {history.slice(0, 3).map((item, idx) => {
@@ -175,6 +175,7 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
                 key={item.request_id}
                 onClick={() => onSelect(item)}
                 data-testid={`ledger-item-${item.request_id}`}
+                data-selected={isSelected ? 'true' : 'false'}
                 style={{
                   padding: '10px 12px',
                   borderRadius: '8px',
@@ -212,7 +213,7 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span
                     style={{
-                      fontSize: '10px',
+                      fontSize: '11px',
                       fontWeight: 800,
                       fontFamily: 'monospace',
                       padding: '2px 6px',

@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from 'react';
 
 export interface ScoreGaugeProps {
-  score: number;
+  score?: number | null;
   size?: number;
   variant?: 'full' | 'dial-only';
 }
 
 export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, variant = 'full' }) => {
+  const hasScore = typeof score === 'number' && Number.isFinite(score);
   const [animatedScore, setAnimatedScore] = useState<number>(0);
 
-  // Clamped score between 1 and 100
-  const normalizedScore = Math.max(1, Math.min(100, Math.round(score)));
+  // Clamped score between 1 and 100. No score is kept as "unknown" rather than
+  // being coerced into a perfect 100.
+  const normalizedScore = hasScore
+    ? Math.max(1, Math.min(100, Math.round(score as number)))
+    : 0;
 
   // Smooth number count-up animation
   useEffect(() => {
+    if (!hasScore) {
+      setAnimatedScore(0);
+      return;
+    }
+
     let startTimestamp: number | null = null;
     const duration = 900; // ms
 
@@ -31,7 +40,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
 
     const frameId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frameId);
-  }, [normalizedScore]);
+  }, [normalizedScore, hasScore]);
 
   // Determine theme color based on score
   let strokeColor = '#059669'; // Solid Signal Emerald
@@ -39,7 +48,12 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
   let badgeClass = 'score-safe';
   let glowColor = 'rgba(5, 150, 105, 0.35)';
 
-  if (normalizedScore < 50) {
+  if (!hasScore) {
+    strokeColor = '#CBD5E1';
+    labelText = 'Not scored';
+    badgeClass = 'score-unknown';
+    glowColor = 'transparent';
+  } else if (normalizedScore < 50) {
     strokeColor = '#E11D48'; // Solid Signal Crimson
     labelText = 'High Threat';
     badgeClass = 'score-danger';
@@ -62,7 +76,9 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
   const strokeWidth = Math.max(5, Math.round(size * 0.08));
   const radius = center - strokeWidth - 2;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (animatedScore / 100) * circumference;
+  const strokeDashoffset = hasScore
+    ? circumference - (animatedScore / 100) * circumference
+    : circumference;
 
   const scoreFontSize = Math.round(size * 0.28);
   const scaleFontSize = Math.max(9, Math.round(size * 0.11));
@@ -89,7 +105,11 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        aria-label={`Security score: ${animatedScore} out of 100`}
+        aria-label={
+          hasScore
+            ? `Security score: ${animatedScore} out of 100`
+            : 'Security score unavailable'
+        }
         style={{ display: 'block' }}
       >
         {/* Aerospace Chronograph Ticks */}
@@ -139,7 +159,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           transform={`rotate(-90 ${center} ${center})`}
-          style={{ filter: `drop-shadow(0 0 6px ${glowColor})` }}
+          style={{ filter: hasScore ? `drop-shadow(0 0 6px ${glowColor})` : 'none' }}
         />
 
         {/* NATIVE SVG CENTERED SCORE TEXT (JetBrains Mono / Tabular Figures) */}
@@ -156,7 +176,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           data-testid="score-value"
           style={{ fontVariantNumeric: 'tabular-nums' }}
         >
-          {animatedScore < 10 ? `0${animatedScore}` : animatedScore}
+          {hasScore ? animatedScore : '—'}
         </text>
         <text
           x={center}
@@ -168,7 +188,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           fontWeight="800"
           fontFamily="'JetBrains Mono', 'Cascadia Code', monospace"
         >
-          /100
+          {hasScore ? '/100' : 'no score'}
         </text>
       </svg>
     </div>
@@ -223,7 +243,9 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 96, varian
           </span>
         </div>
         <p className="gauge-caption" style={{ fontSize: '11px', color: '#8E95A5', lineHeight: 1.45, margin: 0 }}>
-          Deterministic multi-vector risk evaluation of observable indicators.
+          {hasScore
+            ? 'Deterministic multi-vector risk evaluation of observable indicators.'
+            : 'This report did not include a credibility score, so no clean state is shown.'}
         </p>
       </div>
     </div>

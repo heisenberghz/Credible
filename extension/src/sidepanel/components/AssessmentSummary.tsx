@@ -44,6 +44,12 @@ const STATUS_CONFIG: Record<string, StatusTheme> = {
     text: '#334155',
     border: '#CBD5E1',
   },
+  [AssessmentStatus.ERROR]: {
+    label: 'Scan Incomplete',
+    bg: '#FFF1F2',
+    text: '#9F1239',
+    border: '#FECDD3',
+  },
 };
 
 const renderVerdictIcon = (status: string) => {
@@ -179,7 +185,7 @@ export const AssessmentSummary: React.FC<AssessmentSummaryProps> = ({ report }) 
       </div>
 
       {/* Dynamic Animated Heuristic Score Gauge */}
-      <ScoreGauge score={report.score ?? 100} />
+      <ScoreGauge score={report.score} />
 
       {/* Plain Language Summary */}
       <p

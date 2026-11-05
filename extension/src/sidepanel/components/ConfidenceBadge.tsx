@@ -35,7 +35,7 @@ export const ConfidenceBadge: React.FC<ConfidenceBadgeProps> = ({ confidence }) 
         border: '1px solid #CBD5E1', // Crisp thin outline
       }}
     >
-      <span style={{ fontSize: '10px', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+      <span style={{ fontSize: '11px', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
         Certainty
       </span>
 

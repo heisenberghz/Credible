@@ -130,7 +130,7 @@ export const InfluencySidebar: React.FC<InfluencySidebarProps> = ({
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
         </div>
-        <h4 className="influency-upgrade-title">Defensive Engine</h4>
+        <p className="influency-upgrade-title">Defensive Engine</p>
         <p className="influency-upgrade-desc">
           Zero client PII leakage. Heuristics online.
         </p>

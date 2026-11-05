@@ -126,6 +126,14 @@ describe('Side Panel Components', () => {
       );
       expect(screen.getByTestId('scan-mode')).toHaveTextContent('Full Page Scan');
     });
+
+    it('does not fabricate a score when the report has none', () => {
+      render(<AssessmentSummary report={{ ...mockReport, score: undefined }} />);
+
+      expect(screen.getByText('Not scored')).toBeInTheDocument();
+      expect(screen.queryByText('Clean Signals')).not.toBeInTheDocument();
+      expect(screen.getByText('no score')).toBeInTheDocument();
+    });
   });
 
   describe('FindingDetail & FindingList Components', () => {

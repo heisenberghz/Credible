@@ -52,9 +52,9 @@ export const FindingList: React.FC<FindingListProps> = ({ findings }) => {
         >
           ✓
         </div>
-        <h4 style={{ fontSize: '14px', fontWeight: 600, color: '#0F172A', marginBottom: '4px' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 600, color: '#0F172A', marginBottom: '4px' }}>
           No Active Threat Findings
-        </h4>
+        </h3>
         <p style={{ fontSize: '12px', color: '#64748B', lineHeight: '1.4', maxWidth: '260px', margin: '0 auto' }}>
           All executed deterministic rules and content checks evaluated normal signals without deception indicators.
         </p>

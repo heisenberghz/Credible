@@ -722,6 +722,8 @@ export const DashboardApp: React.FC = () => {
             isScanning={isScanning}
           />
 
+          <h2 className="sr-only">Credible assessment workbench</h2>
+
           <ScanProgress
             active={isScanning}
             elapsedSeconds={elapsedSeconds}

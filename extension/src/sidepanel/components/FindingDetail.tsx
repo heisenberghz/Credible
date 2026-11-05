@@ -62,7 +62,7 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
         <span
           data-testid="finding-source"
           style={{
-            fontSize: '10px',
+            fontSize: '11px',
             color: '#64748B',
             backgroundColor: '#F8FAFC',
             padding: '2px 6px',
@@ -119,7 +119,7 @@ export const FindingDetail: React.FC<FindingDetailProps> = ({
             gap: '8px',
           }}
         >
-          <span style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#0052FF', fontFamily: 'monospace' }}>
+          <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#0052FF', fontFamily: 'monospace' }}>
             Action:
           </span>
           <span style={{ flex: 1, lineHeight: 1.45 }}>{finding.recommended_action}</span>
