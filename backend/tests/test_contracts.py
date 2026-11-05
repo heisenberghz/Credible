@@ -15,6 +15,11 @@ from app.schemas.requests import AnalysisMode
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 EXTENSION_FIXTURES_DIR = Path(__file__).parent.parent.parent / "extension" / "tests" / "fixtures"
 
+# The golden bundle is a tracked fixture. A real pipeline run stamps the current
+# time, which would make every test run dirty the working tree, so pin the
+# timestamp when exporting. The extension contract tests only validate shape.
+GOLDEN_TIMESTAMP = "2026-01-01T00:00:00Z"
+
 
 class TestSchemaContracts:
     def test_enum_parity_with_typescript(self):
@@ -113,6 +118,9 @@ class TestSchemaContracts:
         assert selection_resp.status_code == 200
         selection_report = selection_resp.json()
 
+        for report in (benign_report, suspicious_report, selection_report):
+            report["timestamp"] = GOLDEN_TIMESTAMP
+
         golden_bundle = {
             "benign": benign_report,
             "suspicious": suspicious_report,
@@ -120,8 +128,11 @@ class TestSchemaContracts:
         }
 
         EXTENSION_FIXTURES_DIR.mkdir(parents=True, exist_ok=True)
-        with open(EXTENSION_FIXTURES_DIR / "golden_reports.json", "w", encoding="utf-8") as f:
-            json.dump(golden_bundle, f, indent=2)
+        golden_path = EXTENSION_FIXTURES_DIR / "golden_reports.json"
+        serialized = json.dumps(golden_bundle, indent=2)
+        existing = golden_path.read_text(encoding="utf-8") if golden_path.exists() else None
+        if existing != serialized:
+            golden_path.write_text(serialized, encoding="utf-8")
 
-        assert (EXTENSION_FIXTURES_DIR / "golden_reports.json").exists()
+        assert golden_path.exists()
 

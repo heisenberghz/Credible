@@ -42,6 +42,28 @@ class TestPaymentPressureCheck:
         res = check.run(req)
         assert res.status == CheckStatus.NOT_DETECTED
 
+    def test_negated_fee_statement_not_detected(self):
+        check = PaymentPressureCheck()
+        req = make_page_text_req(
+            "We never ask contributors to pay any fee or deposit money to join."
+        )
+        res = check.run(req)
+        assert res.status == CheckStatus.NOT_DETECTED
+
+    def test_no_fee_is_not_required(self):
+        check = PaymentPressureCheck()
+        req = make_page_text_req("No registration fee is required and no deposit is needed.")
+        res = check.run(req)
+        assert res.status == CheckStatus.NOT_DETECTED
+
+    def test_negated_fee_with_real_demand_still_detected(self):
+        check = PaymentPressureCheck()
+        req = make_page_text_req(
+            "We never ask for a fee, but selected applicants must pay a $250 deposit."
+        )
+        res = check.run(req)
+        assert res.status == CheckStatus.DETECTED
+
     def test_upfront_fee_detected(self):
         check = PaymentPressureCheck()
         req = make_page_text_req("Selected interns must pay ₹3000 registration fee to reserve their seat.")

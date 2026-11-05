@@ -233,7 +233,7 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-# Phase 3 — Chrome Extension Core
+# ~~Phase 3 — Chrome Extension Core~~
 
 ## - [x] ~~Task 10: Extension Scaffold + Popup + Service Worker~~
 
@@ -305,7 +305,7 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-# Phase 4 — Side Panel UI + Select-to-Verify
+# ~~Phase 4 — Side Panel UI + Select-to-Verify~~
 
 ## - [x] ~~Task 13: Side Panel — Core Results UI~~
 
@@ -373,7 +373,7 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-# Phase 5 — Integration + Security
+# ~~Phase 5 — Integration + Security~~
 
 ## - [x] ~~Task 16: End-to-End Integration~~
 
@@ -432,7 +432,7 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-# Phase 6 — Demo + Polish
+# ~~Phase 6 — Demo + Polish~~
 
 ## - [x] ~~Task 18: Demo Scenarios + Test Pages~~
 
@@ -498,25 +498,27 @@ Report: task ID, files changed, tests added, commands run, test results, accepta
 
 ---
 
-# Phase 7 — Handoff
+# ~~Phase 7 — Handoff~~
 
-## - [ ] Task 21: Documentation + Handoff
+## - [x] ~~Task 21: Documentation + Handoff~~
 
-**Build:**
-- `README.md` — Project overview, quick start, architecture summary
-- Setup guide — Backend + extension local development
-- Environment variables documentation (including where to add `GEMINI_API_KEY`)
-- Test commands reference
-- Demo script with step-by-step instructions
-- Known limitations
-- Release checklist
-- Architecture diagram
+~~**Build:**~~
+- [x] ~~`README.md` — Project overview, quick start, architecture summary~~
+- [x] ~~Setup guide — Backend + extension local development~~
+- [x] ~~Environment variables documentation (including where to add `GEMINI_API_KEY`)~~
+- [x] ~~Test commands reference~~
+- [x] ~~Demo script with step-by-step instructions~~
+- [x] ~~Known limitations~~
+- [x] ~~Release checklist~~
+- [x] ~~Architecture diagram~~
 
-**Acceptance:**
-- [ ] A new developer can set up and run the project from README alone
-- [ ] Demo script is reproducible
-- [ ] All environment variables documented
-- [ ] Known limitations listed
+~~**Acceptance:**~~
+- [x] ~~A new developer can set up and run the project from README alone~~
+- [x] ~~Demo script is reproducible~~
+- [x] ~~All environment variables documented~~
+- [x] ~~Known limitations listed~~
+
+~~**Verified:** Backend `pytest` 158 passed; extension `tsc --noEmit`, `vitest run` (136 tests), and `vite build` all pass. Demo pages now state the current verdict vocabulary and match the observed scenario outputs. The golden-report fixture is written with a pinned timestamp so running the suite no longer dirties the working tree.~~
 
 ---
 

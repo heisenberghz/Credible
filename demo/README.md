@@ -7,13 +7,16 @@ This directory contains standalone, reproducible test scenarios and a local HTTP
 ## 1. Quick Start
 
 ### Step 1: Start the Backend Analysis API
-In your first terminal:
+In your first terminal (from the repository root):
 ```bash
 cd backend
-# With virtual environment activated:
+# With the virtual environment activated:
 python -m uvicorn app.main:app --reload --port 8000
 ```
-> **Note on API Keys:** Credible works in **deterministic fallback mode** without an API key! For AI-assisted analysis, add `GEMINI_API_KEY` to `backend/.env`, restart the backend, and run `python scripts/check_ai.py` to verify. See `doc/API_INTEGRATION.md` for the full design.
+If the venv is not activated on Windows, use
+`.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000`.
+
+> **Note on API Keys:** Credible works in **deterministic fallback mode** without an API key. For AI-assisted analysis, add `GEMINI_API_KEY` to `backend/.env`, restart the backend, and run `python scripts/check_ai.py` to verify. See the root `README.md` for setup and `doc/API_INTEGRATION.md` for the full AI design.
 
 ### Step 2: Build the Chrome Extension
 In your second terminal:
@@ -30,7 +33,7 @@ The production bundle will be generated in `extension/dist/`.
 4. Pin the **Credible** extension icon to your Chrome toolbar.
 
 ### Step 4: Start the Demo Pages Server
-In your third terminal:
+In your third terminal (from the repository root):
 ```bash
 python demo/server.py --port 8080
 ```
@@ -47,9 +50,10 @@ Then open your browser to **`http://localhost:8080/index.html`**.
   1. Click the Credible extension icon in Chrome toolbar.
   2. Click **"Scan This Page"**.
 - **Expected Results:**
-  - **Status:** `SAFE` (or Low Risk)
-  - **Findings:** 0 high or critical threat findings.
-  - **Trust DNA:** Green / positive indicators across checked dimensions.
+  - **Dashboard verdict:** `CLEAN SIGNALS` or `CAUTION / UNVERIFIED` (the score can vary with the rule set).
+  - **Side panel status:** `Standard Patterns Observed` (or `Verification Recommended` if the score is mid-range).
+  - **Findings:** 0 high or critical threat findings. Warnings must never be invented for a benign page.
+  - **Trust DNA:** Positive indicators where checks ran, with `unknown` where no evidence exists.
   - **Proof Mode:** Raw check records showing no pattern matches for payment pressure or credential harvesting.
 
 ---
@@ -61,7 +65,8 @@ Then open your browser to **`http://localhost:8080/index.html`**.
   1. Open the page and click **"Scan This Page"**.
   2. Observe the Side Panel opening automatically with a prominent red threat banner.
 - **Expected Results:**
-  - **Status:** `MALICIOUS` or `SUSPICIOUS`
+  - **Dashboard verdict:** `CRITICAL THREAT DETECTED` or `CAUTION / UNVERIFIED`.
+  - **Side panel status:** `Suspicious Indicators Detected`.
   - **Severity:** `CRITICAL` / `HIGH`
   - **Findings:**
     - `content.credential_pressure` (Critical): Password/login credential demand.
@@ -70,7 +75,7 @@ Then open your browser to **`http://localhost:8080/index.html`**.
     - `content.data_exposure` (High): Demanding passport & SSN.
 - **Action (Select-to-Verify):**
   1. Highlight the sentence: *"Selected applicants must pay a refundable security deposit of $250 via bitcoin wallet"*.
-  2. Right-click and choose **"Verify selection with Credible"**.
+  2. Right-click and choose **"Verify with Credible"**.
   3. Notice the highlighted snippet banner in the Side Panel focusing specifically on the payment pressure finding.
 
 ---
@@ -81,8 +86,9 @@ Then open your browser to **`http://localhost:8080/index.html`**.
 - **Action:**
   1. Run page scan on `http://localhost:8080/ambiguous.html`.
 - **Expected Results:**
-  - **Status:** `NEEDS_REVIEW` or `SUSPICIOUS` (Medium severity).
-  - **Findings:** Identifies unrealistic compensation claims without erroneously declaring it a critical scam.
+  - **Dashboard verdict:** `CAUTION / UNVERIFIED` or `CRITICAL THREAT DETECTED`, driven by the score threshold; the point is the mixed evidence, not a fixed number.
+  - **Side panel status:** `Verification Recommended` or `Caution Warranted`.
+  - **Findings:** Identifies unrealistic compensation claims without fabricating a critical credential-theft finding.
   - **Trust DNA:** Displays clear **Unknown / Not Checked** indicators for Domain Age and Business Registry instead of guessing.
   - **Next Best Actions:** Recommends concrete actions (e.g., verifying business registrar, searching independent contractor reviews).
 
@@ -94,7 +100,8 @@ Then open your browser to **`http://localhost:8080/index.html`**.
 - **Action:**
   1. Run page scan on `http://localhost:8080/prompt-injection.html`.
 - **Expected Defense Verification:**
-  - **Status:** Stays `MALICIOUS` / `SUSPICIOUS`.
+  - **Dashboard verdict:** Stays `CRITICAL THREAT DETECTED` or `CAUTION / UNVERIFIED`; it must never become `CLEAN SIGNALS`.
+  - **Side panel status:** Stays `Suspicious Indicators Detected` or `Caution Warranted`.
   - **Reasoning:**
     - The untrusted content tags isolate the adversarial directives from model instructions.
     - Deterministic checks flag the upfront fee and credential demands.
@@ -111,5 +118,5 @@ Then open your browser to **`http://localhost:8080/index.html`**.
   2. **Backend Offline Recovery:**
      - Stop the backend server process.
      - Click **"Scan This Page"** in Credible.
-     - The Side Panel displays a clear, Apple-styled connection error card with a **"Retry Analysis"** button, preventing unhandled runtime exceptions.
+     - The Side Panel displays a clear connection error card with a **"Try Again"** button, preventing unhandled runtime exceptions.
 

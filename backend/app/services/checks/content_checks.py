@@ -37,6 +37,43 @@ def find_matching_sentences(text: str, patterns: List[re.Pattern]) -> List[Tuple
     return matches
 
 
+# A legitimate disclaimer can mention payment words without requesting money,
+# e.g. "we never ask contributors to pay any fee". Skip those clauses unless the
+# same sentence also contains an affirmative demand or a concrete amount.
+PAYMENT_DISCLAIMER_PATTERNS = [
+    re.compile(
+        r"\b(?:never|do|does|did)\s*(?:not|n't)?\s*"
+        r"(?:ask|require|expect|demand|charge|pay|need)\b[^.;]{0,50}"
+        r"\b(?:pay|payment|fee|charge|deposit)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\bno\s+(?:\w+\s+){0,2}(?:fee|charge|deposit|payment)\s+"
+        r"(?:is|are)?\s*(?:required|needed|necessary)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:fee|charge|deposit|payment)\s+(?:is|are)\s+not\s+"
+        r"(?:required|needed|necessary)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\bwithout\s+(?:paying|any)\s+(?:fee|charge|deposit)\b", re.IGNORECASE),
+    re.compile(r"\b(?:do|does|did)\s*(?:not|n't)\s+charge\b[^.;]{0,30}\b(?:fee|deposit|payment|money)\b", re.IGNORECASE),
+]
+
+PAYMENT_AFFIRMATIVE_PATTERN = re.compile(
+    r"\b(?:must|please|kindly)\b"
+    r"|\byou\s+(?:will|must|should|are\s+required)\b"
+    r"|\b(?:are|is)\s+required\s+to\b"
+    r"|\bfailure\s+to\b|\bbefore\s+you\s+can\b|\bto\s+proceed\b|\bin\s+order\s+to\b"
+    r"|[₹$]\s*\d+"
+    r"|\b\d[\d,]*\s*(?:usd|inr|rupees|dollars)\b"
+    r"|\b(?:send|transfer|wire|submit|pay|deposit)\b[^.;]{0,25}"
+    r"\b(?:usdt|bitcoin|ethereum|crypto|wallet|upi|account\s+number)\b",
+    re.IGNORECASE,
+)
+
+
 class PaymentPressureCheck(BaseCheck):
     check_id = "content.payment_pressure"
     category = "content"
@@ -49,6 +86,12 @@ class PaymentPressureCheck(BaseCheck):
         re.compile(r"\b(?:crypto|bitcoin|ethereum|usdt|upi)\s+(?:wallet|address|payment|transfer|account)\b", re.IGNORECASE),
     ]
 
+    @staticmethod
+    def _is_disclaimer(chunk: str) -> bool:
+        if PAYMENT_AFFIRMATIVE_PATTERN.search(chunk):
+            return False
+        return any(pattern.search(chunk) for pattern in PAYMENT_DISCLAIMER_PATTERNS)
+
     def run(self, request: AnalysisRequest) -> CheckResult:
         text = extract_content_text(request)
         if not text.strip():
@@ -59,7 +102,11 @@ class PaymentPressureCheck(BaseCheck):
                 limitations=["No readable content was submitted for text analysis."],
             )
 
-        matches = find_matching_sentences(text, self.PATTERNS)
+        matches = [
+            (chunk, label)
+            for chunk, label in find_matching_sentences(text, self.PATTERNS)
+            if not self._is_disclaimer(chunk)
+        ]
         if matches:
             evidences = [
                 Evidence(
