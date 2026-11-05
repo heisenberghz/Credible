@@ -47,7 +47,7 @@ export function describeEngineStatus(
     }
     return {
       state: 'online',
-      label: `AI READY · ${provider}`,
+      label: `AI AVAILABLE · ${provider}`,
       shortLabel: 'AI',
       detail: `AI-assisted analysis via ${provider}${model ? ` (${model})` : ''}`,
       provider: status.active_provider,

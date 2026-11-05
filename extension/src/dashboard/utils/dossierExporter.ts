@@ -1,4 +1,4 @@
-import { AnalysisReport, FindingSource } from '../../types/analysis';
+import { AnalysisReport, AssessmentStatus, FindingSource } from '../../types/analysis';
 
 function describeAttribution(source: FindingSource | undefined, isDeterministic: boolean): string {
   const resolved =
@@ -16,18 +16,19 @@ function describeAttribution(source: FindingSource | undefined, isDeterministic:
 
 export function generateMarkdownDossier(report: AnalysisReport): string {
   const timestamp = report.timestamp ? new Date(report.timestamp).toUTCString() : new Date().toUTCString();
-  const score = report.score ?? 100;
+  const scoreLabel =
+    typeof report.score === 'number' ? `**${report.score} / 100**` : '**Not available**';
 
   let markdown = `# CREDIBLE SECURITY AUDIT DOSSIER
 **Report ID:** \`${report.request_id}\`  
 **Generated:** ${timestamp}  
 **Target URL:** \`${report.analyzed_url}\`  
 **Scan Mode:** ${report.mode.toUpperCase()}  
-
+ 
 ---
 
 ## 1. EXECUTIVE VERDICT
-- **Credibility Safety Index:** **${score} / 100**
+- **Credibility Safety Index:** ${scoreLabel}
 - **Assessment Verdict:** **${report.assessment_status.toUpperCase()}**
 - **Summary:** ${report.summary}
 
@@ -64,7 +65,10 @@ export function generateMarkdownDossier(report: AnalysisReport): string {
       }
     });
   } else {
-    markdown += `*✓ Clean signatures. No threat indicators detected.*\n\n`;
+    markdown +=
+      report.assessment_status === AssessmentStatus.BENIGN
+        ? `*No threat indicators were detected in the evaluated checks.*\n\n`
+        : `*No proof entries were recorded for this assessment.*\n\n`;
   }
 
   markdown += `---

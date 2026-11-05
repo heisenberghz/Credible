@@ -92,8 +92,8 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
           >
             Proof Mode Trace (0)
           </h3>
-          <span style={{ fontSize: '11px', color: '#059669', fontFamily: 'monospace', fontWeight: 700 }}>
-            ✓ VERIFIED CLEAN SIGNALS
+          <span style={{ fontSize: '10.5px', color: '#475569', fontFamily: 'monospace', fontWeight: 700 }}>
+            NO FINDINGS LOGGED
           </span>
         </div>
 
@@ -105,32 +105,17 @@ export const ProofModePanel: React.FC<ProofModePanelProps> = ({
             border: '1px solid #E2E8F0',
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: '6px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#059669', fontSize: '14px', fontWeight: 800 }}>✓</span>
-            <span style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A' }}>
-              Zero Threat Vectors Flagged in DOM
-            </span>
-          </div>
+          <span style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A' }}>
+            No proof entries were recorded
+          </span>
           <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-            All deterministic and semantic checks passed with clean signatures. No upfront cryptocurrency requests, payment pressure, artificial countdown scarcity timers, or illicit credential harvesting patterns were observed in the analyzed content.
+            This trace lists only findings that produced observable evidence. An empty trace is not
+            proof of safety — check the rule results and evidence confidence for what was actually
+            evaluated.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
-            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
-              payment_pressure: CLEAN
-            </span>
-            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
-              urgency: CLEAN
-            </span>
-            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
-              credential_pressure: CLEAN
-            </span>
-            <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 6px', borderRadius: '4px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
-              data_exposure: CLEAN
-            </span>
-          </div>
         </div>
       </section>
     );

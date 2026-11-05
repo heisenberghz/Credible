@@ -10,7 +10,7 @@ import { AIStatusResponse, EngineStatus } from '../types/status';
  *
  * `refreshKey` re-checks the backend when it changes. Callers pass the report
  * timestamp so a scan that degraded the AI immediately flips the badge instead
- * of leaving a stale "AI READY" until the next mount.
+ * of leaving a stale "AI AVAILABLE" until the next mount.
  */
 export function useEngineStatus(refreshKey?: string | number | null): EngineStatus {
   const [status, setStatus] = useState<AIStatusResponse | null>(null);

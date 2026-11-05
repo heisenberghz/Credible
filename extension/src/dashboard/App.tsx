@@ -3,7 +3,7 @@ import { AnalysisReport, AssessmentStatus, AnalysisMode, Confidence } from '../t
 import { ExtensionMessage, MessageType } from '../types/extension';
 import { InfluencySidebar } from './components/InfluencySidebar';
 import { InfluencyTopBar } from './components/InfluencyTopBar';
-import { InfluencyKpiRow } from './components/InfluencyKpiRow';
+import { InfluencyTelemetryRail } from './components/InfluencyTelemetryRail';
 import { BenchmarkSwitcher } from './components/BenchmarkSwitcher';
 import { HeuristicMatrix } from './components/HeuristicMatrix';
 import { ScanLedger } from './components/ScanLedger';
@@ -12,8 +12,7 @@ import { ChecksAndLimitations } from '../sidepanel/components/ChecksAndLimitatio
 import { TrustDnaPanel } from '../sidepanel/components/TrustDnaPanel';
 import { ProofModePanel } from '../sidepanel/components/ProofModePanel';
 import { NextBestActionList } from '../sidepanel/components/NextBestActionList';
-import { ScoreGauge } from '../sidepanel/components/ScoreGauge';
-import { apiClient } from '../services/api-client';
+import { apiClient, mapErrorToUserMessage } from '../services/api-client';
 import { useElapsedSeconds } from '../hooks/useElapsedSeconds';
 import { ScanProgress } from '../components/ScanProgress';
 
@@ -414,10 +413,51 @@ const DEMO_REPORTS: AnalysisReport[] = [
   },
 ];
 
+export type VerdictTone = 'clean' | 'caution' | 'threat' | 'unknown';
+
+export interface DashboardVerdict {
+  tone: VerdictTone;
+  label: string;
+}
+
+/**
+ * Derive the dashboard verdict from the report itself. A missing score is never
+ * treated as a perfect score: without a score there is no clean claim to make.
+ */
+export function deriveVerdict(report: AnalysisReport): DashboardVerdict {
+  switch (report.assessment_status) {
+    case AssessmentStatus.ERROR:
+      return { tone: 'unknown', label: 'SCAN INCOMPLETE' };
+    case AssessmentStatus.INCONCLUSIVE:
+      return { tone: 'unknown', label: 'INCONCLUSIVE' };
+    case AssessmentStatus.SUSPICIOUS:
+      return { tone: 'threat', label: 'CRITICAL THREAT DETECTED' };
+    case AssessmentStatus.CAUTION:
+      return { tone: 'caution', label: 'CAUTION / UNVERIFIED' };
+    case AssessmentStatus.NEEDS_VERIFICATION:
+      return { tone: 'caution', label: 'VERIFICATION REQUIRED' };
+    default:
+      break;
+  }
+
+  const score = typeof report.score === 'number' ? report.score : null;
+  if (score === null) {
+    return { tone: 'unknown', label: 'UNVERIFIED — NO SCORE' };
+  }
+  if (score < 50) {
+    return { tone: 'threat', label: 'CRITICAL THREAT DETECTED' };
+  }
+  if (score < 85) {
+    return { tone: 'caution', label: 'CAUTION / UNVERIFIED' };
+  }
+  return { tone: 'clean', label: 'CLEAN SIGNALS' };
+}
+
 export const DashboardApp: React.FC = () => {
   const [report, setReport] = useState<AnalysisReport | null>(null);
   const [history, setHistory] = useState<AnalysisReport[]>(DEMO_REPORTS);
   const [isScanning, setIsScanning] = useState<boolean>(false);
+  const [scanError, setScanError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [copiedSummary, setCopiedSummary] = useState<boolean>(false);
   const [copiedUrl, setCopiedUrl] = useState<boolean>(false);
@@ -469,12 +509,15 @@ export const DashboardApp: React.FC = () => {
       setReport(DEMO_REPORTS[0]);
     }
 
-    // 3. Listen for live SCAN_SUCCESS messages from background/sidepanel
+    // 3. Listen for live SCAN_SUCCESS / SCAN_ERROR messages from background/sidepanel
     if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
       const listener = (message: ExtensionMessage) => {
         if (message.type === MessageType.SCAN_SUCCESS && message.report) {
+          setScanError(null);
           setReport(message.report);
           setHistory((prev) => [message.report, ...prev.filter((p) => p.request_id !== message.report.request_id)]);
+        } else if (message.type === MessageType.SCAN_ERROR) {
+          setScanError(message.error || 'The scan could not be completed. Reload the tab and try again.');
         }
       };
       chrome.runtime.onMessage.addListener(listener);
@@ -491,7 +534,8 @@ export const DashboardApp: React.FC = () => {
   const handleCopySummary = async () => {
     if (!report) return;
     try {
-      const summaryText = `[Credible Forensic Dossier]\nTarget: ${report.analyzed_url}\nScore: ${report.score ?? 100}/100\nVerdict: ${report.assessment_status}\nSummary: ${report.summary}`;
+      const scoreLabel = typeof report.score === 'number' ? `${report.score}/100` : 'not available';
+      const summaryText = `[Credible Forensic Dossier]\nTarget: ${report.analyzed_url}\nScore: ${scoreLabel}\nVerdict: ${report.assessment_status}\nSummary: ${report.summary}`;
       if (typeof navigator !== 'undefined' && navigator.clipboard) {
         await navigator.clipboard.writeText(summaryText);
         setCopiedSummary(true);
@@ -512,57 +556,104 @@ export const DashboardApp: React.FC = () => {
   const handleTriggerScan = async () => {
     if (isScanning) return;
     setIsScanning(true);
+    setScanError(null);
+
+    const finish = () => setIsScanning(false);
+
+    const applyReport = (newReport: AnalysisReport) => {
+      setReport(newReport);
+      setHistory((prev) => [
+        newReport,
+        ...prev.filter((p) => p.request_id !== newReport.request_id),
+      ]);
+
+      if (chrome.storage?.local) {
+        chrome.storage.local.set({
+          credible_latest_report: newReport,
+          credible_scan_history: [
+            newReport,
+            ...history.filter((p) => p.request_id !== newReport.request_id),
+          ],
+        });
+      }
+    };
+
+    const runBackgroundScan = (tabId: number) => {
+      if (!chrome.runtime?.sendMessage) {
+        setScanError('The page could not be read. Reload the tab and try again.');
+        finish();
+        return;
+      }
+
+      chrome.runtime.sendMessage({ type: 'REQUEST_SCAN', tabId }, (bgResponse) => {
+        if (chrome.runtime.lastError) {
+          setScanError('The scanner did not respond. Reload the extension and try again.');
+        } else if (bgResponse?.report) {
+          applyReport(bgResponse.report);
+        } else if (bgResponse?.alreadyScanning) {
+          setScanError('A scan is already running. Wait for it to finish, then try again.');
+        } else {
+          setScanError(
+            bgResponse?.error || 'The scan could not be completed. Reload the tab and try again.'
+          );
+        }
+        finish();
+      });
+    };
 
     try {
       if (typeof chrome !== 'undefined' && chrome.tabs?.query) {
-        chrome.tabs.query({ currentWindow: true }, async (tabs) => {
-          const targetTab = tabs.find(
-            (t) => t.url && !t.url.startsWith('chrome-extension://') && !t.url.startsWith('chrome://') && !t.url.startsWith('about:')
-          ) || tabs[0];
+        chrome.tabs.query({ currentWindow: true }, (tabs) => {
+          const targetTab =
+            tabs.find(
+              (t) =>
+                t.url &&
+                !t.url.startsWith('chrome-extension://') &&
+                !t.url.startsWith('chrome://') &&
+                !t.url.startsWith('about:')
+            ) || tabs[0];
 
-          if (!targetTab?.id || !targetTab.url || targetTab.url.startsWith('chrome-extension://') || targetTab.url.startsWith('chrome://')) {
-            alert('To scan a live web page, please open a website in a tab (e.g. any job board, article, or demo page) and click Scan.');
-            setIsScanning(false);
+          if (
+            !targetTab?.id ||
+            !targetTab.url ||
+            targetTab.url.startsWith('chrome-extension://') ||
+            targetTab.url.startsWith('chrome://') ||
+            targetTab.url.startsWith('about:')
+          ) {
+            setScanError(
+              'Open a regular website tab, then scan again. Browser and extension pages cannot be inspected.'
+            );
+            finish();
             return;
           }
 
-          chrome.tabs.sendMessage(targetTab.id, { type: 'EXTRACT_PAGE_CONTENT' }, async (response) => {
-            if (response && response.success && response.data) {
+          const tabId = targetTab.id;
+
+          chrome.tabs.sendMessage(tabId, { type: 'EXTRACT_PAGE_CONTENT' }, async (response) => {
+            const runtimeError = chrome.runtime?.lastError;
+
+            if (!runtimeError && response?.success && response.data) {
               try {
-                const newReport = await apiClient.analyzePage(response.data);
-
-                setReport(newReport);
-                setHistory((prev) => [newReport, ...prev.filter((p) => p.request_id !== newReport.request_id)]);
-
-                if (chrome.storage?.local) {
-                  chrome.storage.local.set({
-                    credible_latest_report: newReport,
-                    credible_scan_history: [newReport, ...history],
-                  });
-                }
-              } catch (e) {
-                console.error('Scan failed:', e);
+                applyReport(await apiClient.analyzePage(response.data));
+              } catch (error) {
+                setScanError(mapErrorToUserMessage(error));
+              } finally {
+                finish();
               }
-            } else {
-              if (chrome.runtime?.sendMessage) {
-                chrome.runtime.sendMessage({ type: 'REQUEST_SCAN', tabId: targetTab.id }, (bgResponse) => {
-                  if (bgResponse && bgResponse.report) {
-                    setReport(bgResponse.report);
-                    setHistory((prev) => [bgResponse.report, ...prev.filter((p) => p.request_id !== bgResponse.report.request_id)]);
-                  }
-                });
-              }
+              return;
             }
-            setIsScanning(false);
+
+            // The content script may not be injected yet; let the service worker retry.
+            runBackgroundScan(tabId);
           });
         });
       } else {
-        setTimeout(() => {
-          setIsScanning(false);
-        }, 800);
+        setScanError('Scanning is only available inside the installed extension.');
+        finish();
       }
-    } catch {
-      setIsScanning(false);
+    } catch (error) {
+      setScanError(mapErrorToUserMessage(error));
+      finish();
     }
   };
 
@@ -577,26 +668,37 @@ export const DashboardApp: React.FC = () => {
     return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'monospace' }}>INITIALIZING COMMAND CENTER...</div>;
   }
 
-  const score = report.score ?? 100;
-  const isThreat = report.assessment_status === AssessmentStatus.SUSPICIOUS || score < 50;
-  const isCaution = report.assessment_status === AssessmentStatus.CAUTION || (score >= 50 && score < 85);
+  const score = typeof report.score === 'number' ? report.score : null;
+  const verdict = deriveVerdict(report);
+  const verdictTone = verdict.tone;
+  const verdictLabel = verdict.label;
+  const displayScore = score === null ? '-' : String(score);
+  const scoreAria =
+    score === null ? 'Trust score unavailable' : `Trust score ${score} out of 100`;
 
-  let verdictBg = '#ECFDF5';
-  let verdictText = '#065F46';
-  let verdictBorder = '#A7F3D0';
-  let verdictLabel = 'CLEAN SIGNALS';
+  const demoCase = report.request_id.match(/^demo-scen-(\d+)/);
+  const caseId = demoCase
+    ? demoCase[1].padStart(2, '0')
+    : report.request_id.slice(0, 8).toUpperCase();
 
-  if (isThreat) {
-    verdictBg = '#FFF1F2';
-    verdictText = '#9F1239';
-    verdictBorder = '#FECDD3';
-    verdictLabel = 'CRITICAL THREAT DETECTED';
-  } else if (isCaution) {
-    verdictBg = '#FFFBEB';
-    verdictText = '#92400E';
-    verdictBorder = '#FDE68A';
-    verdictLabel = 'CAUTION / UNVERIFIED';
-  }
+  const timestamp = new Date(report.timestamp);
+  const scannedAt = Number.isNaN(timestamp.getTime())
+    ? '—'
+    : timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const executedCount = report.checks?.executed?.length || 0;
+  // Only the finding sources are known per report; this is not a claim about
+  // whether the AI ran, so label it as attribution rather than an engine mode.
+  const engineLabel = (report.proof_mode || []).some(
+    (entry) => entry.source && entry.source !== 'deterministic'
+  )
+    ? 'RULES + AI'
+    : 'RULE-BASED ONLY';
+  const evidenceConfidence = report.trust_dna?.find((dim) => dim.id === 'evidence_confidence')?.confidence;
+  const evidenceLabel = evidenceConfidence
+    ? evidenceConfidence.charAt(0).toUpperCase() + evidenceConfidence.slice(1)
+    : '—';
+  const modeLabel = report.mode === AnalysisMode.PAGE ? 'PAGE' : 'SELECTION';
 
   return (
     <div className="influency-app-shell" data-testid="dashboard-container">
@@ -629,119 +731,160 @@ export const DashboardApp: React.FC = () => {
             testId="dashboard-scan-progress"
           />
 
-          {/* Verdict-first Forensic Horizon */}
-          <section className="influency-forensic-horizon" data-testid="dashboard-hero" id="forensic-workbench-section">
-            <div className="horizon-flex-row">
-              <div className="horizon-score-frame" style={{ width: '84px', height: '84px', flexShrink: 0 }}>
-                <ScoreGauge score={score} size={84} variant="dial-only" />
-              </div>
-              <div className="horizon-verdict-info">
-                <span className="horizon-micro-label">OVERALL VERDICT</span>
-                <span
-                  data-testid="dashboard-verdict-pill"
-                  className="horizon-verdict-pill"
-                  style={{
-                    backgroundColor: verdictBg,
-                    color: verdictText,
-                    borderColor: verdictBorder,
-                  }}
-                >
-                  {verdictLabel}
-                </span>
-                <div className="horizon-threat-count" style={{ color: isThreat ? '#E11D48' : '#059669' }}>
-                  {report.findings.length > 0 ? (
-                    <>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                        <line x1="12" y1="9" x2="12" y2="13" />
-                        <line x1="12" y1="17" x2="12.01" y2="17" />
-                      </svg>
-                      <span>{report.findings.length} Threat Vectors Triggered</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      <span>0 Threat Vectors Triggered</span>
-                    </>
-                  )}
+          {scanError && !isScanning && (
+            <div className="scan-error" role="alert" data-testid="dashboard-scan-error">
+              <span className="scan-error-mark" aria-hidden="true">
+                !
+              </span>
+              <p className="scan-error-text">{scanError}</p>
+              <button
+                type="button"
+                className="scan-error-dismiss"
+                onClick={() => setScanError(null)}
+              >
+                DISMISS
+              </button>
+            </div>
+          )}
+
+          {/* Case-file verdict sheet: score, verdict, target, action, and telemetry in one document */}
+          <section className="case-file" data-testid="dashboard-hero" id="forensic-workbench-section">
+            <div className="case-file-bar">
+              <span className="case-file-id">CASE {caseId}</span>
+              <span className="case-file-spacer" />
+              <span className="case-file-meta">SCANNED {scannedAt}</span>
+            </div>
+
+            <div className="case-file-body">
+              <div className="case-verdict">
+                <span className="case-label">TRUST INDEX</span>
+                <div className="case-score-line">
+                  <span
+                    className={`case-score ${score === null ? 'case-score-unknown' : ''}`}
+                    data-testid="dashboard-score-value"
+                  >
+                    {score === null ? 'Not scored' : displayScore}
+                  </span>
+                  {score !== null && <span className="case-score-denom">/ 100</span>}
                 </div>
+                <div
+                  className={`case-meter case-meter-${verdictTone}`}
+                  role="img"
+                  aria-label={scoreAria}
+                >
+                  <span
+                    className="case-meter-fill"
+                    style={{ width: score === null ? '0%' : `${Math.max(0, Math.min(100, score))}%` }}
+                  />
+                </div>
+                <div className="case-verdict-line">
+                  <span
+                    data-testid="dashboard-verdict-pill"
+                    className={`case-verdict-word case-verdict-${verdictTone}`}
+                  >
+                    <span className="case-verdict-dot" aria-hidden="true" />
+                    {verdictLabel}
+                  </span>
+                  <span className="case-verdict-count">
+                    {verdictTone === 'unknown'
+                      ? 'verdict not established'
+                      : `${report.findings.length} ${
+                          report.findings.length === 1 ? 'threat vector' : 'threat vectors'
+                        }`}
+                  </span>
+                </div>
+                <p className="case-reason">{report.summary}</p>
               </div>
 
-              {/* Target URL Telemetry */}
-              <div className="horizon-target-telemetry">
-                <div className="horizon-panel-header">
-                  <span className="horizon-micro-label">INVESTIGATION TARGET</span>
-                  <span className="horizon-protocol-badge">
+              <aside className="case-evidence">
+                <div className="case-evidence-head">
+                  <span className="case-label">INVESTIGATION TARGET</span>
+                  <span className="case-protocol">
                     {report.analyzed_url.startsWith('https') ? 'HTTPS' : 'HTTP'}
                   </span>
                 </div>
-                <div className="horizon-url-box-wrapper">
-                  <div className="horizon-url-box" title={report.analyzed_url}>
-                    <code className="horizon-url-code">{report.analyzed_url}</code>
-                  </div>
+                <div className="case-target">
+                  <code className="case-target-url" title={report.analyzed_url}>
+                    {report.analyzed_url}
+                  </code>
                   <button
                     type="button"
                     onClick={handleCopyUrl}
-                    className={`btn-url-copy ${copiedUrl ? 'copied' : ''}`}
+                    className={`case-copy ${copiedUrl ? 'is-copied' : ''}`}
                     title="Copy target URL"
                     aria-label="Copy target URL"
                   >
                     {copiedUrl ? 'COPIED' : 'COPY'}
                   </button>
                 </div>
-              </div>
-            </div>
 
-            {/* Executive Narrative Summary Box */}
-            <div className="influency-narrative-box">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span className="horizon-micro-label">EXECUTIVE THREAT NARRATIVE</span>
+                <dl className="case-facts">
+                  <div className="case-fact">
+                    <dt>MODE</dt>
+                    <dd>{modeLabel}</dd>
+                  </div>
+                  <div className="case-fact">
+                    <dt>FINDING SOURCE</dt>
+                    <dd>{engineLabel}</dd>
+                  </div>
+                  <div className="case-fact">
+                    <dt>SCOPE</dt>
+                    <dd>{executedCount} rules</dd>
+                  </div>
+                  <div className="case-fact">
+                    <dt>EVIDENCE</dt>
+                    <dd>{evidenceLabel}</dd>
+                  </div>
+                </dl>
+
                 <button
                   type="button"
                   onClick={handleCopySummary}
                   data-testid="dashboard-copy-summary-btn"
-                  className="btn-copy-mini"
+                  className="case-copy case-copy-summary"
                 >
-                  {copiedSummary ? 'Copied' : 'Copy Summary'}
+                  {copiedSummary ? 'COPIED' : 'COPY SUMMARY'}
                 </button>
-              </div>
-              <p className="influency-narrative-text">{report.summary}</p>
+              </aside>
             </div>
 
-            {/* Primary protective action — keep the single most useful step above the fold */}
             {report.next_best_actions.length > 0 && (
-              <div className="influency-priority-action" data-testid="dashboard-priority-action">
-                <div className="priority-action-marker" aria-hidden="true">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14" />
-                    <polyline points="13 6 19 12 13 18" />
-                  </svg>
-                </div>
-                <div className="priority-action-content">
-                  <span className="horizon-micro-label">DO THIS FIRST</span>
-                  <p className="priority-action-text">{report.next_best_actions[0]}</p>
-                </div>
+              <div className="case-action" data-testid="dashboard-priority-action">
+                <span className="case-action-label">DO THIS FIRST</span>
+                <p className="case-action-text">{report.next_best_actions[0]}</p>
                 <button
                   type="button"
-                  className="btn-priority-all"
+                  className="case-action-all"
                   onClick={() => {
                     const el = document.getElementById('next-actions-panel');
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
                 >
                   All {report.next_best_actions.length} actions
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
                 </button>
               </div>
             )}
+
+            <InfluencyTelemetryRail report={report} historyCount={history.length} />
           </section>
 
-          {/* Compact telemetry strip */}
-          <InfluencyKpiRow report={report} historyCount={history.length} />
-
-          {/* Ground-truth calibration benchmarks (secondary tooling) */}
-          <div className="influency-benchmark-dock">
+          {/* Reference cases: one ruled row, not another card */}
+          <div className="case-scenarios">
+            <span className="case-scenarios-label">REFERENCE CASES</span>
             <BenchmarkSwitcher selectedId={report.request_id} onSelect={handleSelectBenchmark} />
           </div>
 

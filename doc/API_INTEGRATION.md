@@ -171,7 +171,7 @@ Exit code `1` means the configured model/key failed; `0` means it is usable
 |---|---|---|
 | unreachable | `ENGINE OFFLINE` | Backend not running or blocked. |
 | reachable, no key | `DETERMINISTIC MODE` | Rules only; explicitly not AI. |
-| reachable, key present | `AI READY · GEMINI` | AI-assisted analysis available. |
+| reachable, key present | `AI AVAILABLE · GEMINI` | AI-assisted analysis available. |
 | reachable, last AI call failed | `AI DEGRADED · GEMINI` | Key present, but scans currently fall back to rules. |
 
 The badge is a convenience, not a guarantee about the next scan. A provider can

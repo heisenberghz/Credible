@@ -31,7 +31,7 @@ describe('Engine status badge', () => {
   it('shows the active AI provider when AI is configured', () => {
     const engine = describeEngineStatus(baseStatus, true);
     expect(engine.state).toBe('online');
-    expect(engine.label).toBe('AI READY · GEMINI');
+    expect(engine.label).toBe('AI AVAILABLE · GEMINI');
     expect(engine.shortLabel).toBe('AI');
     expect(engine.detail).toContain('gemini-3.5-flash-lite');
   });

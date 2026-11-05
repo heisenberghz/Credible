@@ -171,7 +171,7 @@ curl http://localhost:8000/health
 ```
 
 The extension queries this endpoint on popup/dashboard load and shows a truthful
-badge: **AI READY · GEMINI**, **AI DEGRADED · GEMINI**, **DETERMINISTIC MODE**,
+badge: **AI AVAILABLE · GEMINI**, **AI DEGRADED · GEMINI**, **DETERMINISTIC MODE**,
 or **ENGINE OFFLINE**.
 
 ### After adding a key

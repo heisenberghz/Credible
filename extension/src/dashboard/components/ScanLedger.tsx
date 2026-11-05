@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AnalysisReport, AssessmentStatus } from '../../types/analysis';
 
 interface ScanLedgerProps {
@@ -8,12 +8,23 @@ interface ScanLedgerProps {
   onClear: () => void;
 }
 
+const smallButtonStyle: React.CSSProperties = {
+  fontSize: '10px',
+  fontFamily: 'monospace',
+  fontWeight: 700,
+  padding: '2px 8px',
+  borderRadius: '4px',
+  cursor: 'pointer',
+};
+
 export const ScanLedger: React.FC<ScanLedgerProps> = ({
   history,
   selectedId,
   onSelect,
   onClear,
 }) => {
+  const [confirmingClear, setConfirmingClear] = useState(false);
+
   return (
     <div className="arch-card" data-testid="scan-ledger">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', borderBottom: '1px solid #E2E8F0', paddingBottom: '10px' }}>
@@ -24,24 +35,60 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
           <p style={{ fontSize: '11px', color: '#64748B' }}>Audit history & benchmark comparison</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          {history.length > 0 && (
+          {history.length > 0 && !confirmingClear && (
             <button
-              onClick={onClear}
+              onClick={() => setConfirmingClear(true)}
+              data-testid="ledger-clear-btn"
               style={{
-                fontSize: '10px',
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                padding: '2px 8px',
+                ...smallButtonStyle,
                 backgroundColor: '#F8FAFC',
                 color: '#64748B',
                 border: '1px solid #CBD5E1',
-                borderRadius: '4px',
-                cursor: 'pointer',
               }}
               title="Clear stored scan history"
             >
               CLEAR
             </button>
+          )}
+
+          {history.length > 0 && confirmingClear && (
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+              role="group"
+              aria-label="Confirm clearing scan history"
+              data-testid="ledger-clear-confirm"
+            >
+              <span style={{ fontSize: '9px', fontFamily: 'monospace', fontWeight: 800, color: '#9F1239' }}>
+                CLEAR ALL?
+              </span>
+              <button
+                onClick={() => {
+                  onClear();
+                  setConfirmingClear(false);
+                }}
+                data-testid="ledger-clear-confirm-btn"
+                style={{
+                  ...smallButtonStyle,
+                  backgroundColor: '#FFF1F2',
+                  color: '#9F1239',
+                  border: '1px solid #FECDD3',
+                }}
+              >
+                YES, CLEAR
+              </button>
+              <button
+                onClick={() => setConfirmingClear(false)}
+                data-testid="ledger-clear-cancel-btn"
+                style={{
+                  ...smallButtonStyle,
+                  backgroundColor: '#F8FAFC',
+                  color: '#475569',
+                  border: '1px solid #CBD5E1',
+                }}
+              >
+                CANCEL
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -72,7 +119,7 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
                 transition: 'all 0.15s ease',
               }}
             >
-              {label} ({item.score ?? 100})
+              {label} ({typeof item.score === 'number' ? item.score : '—'})
             </button>
           );
         })}
@@ -86,16 +133,31 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '340px', overflowY: 'auto' }}>
           {history.map((item) => {
             const isSelected = item.request_id === selectedId;
-            const score = item.score ?? 100;
-            const isThreat = item.assessment_status === AssessmentStatus.SUSPICIOUS || score < 50;
-            const isCaution = item.assessment_status === AssessmentStatus.CAUTION || (score >= 50 && score < 85);
+            const hasScore = typeof item.score === 'number';
+            const score = hasScore ? (item.score as number) : null;
+            const isThreat =
+              item.assessment_status === AssessmentStatus.SUSPICIOUS ||
+              (score !== null && score < 50);
+            const isCaution =
+              item.assessment_status === AssessmentStatus.CAUTION ||
+              item.assessment_status === AssessmentStatus.NEEDS_VERIFICATION ||
+              (score !== null && score >= 50 && score < 85);
+            const isUnknown =
+              item.assessment_status === AssessmentStatus.INCONCLUSIVE ||
+              item.assessment_status === AssessmentStatus.ERROR ||
+              score === null;
 
             let badgeBg = '#ECFDF5';
             let badgeText = '#065F46';
             let badgeBorder = '#A7F3D0';
             let statusLabel = 'CLEAN';
 
-            if (isThreat) {
+            if (isUnknown) {
+              badgeBg = '#F1F5F9';
+              badgeText = '#475569';
+              badgeBorder = '#CBD5E1';
+              statusLabel = 'UNKNOWN';
+            } else if (isThreat) {
               badgeBg = '#FFF1F2';
               badgeText = '#9F1239';
               badgeBorder = '#FECDD3';
@@ -104,7 +166,8 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
               badgeBg = '#FFFBEB';
               badgeText = '#92400E';
               badgeBorder = '#FDE68A';
-              statusLabel = 'CAUTION';
+              statusLabel =
+                item.assessment_status === AssessmentStatus.NEEDS_VERIFICATION ? 'REVIEW' : 'CAUTION';
             }
 
             return (
@@ -172,7 +235,7 @@ export const ScanLedger: React.FC<ScanLedgerProps> = ({
                       textAlign: 'right',
                     }}
                   >
-                    {score}
+                    {score === null ? '—' : score}
                   </span>
                 </div>
               </div>

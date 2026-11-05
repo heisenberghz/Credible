@@ -7,80 +7,60 @@ interface BenchmarkSwitcherProps {
 
 interface BenchmarkItem {
   id: string;
-  badge: string;
+  verdict: string;
   label: string;
-  scoreText: string;
-  pipClass: string;
-  tagColor: { bg: string; text: string; border: string };
+  score: string;
+  tone: 'clean' | 'threat' | 'caution';
 }
 
 const BENCHMARKS: BenchmarkItem[] = [
   {
     id: 'demo-scen-1-benign',
-    badge: 'BENIGN',
+    verdict: 'Benign',
     label: 'Corporate Career Portal',
-    scoreText: 'Score 97',
-    pipClass: 'pip-clean',
-    tagColor: { bg: '#ECFDF5', text: '#059669', border: '#A7F3D0' },
+    score: '97',
+    tone: 'clean',
   },
   {
     id: 'demo-scen-2-suspicious',
-    badge: 'SUSPICIOUS',
+    verdict: 'Suspicious',
     label: 'Urgent Crypto Deposit',
-    scoreText: 'Score 01',
-    pipClass: 'pip-threat',
-    tagColor: { bg: '#FFF1F2', text: '#E11D48', border: '#FECDD3' },
+    score: '1',
+    tone: 'threat',
   },
   {
     id: 'demo-scen-3-ambiguous',
-    badge: 'AMBIGUOUS',
+    verdict: 'Ambiguous',
     label: 'Unverified Research Post',
-    scoreText: 'Score 62',
-    pipClass: 'pip-caution',
-    tagColor: { bg: '#FFFBEB', text: '#D97706', border: '#FDE68A' },
+    score: '62',
+    tone: 'caution',
   },
 ];
 
 export const BenchmarkSwitcher: React.FC<BenchmarkSwitcherProps> = ({ selectedId, onSelect }) => {
   return (
-    <div className="benchmark-deck-container" role="region" aria-label="Calibration Scenarios">
-      <div className="benchmark-deck-header">
-        <div className="benchmark-deck-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M10 2v7.31M14 2v7.31M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0" />
-            <path d="M5.52 16h12.96" />
-          </svg>
-          <span>CALIBRATION BENCHMARKS</span>
-        </div>
-        <span className="benchmark-deck-caption">
-          Ground-truth verification scenarios
-        </span>
-      </div>
+    <div className="case-scenarios-track" role="group" aria-label="Reference cases">
+      {BENCHMARKS.map((b) => {
+        const isSelected = selectedId === b.id;
 
-      <div className="benchmark-pills-row" role="group" aria-label="Calibration scenarios">
-        {BENCHMARKS.map((b) => {
-          const isSelected = selectedId === b.id;
-
-          return (
-            <button
-              key={b.id}
-              onClick={() => onSelect(b.id)}
-              type="button"
-              aria-pressed={isSelected}
-              data-testid={`benchmark-btn-${b.id}`}
-              className={`benchmark-pill ${isSelected ? 'active' : ''}`}
-            >
-              <span className={`benchmark-pip ${b.pipClass}`} />
-              <span className="benchmark-badge">{b.badge}</span>
-              <span className="benchmark-separator">·</span>
-              <span className="benchmark-label">{b.label}</span>
-              <span className="benchmark-score-chip">
-                {b.scoreText}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+        return (
+          <button
+            key={b.id}
+            onClick={() => onSelect(b.id)}
+            type="button"
+            aria-pressed={isSelected}
+            data-testid={`benchmark-btn-${b.id}`}
+            className={`case-scenario ${isSelected ? 'is-active' : ''}`}
+          >
+            <span className={`case-scenario-pip case-scenario-${b.tone}`} aria-hidden="true" />
+            <span className="case-scenario-text">
+              <span className="case-scenario-verdict">{b.verdict}</span>
+              <span className="case-scenario-label">{b.label}</span>
+            </span>
+            <span className="case-scenario-score">{b.score}</span>
+          </button>
+        );
+      })}
     </div>
   );
 };
