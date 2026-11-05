@@ -17,7 +17,7 @@ export const InfluencySidebar: React.FC<InfluencySidebarProps> = ({
 }) => {
   const navItems = [
     { id: 'overview', label: 'Overview', icon: 'home', target: 'dashboard-header' },
-    { id: 'scan', label: 'Verdict', icon: 'radar', target: 'forensic-workbench-section' },
+    { id: 'scan', label: 'Verdict', icon: 'radar', target: 'dashboard-hero' },
     { id: 'trust-dna', label: 'Trust DNA', icon: 'dna', badge: '6', target: 'trust-dna-panel' },
     { id: 'heuristics', label: 'Heuristics', icon: 'matrix', badge: heuristicsCount > 0 ? String(heuristicsCount) : undefined, target: 'heuristic-matrix-panel' },
     { id: 'proof-mode', label: 'Proof Mode', icon: 'evidence', badge: threatCount > 0 ? String(threatCount) : undefined, target: 'proof-mode-panel' },

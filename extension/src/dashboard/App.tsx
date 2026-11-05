@@ -884,9 +884,9 @@ export const DashboardApp: React.FC = () => {
             <InfluencyTelemetryRail report={report} historyCount={history.length} />
           </section>
 
-          {/* Reference cases: one ruled row, not another card */}
+          {/* Bundled demo cases: one ruled row, not another card */}
           <div className="case-scenarios">
-            <span className="case-scenarios-label">REFERENCE CASES</span>
+            <span className="case-scenarios-label">DEMO CASES</span>
             <BenchmarkSwitcher selectedId={report.request_id} onSelect={handleSelectBenchmark} />
           </div>
 

@@ -39,7 +39,7 @@ const BENCHMARKS: BenchmarkItem[] = [
 
 export const BenchmarkSwitcher: React.FC<BenchmarkSwitcherProps> = ({ selectedId, onSelect }) => {
   return (
-    <div className="case-scenarios-track" role="group" aria-label="Reference cases">
+    <div className="case-scenarios-track" role="group" aria-label="Demo cases (bundled example reports)">
       {BENCHMARKS.map((b) => {
         const isSelected = selectedId === b.id;
 
